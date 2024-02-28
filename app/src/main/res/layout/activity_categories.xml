@@ -18,38 +18,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
         <androidx.cardview.widget.CardView
-        android:layout_height="0dp"
-        android:layout_width="0dp"
-        app:cardCornerRadius="15dp"
-        android:layout_columnWeight="1"
-        android:layout_rowWeight="1"
-        android:elevation="0dp"
-        android:layout_margin="5dp">
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            app:cardCornerRadius="15dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:elevation="0dp"
+            android:layout_margin="5dp">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <RelativeLayout
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/baseline_control_point_24"
+                    android:id="@+id/imageView"
+                    android:layout_marginLeft="8dp"
+                    >
+                </ImageView>
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true">
+                    android:text="Cherry reception"
+                    android:layout_below="@id/imageView"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="15dp"
+                    />
 
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/baseline_control_point_24"
-                        android:id="@+id/imageView"
-                        android:layout_centerInParent="true"
-                        >
-                    </ImageView>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cherry reception"
-                        android:layout_below="@id/imageView"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="28dp"/> <!-- Add margin to create space between image and text -->
-                </RelativeLayout>
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
@@ -128,6 +124,7 @@
                     android:layout_height="100dp"
                     android:src="@drawable/baseline_table_restaurant_24"
                     android:layout_centerInParent="true"
+                    android:contentDescription="go"
                     >
                 </ImageView>
             </RelativeLayout>

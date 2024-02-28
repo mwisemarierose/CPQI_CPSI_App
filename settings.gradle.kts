@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CPQI_CPSI App"
+rootProject.name = "TNSapp"
 include(":app")
  

@@ -10,13 +10,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CPQI_CPSIApp"
+        android:theme="@style/Theme.TNSapp"
         tools:targetApi="31">
         <activity
-            android:name=".checklistActivity"
-            android:exported="false"
-            android:label="@string/title_activity_checklist"
-            android:theme="@style/Theme.CPQI_CPSIApp" />
+            android:name=".CategoriesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddnewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AuditActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -26,9 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChecklistActivity" />
-        <activity android:name=".DashboardActivity"/>
-
     </application>
 
 </manifest>

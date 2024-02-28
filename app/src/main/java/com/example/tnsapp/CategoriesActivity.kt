@@ -1,10 +1,11 @@
-package com.example.cpqi_cpsiapp
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+package com.example.tnsapp
 
-class ChecklistActivity : AppCompatActivity() {
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+
+class CategoriesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.checklistpage)
+        setContentView(R.layout.activity_categories)
     }
 }
