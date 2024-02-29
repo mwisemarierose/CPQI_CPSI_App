@@ -9,13 +9,15 @@
 
     <Button
         android:id="@+id/getstarted"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:backgroundTint="@color/maroon"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/rectangle_button"
+        android:textColor="@color/white"
         android:text="Get Started" />
 
 </RelativeLayout>
