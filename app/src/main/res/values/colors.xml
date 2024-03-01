@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="maroon">#800000</color>
     <color name="lightPink">#F9EAEA</color>
+    <color name="grey">#808080</color>
 </resources>

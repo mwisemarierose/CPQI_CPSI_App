@@ -5,22 +5,26 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 
-class AddnewActivity : AppCompatActivity() {
+class AddNewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addnew)
+
         setupUI()
     }
 
-    private fun setupUI() {
-        val bodyButton = findViewById<Button>(R.id.bodyButton)
+    private fun setupUI() { val addNewBtn = findViewById<Button>(R.id.addNewBtn)
 
-        bodyButton.setOnClickListener {
+        addNewBtn.setOnClickListener {
             openCategoryActivity()
         }
     }
 
     private fun openCategoryActivity() {
-        startActivity(Intent(this, CategoriesActivity::class.java))
+        val auditListId = intent.getLongExtra("auditListId", 0)
+
+        startActivity(Intent(this, CategoriesActivity::class.java).apply {
+            putExtra("auditListId", auditListId)
+        })
     }
 }

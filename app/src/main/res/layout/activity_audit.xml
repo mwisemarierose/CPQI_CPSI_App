@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,7 +11,6 @@
         android:clipToOutline="true"
         android:outlineProvider="background"
         android:background="@drawable/border_radius"
-
         >
 
         <ImageView
@@ -20,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/top" />
+            android:src="@drawable/top"
+            android:contentDescription="coffee_image" />
 
     </androidx.cardview.widget.CardView>
 
@@ -38,7 +37,7 @@
         />
 
     <Button
-        android:id="@+id/firstButton"
+        android:id="@+id/cpqiBtn"
         android:layout_width="380dp"
         android:layout_height="60dp"
         android:text="CPQI Audit"
@@ -53,12 +52,12 @@
         />
 
     <Button
-        android:id="@+id/secondButton"
+        android:id="@+id/cpsiBtn"
         android:layout_width="380dp"
         android:layout_height="60dp"
         android:text="CPQSI Audit"
         android:textColor="@color/maroon"
-        android:layout_below="@id/firstButton"
+        android:layout_below="@id/cpqiBtn"
         android:drawableStart="@drawable/baseline_balance_24"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
@@ -68,7 +67,7 @@
         />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/continueBtn"
         android:layout_width="190dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

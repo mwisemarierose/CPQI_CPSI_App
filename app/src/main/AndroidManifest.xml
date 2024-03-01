@@ -16,7 +16,7 @@
             android:name=".CategoriesActivity"
             android:exported="false" />
         <activity
-            android:name=".AddnewActivity"
+            android:name=".AddNewActivity"
             android:exported="false" />
         <activity
             android:name=".AuditActivity"

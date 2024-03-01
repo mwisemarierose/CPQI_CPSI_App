@@ -13,15 +13,31 @@ class AuditActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        val button = findViewById<Button>(R.id.button)
+        val cpqiBtn: Button = findViewById(R.id.cpqiBtn)
+        val cpsiBtn: Button = findViewById(R.id.cpsiBtn)
+        val continueBtn = findViewById<Button>(R.id.continueBtn)
 
-        button.setOnClickListener {
-            openAddnewActivity()
+        var clickedBtn = 0
+
+        cpqiBtn.setOnClickListener {
+            clickedBtn = 1
+        }
+
+        cpsiBtn.setOnClickListener {
+            clickedBtn = 2
+        }
+
+        continueBtn.setOnClickListener {
+            openAddNewActivity(clickedBtn.toLong())
         }
     }
 
-    private fun openAddnewActivity() {
-        startActivity(Intent(this@AuditActivity, AddnewActivity::class.java))
+    private fun openAddNewActivity(
+        auditListId: Long
+    ) {
+        startActivity(Intent(this@AuditActivity, AddNewActivity::class.java).apply {
+            putExtra("auditListId", auditListId)
+        })
     }
 
 }
