@@ -1,11 +1,20 @@
 package com.example.tnsapp.database
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "questions")
+@Entity(tableName = "questions",
+    foreignKeys = [
+        ForeignKey(
+            entity = Categories::class,
+            parentColumns = ["id"],
+            childColumns = ["cat_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ])
 data class Questions(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val name: String,
-    val categoryId: Long
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    @ColumnInfo(name = "q_name") val qName: String,
+    @ColumnInfo(name = "cat_id") val catId: Long
 )
