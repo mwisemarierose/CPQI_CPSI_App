@@ -1,35 +1,15 @@
+package com.example.tnsapp.database
 import androidx.room.*
-import com.example.tnsapp.database.Answers
-import com.example.tnsapp.database.AuditCategories
-import com.example.tnsapp.database.Categories
-import com.example.tnsapp.database.Questions
 
-@Dao
-interface AuditCategoriesDao {
-    @Query("SELECT * FROM audit_categories")
-    suspend fun getAll(): List<AuditCategories>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(auditCategory: AuditCategories)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(auditCategories: List<AuditCategories>)
-
-}
 
 @Dao
 interface CategoriesDao {
     @Query("SELECT * FROM categories")
     suspend fun getAll(): List<Categories>
 
-    @Query("SELECT * FROM categories WHERE audit_id = :auditId")
-    suspend fun getByAuditId(auditId: Long): List<Categories>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(category: Categories)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(categories: List<Categories>)
 
     @Delete
     suspend fun delete(category: Categories)
@@ -45,8 +25,6 @@ interface QuestionsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(question: Questions)
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(questions: List<Questions>)
 
     @Delete
     suspend fun delete(question: Questions)

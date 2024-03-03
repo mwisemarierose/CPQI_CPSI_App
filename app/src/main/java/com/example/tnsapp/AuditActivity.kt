@@ -3,52 +3,59 @@ package com.example.tnsapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
-import com.example.tnsapp.database.AuditCategories
+import com.example.tnsapp.database.AppDatabase
+
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AuditActivity : AppCompatActivity() {
 
-    private lateinit var cpqiBtn: Button
-    private lateinit var cpsiBtn: Button
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audit)
+
+        var db = AppDatabase.getDatabase(this)
+
+        GlobalScope.launch(Dispatchers.Main) {
+
+        }
+
         setupUI()
-        fetchAuditCategories()
     }
 
     private fun setupUI() {
-        cpqiBtn = findViewById(R.id.cpqiBtn)
-        cpsiBtn = findViewById(R.id.cpsiBtn)
+        val cpqiBtn: Button = findViewById(R.id.cpqiBtn)
+        val cpsiBtn: Button = findViewById(R.id.cpsiBtn)
+        val continueBtn = findViewById<Button>(R.id.continueBtn)
+
+        var clickedBtn = 0
 
         cpqiBtn.setOnClickListener {
-            // Handle CPQI button click
+            clickedBtn = 1
         }
 
         cpsiBtn.setOnClickListener {
-            // Handle CPSI button click
+            clickedBtn = 2
+        }
+
+        continueBtn.setOnClickListener {
+            openAddNewActivity(clickedBtn.toLong())
         }
     }
 
-    private fun fetchAuditCategories() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val auditCategories = AppDatabase.getDatabase(applicationContext).auditCategoryDao().getAll()
-            updateButtonLabels(auditCategories)
-        }
+    private fun openAddNewActivity(
+        auditListId: Long
+    ) {
+        startActivity(Intent(this@AuditActivity, AddNewActivity::class.java).apply {
+            putExtra("auditListId", auditListId)
+        })
     }
 
-    private fun updateButtonLabels(auditCategories: List<AuditCategories>) {
-        if (auditCategories.size >= 2) {
-            cpqiBtn.text = auditCategories[0].name
-            cpsiBtn.text = auditCategories[1].name
-        }
-    }
-
-    private fun openAddNewActivity() {
-        startActivity(Intent(this@AuditActivity, AddNewActivity::class.java))
-    }
 }
