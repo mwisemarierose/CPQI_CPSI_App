@@ -21,10 +21,7 @@ class AddNewActivity : AppCompatActivity() {
     }
 
     private fun openCategoryActivity() {
-        val auditListId = intent.getLongExtra("auditListId", 0)
 
-        startActivity(Intent(this, CategoriesActivity::class.java).apply {
-            putExtra("auditListId", auditListId)
-        })
+        startActivity(Intent(this, CategoriesActivity::class.java))
     }
 }

@@ -12,8 +12,9 @@ interface AuditCategoriesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(auditCategory: AuditCategories)
 
-    @Delete
-    suspend fun delete(auditCategory: AuditCategories)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(auditCategories: List<AuditCategories>)
+
 }
 
 @Dao
@@ -26,6 +27,9 @@ interface CategoriesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(category: Categories)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(categories: List<Categories>)
 
     @Delete
     suspend fun delete(category: Categories)
@@ -41,6 +45,8 @@ interface QuestionsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(question: Questions)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(questions: List<Questions>)
 
     @Delete
     suspend fun delete(question: Questions)

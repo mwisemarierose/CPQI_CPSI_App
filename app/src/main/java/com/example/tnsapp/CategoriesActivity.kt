@@ -9,7 +9,5 @@ class CategoriesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categories)
 
-        val auditListId = intent.getLongExtra("auditListId", 0)
-        println(auditListId)
     }
 }

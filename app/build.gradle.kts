@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.utils.KSP_PLUGIN_ID
 
 plugins {
     id("com.android.application")
@@ -54,12 +53,20 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
     val roomVersion = "2.6.1"
-    implementation("androidx.room:room-ktx:$roomVersion")
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
-// Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.room:room-ktx:$roomVersion")
 
-// Extended Icons
-    implementation("androidx.compose.material:material-icons-extended:1.6.2")
+    implementation("androidx.room:room-rxjava2:$roomVersion")
+
+    implementation("androidx.room:room-rxjava3:$roomVersion")
+
+    implementation("androidx.room:room-guava:$roomVersion")
+
+    testImplementation("androidx.room:room-testing:$roomVersion")
+
+    implementation("androidx.room:room-paging:$roomVersion")
 }

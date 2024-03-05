@@ -1,66 +1,54 @@
 package com.example.tnsapp
 
-import AppDatabase
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import kotlinx.coroutines.DelicateCoroutinesApi
+import com.example.tnsapp.database.AuditCategories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AuditActivity : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
-    @OptIn(DelicateCoroutinesApi::class)
+    private lateinit var cpqiBtn: Button
+    private lateinit var cpsiBtn: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audit)
-
-        db = AppDatabase.getDatabase(this)
-
-        GlobalScope.launch(Dispatchers.Main) {
-            val auditCategories = withContext(Dispatchers.IO) {
-                db.auditCategoryDao().getAll()
-            }
-
-            auditCategories.forEach { audit ->
-                Log.d("AuditCategory", "Name: ${audit.name}, Icon Path: ${audit.iconPath}")
-            }
-        }
-
         setupUI()
+        fetchAuditCategories()
     }
 
     private fun setupUI() {
-        val cpqiBtn: Button = findViewById(R.id.cpqiBtn)
-        val cpsiBtn: Button = findViewById(R.id.cpsiBtn)
-        val continueBtn = findViewById<Button>(R.id.continueBtn)
-
-        var clickedBtn = 0
+        cpqiBtn = findViewById(R.id.cpqiBtn)
+        cpsiBtn = findViewById(R.id.cpsiBtn)
 
         cpqiBtn.setOnClickListener {
-            clickedBtn = 1
+            // Handle CPQI button click
         }
 
         cpsiBtn.setOnClickListener {
-            clickedBtn = 2
-        }
-
-        continueBtn.setOnClickListener {
-            openAddNewActivity(clickedBtn.toLong())
+            // Handle CPSI button click
         }
     }
 
-    private fun openAddNewActivity(
-        auditListId: Long
-    ) {
-        startActivity(Intent(this@AuditActivity, AddNewActivity::class.java).apply {
-            putExtra("auditListId", auditListId)
-        })
+    private fun fetchAuditCategories() {
+        GlobalScope.launch(Dispatchers.Main) {
+            val auditCategories = AppDatabase.getDatabase(applicationContext).auditCategoryDao().getAll()
+            updateButtonLabels(auditCategories)
+        }
     }
 
+    private fun updateButtonLabels(auditCategories: List<AuditCategories>) {
+        if (auditCategories.size >= 2) {
+            cpqiBtn.text = auditCategories[0].name
+            cpsiBtn.text = auditCategories[1].name
+        }
+    }
+
+    private fun openAddNewActivity() {
+        startActivity(Intent(this@AuditActivity, AddNewActivity::class.java))
+    }
 }
