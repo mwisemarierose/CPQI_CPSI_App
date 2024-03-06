@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import com.example.tnsapp.database.AppDatabase
-
 import kotlinx.coroutines.DelicateCoroutinesApi
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -15,16 +15,24 @@ import kotlinx.coroutines.withContext
 
 class AuditActivity : AppCompatActivity() {
 
+    private lateinit var db: AppDatabase
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audit)
 
-        var db = AppDatabase.getDatabase(this)
+        db = AppDatabase.getDatabase(this)!!
 
         GlobalScope.launch(Dispatchers.Main) {
+            val categories = withContext(Dispatchers.IO) {
+                db.categoryDao().getAll()
+            }
 
+            // Now you can use 'categories' in your UI or wherever needed
+            categories.forEach { category ->
+                Log.d("Category", "Name: ${category.name}, Icon Path: ${category.iconPath}, Audit Name: ${category.auditName}")
+            }
         }
 
         setupUI()
