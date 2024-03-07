@@ -3,6 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="maroon">#800000</color>
-    <color name="lightPink">#F9EAEA</color>
+    <color name="lightPink">#FFE6EE</color>
     <color name="grey">#808080</color>
+    <color name="default_button_color">#FFFFFFFF</color>
+    <color name="pressed_button_color">#FFE6EE</color>
+    <color name="button_border_color">#800000</color>
 </resources>

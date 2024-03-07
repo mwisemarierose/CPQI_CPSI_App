@@ -4,15 +4,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "answers",
-    foreignKeys = [
-        ForeignKey(
-            entity = Questions::class,
-            parentColumns = ["id"],
-            childColumns = ["q_id"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ])
+@Entity(tableName = "answers")
+
 data class Answers(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "responder_name") val responderName: String,

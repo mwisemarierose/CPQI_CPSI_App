@@ -5,14 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 
-class AddNewActivity : AppCompatActivity() {
+class AddnewCpsiActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_addnew_cpqi)
-
+        setContentView(R.layout.addnew_cpsi)
         setupUI()
-    }
 
+    }
     private fun setupUI() {
         val addNewBtn = findViewById<Button>(R.id.addNewBtn)
 
@@ -23,6 +22,6 @@ class AddNewActivity : AppCompatActivity() {
 
     private fun openCategoryActivity() {
 
-        startActivity(Intent(this, CategoriesActivity::class.java))
+        startActivity(Intent(this, CategoriesCpqiActivity::class.java))
     }
 }

@@ -13,11 +13,13 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:backgroundTint="@color/maroon"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="120dp"
+        android:backgroundTint="@color/maroon"
         android:background="@drawable/rectangle_button"
         android:textColor="@color/white"
-        android:text="Get Started" />
+        android:text="Get Started"
+
+        />
 
 </RelativeLayout>

@@ -10,10 +10,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Categories::class, Questions::class, Answers::class], version = 1)
+@Database(entities = [ Answers::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun categoryDao(): CategoriesDao
-    abstract fun questionDao(): QuestionsDao
+
     abstract fun answerDao(): AnswersDao
 
     companion object {
@@ -41,28 +40,12 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 "cpq_db"
             )
-            .addCallback(RoomDatabaseCallback(context.applicationContext, INSTANCE))
                 .build()
         }
     }
 
-    private class RoomDatabaseCallback(private val context: Context, instance: AppDatabase?) : RoomDatabase.Callback() {
-        @OptIn(DelicateCoroutinesApi::class)
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-            INSTANCE?.let { database ->
-                GlobalScope.launch(Dispatchers.IO) {
-                    prepopulateDatabase(context, database.categoryDao())
-                }
-            }
-        }
-
-        private suspend fun prepopulateDatabase(context: Context, categoryDao: CategoriesDao) {
-            val categories = listOf(
-                Categories(name = "Cherry Reception", iconPath = "path_to_icon1", auditName = "CPQI"),
-                Categories(name = "Pulping", iconPath = "path_to_icon2", auditName = "CPQS"),
-            )
-            categoryDao.insertAll(categories)
-        }
-    }
 }
+
+
+
+
