@@ -4,10 +4,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
         android:clipToOutline="true"
         android:outlineProvider="background"
         android:background="@drawable/border_radius"
@@ -16,7 +15,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="400dp"
             android:scaleType="centerCrop"
             android:src="@drawable/top"
             android:contentDescription="coffee_image" />
@@ -29,25 +28,24 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cardView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
         android:textColor="@color/maroon"
         android:text="Which audit are you inclined to undertake?"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         />
 
     <Button
         android:id="@+id/cpqiBtn"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:text="CPQI AUDIT"
         android:textColor="@color/maroon"
         android:layout_below="@id/textView"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:drawableStart="@drawable/baseline_assignment_turned_in_24"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:background="@drawable/border"
         android:textStyle="bold"
         />
@@ -55,14 +53,14 @@
     <Button
         android:id="@+id/cpsiBtn"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:text="CPSI AUDIT"
         android:textColor="@color/maroon"
         android:layout_below="@id/cpqiBtn"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:drawableStart="@drawable/baseline_balance_24"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:background="@drawable/border"
         android:textStyle="bold"
         />
@@ -71,12 +69,13 @@
         android:id="@+id/continueBtn"
         android:layout_width="190dp"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/cpsiBtn"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70dp"
-        android:background="@drawable/rectangle_button"
-        android:backgroundTint="@color/maroon"
+        android:layout_marginTop="50dp"
+        android:text="CONTINUE"
         android:textColor="@color/white"
-        android:text="CONTINUE" />
+        android:background="@drawable/rectangle_button"
+        android:backgroundTint="@color/maroon" />
+
 
 </RelativeLayout>

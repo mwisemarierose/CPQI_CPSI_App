@@ -1,0 +1,64 @@
+{
+  "audits": [
+    {
+      "id": 1,
+      "name": "CPQI Audit",
+      "categories": [
+        {
+          "id": 1,
+          "name": "Category 1",
+          "questions": [
+            {
+              "id": 1,
+              "text": "Question 1 for Category 1 in CPQI Audit"
+            },
+            {
+              "id": 2,
+              "text": "Question 2 for Category 1 in CPQI Audit"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Category 2",
+          "questions": [
+            {
+              "id": 3,
+              "text": "Question 1 for Category 2 in CPQI Audit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "CPSI Audit",
+      "categories": [
+        {
+          "id": 3,
+          "name": "Category 3",
+          "questions": [
+            {
+              "id": 4,
+              "text": "Question 1 for Category 3 in CPSI Audit"
+            },
+            {
+              "id": 5,
+              "text": "Question 2 for Category 3 in CPSI Audit"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Category 4",
+          "questions": [
+            {
+              "id": 6,
+              "text": "Question 1 for Category 4 in CPSI Audit"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

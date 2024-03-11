@@ -15,11 +15,9 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="120dp"
-        android:backgroundTint="@color/maroon"
         android:background="@drawable/rectangle_button"
         android:textColor="@color/white"
-        android:text="Get Started"
+        android:text="Get Started" />
 
-        />
 
 </RelativeLayout>

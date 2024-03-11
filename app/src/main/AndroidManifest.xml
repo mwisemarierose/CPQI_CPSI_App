@@ -19,9 +19,6 @@
             android:name=".AddnewCpsiActivity"
             android:exported="false" />
         <activity
-            android:name=".database.AddnewcpsiActivity"
-            android:exported="false" />
-        <activity
             android:name=".CategoriesActivity"
             android:exported="false" />
         <activity

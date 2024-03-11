@@ -51,6 +51,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    implementation ("androidx.fragment:fragment:1.3.0")
+
 
     val roomVersion = "2.6.1"
 
