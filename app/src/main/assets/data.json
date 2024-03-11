@@ -3,10 +3,12 @@
     {
       "id": 1,
       "name": "CPQI Audit",
+      "icon_path": "Icons/baseline_assignment_black_48dp.png",
       "categories": [
         {
           "id": 1,
           "name": "Cherry reception",
+          "icon_path": "Icons/baseline_control_point_24",
           "questions": [
             {
               "id": 1,
@@ -25,6 +27,7 @@
         {
           "id": 2,
           "name": "Pulping",
+          "icon_path": "Icons/baseline_filter_list_alt_24",
           "questions": [
             {
               "id": 1,
@@ -47,6 +50,7 @@
         {
           "id": 3,
           "name": "Fermentation and mucilage removal",
+          "icon_path": "Icons/baseline_playlist_remove_24",
           "questions": [
             {
               "id": 1,
@@ -61,6 +65,7 @@
         {
           "id": 4,
           "name": "Washing",
+          "icon_path": "Icons/baseline_playlist_remove_24",
           "questions": [
             {
               "id": 1,
@@ -75,6 +80,7 @@
         {
           "id": 5,
           "name": "Skin drying",
+          "icon_path": "Icons/baseline_table_restaurant_24",
           "questions": [
             {
               "id": 1,
@@ -85,6 +91,7 @@
         {
           "id": 6,
           "name": "Sun drying",
+          "icon_path": "Icons/baseline_wb_sunny_24",
           "questions": [
             {
               "id": 1,
@@ -107,6 +114,7 @@
         {
           "id": 7,
           "name": "Storage",
+          "icon_path": "Icons/baseline_propane_tank_24",
           "questions": [
             {
               "id": 1,
@@ -124,10 +132,12 @@
     {
       "id": 2,
       "name": "CPSI Audit",
+      "icon_path": "Icons/baseline_balance_24",
       "categories": [
         {
           "id": 1,
           "name": "Bookkeeping and Financial Management",
+          "icon_path": "Icons/baseline_menu_book_24",
           "questions": [
             {
               "id": 1,
@@ -142,6 +152,7 @@
         {
           "id": 2,
           "name": "Social and environmental standards",
+          "icon_path": "Icons/baseline_blinds_closed_24",
           "questions": [
             {
               "id": 1,
