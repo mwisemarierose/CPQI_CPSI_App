@@ -1,8 +1,5 @@
-package com.example.tnsapp.database
+package com.example.tnsapp.data
 import androidx.room.*
-import com.example.tnsapp.database.Answers
-import com.example.tnsapp.database.Categories
-import com.example.tnsapp.database.Questions
 
 
 @Dao

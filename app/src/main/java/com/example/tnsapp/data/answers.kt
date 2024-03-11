@@ -1,7 +1,6 @@
-package com.example.tnsapp.database
+package com.example.tnsapp.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "answers")
