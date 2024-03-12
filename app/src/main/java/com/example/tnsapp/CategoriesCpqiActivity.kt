@@ -42,7 +42,7 @@ class CategoriesCpqiActivity : AppCompatActivity() {
     }
 
     fun showCustomPopupMenu(view: View) {
-        val popupView = LayoutInflater.from(this).inflate(R.layout.popup_layout, null)
+        val popupView = LayoutInflater.from(this).inflate(R.layout.popup, null)
 
         val popupWindow = PopupWindow(
             popupView,
