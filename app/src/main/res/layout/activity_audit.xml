@@ -35,41 +35,17 @@
         android:textStyle="bold"
         />
 
-    <Button
-        android:id="@+id/cpqiBtn"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CPQI AUDIT"
-        android:textColor="@color/maroon"
-        android:layout_below="@id/textView"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:drawableStart="@drawable/baseline_assignment_turned_in_24"
-        android:background="@drawable/border"
-        android:textStyle="bold"
-        />
-
-    <Button
-        android:id="@+id/cpsiBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CPSI AUDIT"
-        android:textColor="@color/maroon"
-        android:layout_below="@id/cpqiBtn"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:drawableStart="@drawable/baseline_balance_24"
-        android:background="@drawable/border"
-        android:textStyle="bold"
-        />
+        android:layout_below="@id/textView" />
 
     <Button
         android:id="@+id/continueBtn"
         android:layout_width="190dp"
         android:layout_height="50dp"
-        android:layout_below="@id/cpsiBtn"
+        android:layout_below="@id/recyclerView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:text="CONTINUE"
