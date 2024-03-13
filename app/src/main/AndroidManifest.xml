@@ -16,19 +16,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TNSapp"
+        android:theme="@style/Base.Theme.TNSapp"
         tools:targetApi="31">
         <activity
             android:name=".PopupActivity"
             android:exported="false" />
         <activity
-            android:name=".CategoriesCpqiActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddnewCpsiActivity"
-            android:exported="false" />
-        <activity
             android:name=".CategoriesActivity"
+            android:theme="@style/Base.Theme.TNSapp.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".AddNewActivity"

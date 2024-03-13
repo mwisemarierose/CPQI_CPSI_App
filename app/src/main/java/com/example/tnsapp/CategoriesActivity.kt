@@ -2,8 +2,8 @@ package com.example.tnsapp
 
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,11 +25,18 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categories)
+
+//        remove action bar
+        supportActionBar?.hide()
+
+        val backIconBtn: ImageView = findViewById(R.id.backIcon)
+        val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
+
         val auditId = intent.getIntExtra("auditId", 0)
+        val auditName = intent.getStringExtra("auditName")
 
         val jsonString = readJsonFromAssets(this,"data.json")
         val items: List<Categories>? = jsonString?.let { categoryParser(it, auditId) }
-
 
         setupUI(items)
         val dateTextView = findViewById<TextView>(R.id.todaysDateTextView)
@@ -40,6 +47,12 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val formattedDate = dateFormat.format(currentDate)
 
         dateTextView.text = "Date: $formattedDate"
+
+        toolBarTitle.text = auditName
+
+        backIconBtn.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun setupUI(items: List<Categories>?) {
@@ -59,9 +72,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
-        val intent = Intent(this, PopupActivity::class.java)
-        intent.putExtra("catId", "$auditId.$position")
-        intent.putExtra("catName", adapter.items[position - 1].name)
-        startActivity(intent)
+        val dialog = PopupActivity(this, auditId, position, adapter.items[position - 1].name)
+        dialog.show()
     }
 }

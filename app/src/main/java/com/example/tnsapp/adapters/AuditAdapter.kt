@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.tnsapp.R
 import com.example.tnsapp.data.AuditCategories
 
-class AuditAdapter(private val items: List<AuditCategories>, private val listener: OnItemClickListener) : RecyclerView.Adapter<AuditAdapter.ViewHolder>() {
+class AuditAdapter(val items: List<AuditCategories>, private val listener: OnItemClickListener) : RecyclerView.Adapter<AuditAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val auditNameView: TextView = itemView.findViewById(R.id.auditName)
