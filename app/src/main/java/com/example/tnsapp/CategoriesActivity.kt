@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tnsapp.adapters.AuditAdapter
 import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.parsers.categoryParser
@@ -22,12 +21,13 @@ import java.util.Locale
 class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
-    private val auditId = intent.getIntExtra("auditId", 0)
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categories)
-        setupUI()
+        val auditId = intent.getIntExtra("auditId", 0)
+
+        setupUI(auditId)
         val dateTextView = findViewById<TextView>(R.id.todaysDateTextView)
 
         val currentDate = Date()
@@ -38,7 +38,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dateTextView.text = "Date: $formattedDate"
     }
 
-    private fun setupUI() {
+    private fun setupUI(auditId: Int) {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -52,6 +52,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     }
 
     override fun onItemClick(position: Int) {
+        val auditId = intent.getIntExtra("auditId", 0)
         val intent = Intent(this, PopupActivity::class.java)
         intent.putExtra("catId", "$auditId.$position")
         startActivity(intent)
