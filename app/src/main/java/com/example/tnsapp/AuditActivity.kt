@@ -45,8 +45,13 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
+        startActivityAfterClick(position)
+    }
+
+    private fun startActivityAfterClick(position: Int) {
         val intent = Intent(this, CategoriesActivity::class.java)
         intent.putExtra("auditId", position)
+        intent.putExtra("auditName", adapter.items[position - 1].name)
         startActivity(intent)
     }
 }
