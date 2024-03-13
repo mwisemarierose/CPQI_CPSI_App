@@ -1,5 +1,6 @@
 package com.example.tnsapp.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.tnsapp.R
 import com.example.tnsapp.data.Categories
 
-class CategoryAdapter(private val items: List<Categories>, private val listener: CategoryAdapter.OnItemClickListener) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(val items: List<Categories>, private val listener: CategoryAdapter.OnItemClickListener) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     inner class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val categoryNameView: TextView = itemView.findViewById(R.id.categoryName)
         val categoryIconView: ImageView = itemView.findViewById(R.id.imageView)
@@ -45,6 +46,7 @@ class CategoryAdapter(private val items: List<Categories>, private val listener:
         return items.size
     }
 
+    @SuppressLint("DiscouragedApi")
     private fun loadImageFromUrl(url: String, iconView: ImageView) {
         val resourceId = iconView.context.resources.getIdentifier(url, "drawable", iconView.context.packageName)
         Glide.with(iconView.context)

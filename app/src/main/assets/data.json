@@ -3,126 +3,126 @@
     {
       "id": 1,
       "name": "CPQI Audit",
-      "icon_path": "assets/Icons/baseline_assignment_black_48dp.png",
+      "icon_path": "baseline_assignment_turned_in_24",
       "categories": [
         {
           "id": 1,
           "name": "Cherry reception",
-          "icon_path": "assets/Icons/baseline_control_point_24.xml",
+          "icon_path": "baseline_control_point_24",
           "questions": [
             {
               "id": 1,
-              "text": "Look in the hopper and select 50 cherries at random. Are at least 90% (45 cherries) within the correct ripeness scale?"
+              "text": "Look in the hopper and select 50 cherries at random. Are at\nleast 90% (45 cherries) within the correct ripeness scale?"
             },
             {
               "id": 2,
-              "text": "Look at a farmer weighing his cherry. Does the scale start at zero and is the name (or ID) of the farmer, date, volume and price filled out on the receipt?"
+              "text": "Look at a farmer weighing his cherry. Does the scale start at\nzero and is the name (or ID) of the farmer, date, volume and\nprice filled out on the receipt?"
             },
             {
               "id": 3,
-              "text": "Look at the cherry before it is fed into the pulp hopper. Are they sorted by color or density before going into the pulping machine?"
+              "text": "Look at the cherry before it is fed into the pulp hopper. Are\nthey sorted by color or density before going into the pulping\nmachine?"
             }
           ]
         },
         {
           "id": 2,
           "name": "Pulping",
-          "icon_path": "assets/Icons/baseline_filter_list_alt_24",
+          "icon_path": "baseline_filter_list_alt_24",
           "questions": [
             {
               "id": 1,
-              "text": "Cherry should be processed within 8 hours of harvesting.Select a few farmers and ask when was the cherry harvested.Was it less than 8 hours ago?"
+              "text": "Cherry should be processed within 8 hours of harvesting.\nSelect a few farmers and ask when was the cherry harvested.\nWas it less than 8 hours ago?"
             },
             {
               "id": 2,
-              "text": "Look at the water source. Is all water used visibly clean with no debris and no ponds leaking or overflowing?"
+              "text": "Look at the water source. Is all water used visibly clean with\nno debris and no ponds leaking or overflowing?"
             },
             {
               "id": 3,
-              "text": "Look at the pulping machine. Is it working well, adjusted correctly and clean with no leftover debris?"
+              "text": "Look at the pulping machine. Is it working well, adjusted\ncorrectly and clean with no leftover debris?"
             },
             {
               "id": 4,
-              "text": "Look in the fermentation tank and select 50 beans at random.Are no more than 10 beans cracked, un-pulped or damaged?"
+              "text": "Look in the fermentation tank and select 50 beans at random.\nAre no more than 10 beans cracked, un-pulped or damaged?"
             }
           ]
         },
         {
           "id": 3,
           "name": "Fermentation and mucilage removal",
-          "icon_path": "assets/Icons/baseline_playlist_remove_24",
+          "icon_path": "baseline_playlist_remove_24",
           "questions": [
             {
               "id": 1,
-              "text": "Look for old cherry pulp and parchment in the fermentation tank. Is the fermentation tank appropriately cleaned after the removal of the last batch?"
+              "text": "Look for old cherry pulp and parchment in the fermentation\ntank. Is the fermentation tank appropriately cleaned after the\nremoval of the last batch?"
             },
             {
               "id": 2,
-              "text": "Look at the fermentation area. Is someone checking the almost-fermented wet parchment every hour?"
+              "text": "Look at the fermentation area. Is someone checking the almost-\nfermented wet parchment every hour?"
             }
           ]
         },
         {
           "id": 4,
           "name": "Washing",
-          "icon_path": "assets/Icons/baseline_playlist_remove_24",
+          "icon_path": "baseline_playlist_remove_24",
           "questions": [
             {
               "id": 1,
-              "text": "Look for old cherry pulp and parchment in the washing channels. Are the washing channels appropriately cleaned after the removal of the last batch?"
+              "text": "Look for old cherry pulp and parchment in the washing\nchannels. Are the washing channels appropriately cleaned after\nthe removal of the last batch?"
             },
             {
               "id": 2,
-              "text": "Look at the parchment at the end of grading channel or just transferred to skin drying table. Is there any mucilage left on the beans?"
+              "text": "Look at the parchment at the end of grading channel or just\ntransferred to skin drying table. Is there any mucilage left on\nthe beans?"
             }
           ]
         },
         {
           "id": 5,
           "name": "Skin drying",
-          "icon_path": "assets/Icons/baseline_table_restaurant_24",
+          "icon_path": "baseline_table_restaurant_24",
           "questions": [
             {
               "id": 1,
-              "text": "Look at the parchment coffee on the skin drying and drying tables. Are the beans being sorted (removing defective beans),rotated (turning the coffee) and labeled by grade?"
+              "text": "Look at the parchment coffee on the skin drying and drying\ntables. Are the beans being sorted (removing defective beans),\nrotated (turning the coffee) and labeled by grade?"
             }
           ]
         },
         {
           "id": 6,
           "name": "Sun drying",
-          "icon_path": "assets/Icons/baseline_wb_sunny_24",
+          "icon_path": "baseline_wb_sunny_24",
           "questions": [
             {
               "id": 1,
-              "text": "Look at the parchment coffee on the drying tables. Are the beans less than 5cm deep (approximately 1/2 your index finger)?"
+              "text": "Look at the parchment coffee on the drying tables. Are the\nbeans less than 5cm deep (approximately 1/2 your index\nfinger)?"
             },
             {
               "id": 2,
-              "text": "Look at the drying tables. Are most tables at the washing station flat with no sagging?"
+              "text": "Look at the drying tables. Are most tables at the washing\nstation flat with no sagging?"
             },
             {
               "id": 3,
-              "text": "Look if all drying tables have plastic sheets (nylex) and shade nets. Is the parchment covered with shade net during hottest part of the day (11am-2pm) and with plastic sheet (nylex) during rain and at night?"
+              "text": "Look if all drying tables have plastic sheets (nylex) and shade\nnets. Is the parchment covered with shade net during hottest\npart of the day (11am-2pm) and with plastic sheet (nylex)\nduring rain and at night?"
             },
             {
               "id": 4,
-              "text": "Look at a sample of parchment in the coffee store and check the moisture level. Is it at 10-12% moisture?"
+              "text": "Look at a sample of parchment in the coffee store and check\nthe moisture level. Is it at 10-12% moisture?"
             }
           ]
         },
         {
           "id": 7,
           "name": "Storage",
-          "icon_path": "assets/Icons/baseline_propane_tank_24",
+          "icon_path": "baseline_propane_tank_24",
           "questions": [
             {
               "id": 1,
-              "text": "Look at the parchment store. Is the coffee store dry, clean and free of pests? Is the coffee elevated off of the floor and well ventilated?"
+              "text": "Look at the parchment store. Is the coffee store dry, clean and\nfree of pests? Is the coffee elevated off of the floor and well\nventilated?"
             },
             {
               "id": 2,
-              "text": "Look at the parchment store register and labels. Is the coffee sorted and labeled by grade?"
+              "text": "Look at the parchment store register and labels. Is the coffee\nsorted and labeled by grade?"
             }
           ]
         }
@@ -132,47 +132,47 @@
     {
       "id": 2,
       "name": "CPSI Audit",
-      "icon_path": "assets/Icons/baseline_balance_24",
+      "icon_path": "baseline_balance_24",
       "categories": [
         {
           "id": 1,
           "name": "Bookkeeping and Financial Management",
-          "icon_path": "assets/Icons/baseline_menu_book_24",
+          "icon_path": "baseline_menu_book_24",
           "questions": [
             {
               "id": 1,
-              "text": "All coffee washing station income and expenses are recorded in designated books (paper or digital) and receipts issued for each(preferably a carbon copy kept for filing).Check whether a proper accounting system is in place and being used"
+              "text": "All coffee washing station income and expenses are recorded in\ndesignated books (paper or digital) and receipts issued for each\n(preferably a carbon copy kept for filing).\nCheck whether a proper accounting system is in place and being used"
             },
             {
               "id": 2,
-              "text": "Cash flow is managed effectively so that the coffee washing station does not need to stop cherry purchases and any on credit delivered cherries are paid out to farmers within the agreed period. Equally, coffee washing station workers are paid within the agreed period.Check whether any collection sites were forced to stopped buying over lack of liquidity and whether cherry purchases on credit and workers’wages are paid within agreed upon"
+              "text": "Cash flow is managed effectively so that the coffee washing station does\nnot need to stop cherry purchases and any on credit delivered cherries\nare paid out to farmers within the agreed period. Equally, coffee washing\nstation workers are paid within the agreed period.\nCheck whether any collection sites were forced to stopped buying over\nlack of liquidity and whether cherry purchases on credit and workers’\nwages are paid within agreed upon"
             }
           ]
         },
         {
           "id": 2,
           "name": "Social and environmental standards",
-          "icon_path": "assets/Icons/baseline_blinds_closed_24",
+          "icon_path": "baseline_blinds_closed_24",
           "questions": [
             {
               "id": 1,
-              "text": "On coffee washing station site no waste water is emitted to natural streams or ground. The channels transporting the water or evaporation ponds or wetland do not overflow.Check for signs of recent overflow around channels and ponds"
+              "text": "On coffee washing station site no waste water is emitted to natural streams\nor ground. The channels transporting the water or evaporation ponds or\nwetland do not overflow.\nCheck for signs of recent overflow around channels and ponds"
             },
             {
               "id": 2,
-              "text": "There is no visible sign of unnecessary water spillage Check for any unnecessary spillage (eg. running taps/broken pipes);specifically check water tank, pulping, fermentation and grading channel areas."
+              "text": "There is no visible sign of unnecessary water spillage\nCheck for any unnecessary spillage (eg. running taps/broken pipes);\nspecifically check water tank, pulping, fermentation and grading channel\nareas."
             },
             {
               "id": 3,
-              "text": "Coffee pulp separated from wastewater and stored seperately Check if there is a system to separate pulp from wastewater in place (eg.pulphopper or filter in channel)"
+              "text": "Coffee pulp separated from wastewater and stored seperately\nCheck if there is a system to separate pulp from wastewater in place (eg.\npulphopper or filter in channel)"
             },
             {
               "id": 4,
-              "text": "The moving parts of the pulper are shielded off by guards; the evaporation ponds are fenced off; no sharp materials are lying around; and workers are not exposed to any danger.Check machine area"
+              "text": "The moving parts of the pulper are shielded off by guards; the evaporation\nponds are fenced off; no sharp materials are lying around; and workers are\nnot exposed to any danger.\nCheck machine area"
             },
             {
               "id": 5,
-              "text": "Workers on site are working under good working conditions meaning they have access to potable water as well as sanitary and hand-washing facilities Ask workers about working conditions and check whether toilet,handwashing and drinking water is available"
+              "text": "Workers on site are working under good working conditions meaning\nthey have access to potable water as well as sanitary and hand-washing\nfacilities\nAsk workers about working conditions and check whether toilet,\nhandwashing and drinking water is available"
             },
             {
               "id": 6,

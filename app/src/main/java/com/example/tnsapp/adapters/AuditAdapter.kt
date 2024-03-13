@@ -1,9 +1,9 @@
 package com.example.tnsapp.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -48,9 +48,12 @@ class AuditAdapter(private val items: List<AuditCategories>, private val listene
         return items.size
     }
 
+    @SuppressLint("DiscouragedApi")
     private fun loadImageFromUrl(url: String, iconView: ImageView) {
         Glide.with(iconView.context)
-            .load(url)
+            .load(
+                iconView.context.resources.getIdentifier(url, "drawable", iconView.context.packageName)
+            )
             .into(iconView)
     }
 }

@@ -27,7 +27,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         setContentView(R.layout.activity_categories)
         val auditId = intent.getIntExtra("auditId", 0)
 
-        setupUI(auditId)
+        val jsonString = readJsonFromAssets(this,"data.json")
+        val items: List<Categories>? = jsonString?.let { categoryParser(it, auditId) }
+
+
+        setupUI(items)
         val dateTextView = findViewById<TextView>(R.id.todaysDateTextView)
 
         val currentDate = Date()
@@ -38,13 +42,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dateTextView.text = "Date: $formattedDate"
     }
 
-    private fun setupUI(auditId: Int) {
+    private fun setupUI(items: List<Categories>?) {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        val jsonString = readJsonFromAssets(this,"data.json")
-        val items: List<Categories>? = jsonString?.let { categoryParser(it, auditId) }
-
 
         adapter = items?.let { CategoryAdapter(it, this) }!!
         recyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -52,9 +52,14 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     }
 
     override fun onItemClick(position: Int) {
+        startActivityAfterClick(position)
+    }
+
+    private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
         val intent = Intent(this, PopupActivity::class.java)
         intent.putExtra("catId", "$auditId.$position")
+        intent.putExtra("catName", adapter.items[position - 1].name)
         startActivity(intent)
     }
 }
