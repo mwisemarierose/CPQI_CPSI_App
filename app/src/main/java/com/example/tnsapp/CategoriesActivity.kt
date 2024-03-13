@@ -43,6 +43,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     }
 
     private fun setupUI(items: List<Categories>?) {
+
+
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 

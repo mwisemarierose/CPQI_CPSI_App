@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="180dp"
+    android:layout_width="150dp"
     android:layout_height="wrap_content"
     app:cardCornerRadius="15dp"
     android:layout_columnWeight="1"
