@@ -5,10 +5,10 @@ import org.json.JSONObject
 
 fun questionParser(jsonString: String, parentId: Int, catId: Int): List<Questions> {
     val items = mutableListOf<Questions>()
-    val catJsonArray = JSONObject(JSONObject(jsonString).getJSONArray("audits")[parentId - 1].toString())
-        .getJSONArray("categories")
+    val catJsonArray =
+        JSONObject(JSONObject(jsonString).getJSONArray("audits")[parentId - 1].toString())
+            .getJSONArray("categories")
     val qJsonArray = JSONObject(catJsonArray[catId - 1].toString()).getJSONArray("questions")
-
     for (i in 0 until qJsonArray.length()) {
         val itemJson: JSONObject = qJsonArray.getJSONObject(i)
         val id = itemJson.getLong("id")
@@ -20,6 +20,5 @@ fun questionParser(jsonString: String, parentId: Int, catId: Int): List<Question
     }
 
     return items
+
 }
-
-

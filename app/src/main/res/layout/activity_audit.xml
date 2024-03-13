@@ -29,9 +29,10 @@
         android:layout_below="@id/auditCardView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
         android:textColor="@color/maroon"
         android:text="Which audit are you inclined to undertake?"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         />
 
