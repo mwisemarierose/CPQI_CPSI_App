@@ -12,6 +12,7 @@ import com.example.tnsapp.data.Questions
 
 class QuestionAdapter (private val items: List<Questions>) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
     inner class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
+        val questionNumberView : TextView = itemView.findViewById(R.id.popUpTextNumbering)
         val questionNameView: TextView = itemView.findViewById(R.id.popUpText)
     }
 
@@ -26,6 +27,7 @@ class QuestionAdapter (private val items: List<Questions>) : RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = items[position]
+        holder.questionNumberView.text = position.plus(1).toString()
         holder.questionNameView.text = currentItem.qName
     }
 }

@@ -6,13 +6,30 @@
     android:orientation="vertical"
     android:layout_margin="15dp">
 
-    <TextView
-        android:id="@+id/popUpText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1. All coffee washing station income and expenses are recorded in."
-        android:textSize="14sp"
-        android:textColor="@android:color/black" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/popUpTextNumbering"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:background="@drawable/border_radius"
+            android:layout_marginEnd="10dp"
+            android:padding="15dp" />
+        <TextView
+            android:id="@+id/popUpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All coffee washing station income and expenses are recorded in."
+            android:layout_toEndOf="@id/popUpTextNumbering"
+            android:layout_centerInParent="true"
+            android:textSize="14sp"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
 
     <!-- Button group for Question 1 -->
     <LinearLayout
