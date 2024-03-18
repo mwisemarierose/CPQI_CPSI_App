@@ -1,31 +1,30 @@
 <resources>
     <string name="app_name">TNSapp</string>
-    <string name="get_started">Get Started</string>
+    <string name="get_started">TANGIRA</string>
     <string name="coffee_image">coffee_image</string>
-    <string name="which_audit_are_you_inclined_to_undertake">Which audit are you inclined to undertake?</string>
-    <string name="continue_txt">CONTINUE</string>
+    <string name="which_audit_are_you_inclined_to_undertake">Nirihe genzura ushaka gukora?</string>
+    <string name="continue_txt">KOMEZA</string>
     <string name="back_icon">back icon</string>
     <string name="audit_text">audit text</string>
     <string name="menu_icon">menu icon</string>
-    <string name="add_new">Add New</string>
-    <string name="date">Date</string>
-    <string name="cws_name">CWS Name</string>
+    <string name="add_new">Kora irindi</string>
+    <string name="date">Itariki</string>
+    <string name="cws_name">Izina rya station</string>
     <string name="score">Score</string>
     <string name="no_records">no records</string>
     <string name="name_txt">Name</string>
-    <string name="date_lbl">Date:</string>
+    <string name="date_lbl">Itariki:</string>
     <string name="category_name">Cherry reception</string>
-    <string name="save_btn">Save</string>
+    <string name="save_btn">Bika</string>
     <string name="answer_txt">All coffee washing station income and expenses are recorded in.</string>
-    <string name="yes_txt">Yes</string>
-    <string name="no_txt">No</string>
-    <string name="ignore">ignore</string>
+    <string name="yes_txt">Yego</string>
+    <string name="no_txt">Oya</string>
     <string name="audit_icon">Audit Icon</string>
     <string name="category_icon">category icon</string>
     <string name="import_csv">Import CSV</string>
     <string name="export_csv">Export CSV</string>
     <string name="submitAll_txt" >Submit All</string>
-
+    <string name="ignore">Irengagize</string>
     <string-array name="languages">
         <item>English</item>
         <item>Kinyarwanda</item>

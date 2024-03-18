@@ -13,6 +13,7 @@ import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.parsers.readJsonFromAssets
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -21,6 +22,7 @@ import java.util.Locale
 class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
+    private lateinit var audit: String
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +35,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
 
         val auditId = intent.getIntExtra("auditId", 0)
-        val auditName = intent.getStringExtra("auditName")
-
-        val jsonString = readJsonFromAssets(this,"data.json")
-        val items: List<Categories>? = jsonString?.let { categoryParser(it, auditId) }
+        audit = intent.getStringExtra("audit").toString()
+        val items: List<Categories> = categoryParser(audit, auditId)
 
         setupUI(items)
         val dateTextView = findViewById<TextView>(R.id.todaysDateTextView)
@@ -48,7 +48,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         dateTextView.text = "Date: $formattedDate"
 
-        toolBarTitle.text = auditName
+        toolBarTitle.text = "auditName"
 
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -56,8 +56,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     }
 
     private fun setupUI(items: List<Categories>?) {
-
-
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -72,7 +70,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
-        val dialog = PopupActivity(this, auditId, position, adapter.items[position - 1].name)
+        val dialog = PopupActivity(this, auditId, audit, position, adapter.items[position - 1].name)
         dialog.show()
     }
 }

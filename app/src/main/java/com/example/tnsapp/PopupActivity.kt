@@ -12,7 +12,7 @@ import com.example.tnsapp.adapters.QuestionAdapter
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.parsers.questionParser
 
-class PopupActivity(context: Context, private val auditId: Int, private val catId: Int, private val catName: String) : Dialog(context) {
+class PopupActivity(context: Context, private val auditId: Int, private val audit: String, private val catId: Int, private val catName: String) : Dialog(context) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: QuestionAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +27,10 @@ class PopupActivity(context: Context, private val auditId: Int, private val catI
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        val jsonString = readJsonFromAssets(context,"data.json")
-        val items: List<Questions>? = jsonString?.let { questionParser(it, auditId, catId) }
+        val items: List<Questions> = questionParser(audit, auditId, catId)
 
         popupTitle.text = catName
-        adapter = items?.let { QuestionAdapter(it) }!!
+        adapter = QuestionAdapter(items)
         recyclerView.adapter = adapter
     }
 }

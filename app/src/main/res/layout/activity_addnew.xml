@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,27 +7,25 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/maroon"
-        >
+        android:background="@color/maroon">
 
-        <!-- Back Arrow Icon -->
-<!--        <ImageView-->
-<!--            android:id="@+id/backIcon"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/baseline_arrow_back_ios_24"-->
-<!--            android:padding="8dp"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            />-->
+        <ImageView
+            android:id="@+id/backIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_arrow_back_ios_24"
+            android:padding="8dp"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/back_icon" />
 
         <!-- Title Text -->
         <TextView
             android:id="@+id/toolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CPQI Audit"
+            android:text="@string/audit_text"
             android:textSize="27sp"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"/>
 
@@ -41,7 +38,9 @@
             android:padding="8dp"
             android:layout_gravity="end"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:onClick="showDropdownMenu"
+            android:contentDescription="@string/menu_icon" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -50,7 +49,7 @@
         android:id="@+id/addNewBtn"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:text="Add New"
+        android:text="@string/add_new"
         android:layout_below="@id/toolbar"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
@@ -86,10 +85,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Date"
+                android:text="@string/date"
                 android:textSize="25sp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 />
 
             <!-- CWSName Column -->
@@ -97,8 +96,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="CWS Name"
-                android:textSize="25dp"
+                android:text="@string/cws_name"
+                android:textSize="25sp"
                 android:layout_marginEnd="10dp"
                  />
 
@@ -107,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Score"
+                android:text="@string/score"
                 android:textSize="25sp"
                 android:layout_marginEnd="10dp" />
                 </LinearLayout>
@@ -116,17 +115,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="no records"
+                android:text="@string/no_records"
                 android:layout_marginTop="100dp"
                 android:textAlignment="center"
                 android:textStyle="italic"
-                android:layout_gravity="center_horizontal"
-                >
+                android:layout_gravity="center_horizontal">
 
             </TextView>
         </LinearLayout>
-
-
-
-
 </RelativeLayout>

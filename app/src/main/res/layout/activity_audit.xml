@@ -8,16 +8,35 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:outlineProvider="background"
-        android:background="@drawable/border_radius"
-        >
+        android:background="@drawable/border_radius">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/top"
-            android:contentDescription="coffee_image" />
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/top"
+                android:contentDescription="@string/coffee_image"
+                 />
+
+
+            <Spinner
+                android:id="@+id/languageSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="20dp"
+                android:layout_alignParentEnd="true"
+                android:theme="@style/SpinnerTheme"
+                android:entries="@array/languages"
+                />
+
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 
@@ -28,29 +47,29 @@
         android:layout_below="@id/auditCardView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
         android:textColor="@color/maroon"
-        android:text="Which audit are you inclined to undertake?"
+        android:text="@string/which_audit_are_you_inclined_to_undertake"
         android:textSize="24sp"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:layout_below="@id/textView" />
 
-    <Button
-        android:id="@+id/continueBtn"
-        android:layout_width="190dp"
-        android:layout_height="52dp"
-        android:layout_below="@id/recyclerView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="CONTINUE"
-        android:textColor="@color/white"
-        android:background="@drawable/rectangle_button"
-        android:backgroundTint="@color/maroon" />
+<!--    <Button-->
+<!--        android:id="@+id/continueBtn"-->
+<!--        android:layout_width="190dp"-->
+<!--        android:layout_height="52dp"-->
+<!--        android:layout_below="@id/recyclerView"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:text="@string/continue_txt"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:background="@drawable/rectangle_button"-->
+<!--        android:backgroundTint="@color/maroon" />-->
 
 </RelativeLayout>

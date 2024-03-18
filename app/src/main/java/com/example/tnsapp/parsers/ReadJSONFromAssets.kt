@@ -5,8 +5,8 @@ import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
 
-fun readJsonFromAssets(context: Context, fileName: String): String? {
-    var json: String? = null
+fun readJsonFromAssets(context: Context, fileName: String): String {
+    var json: String = ""
     try {
         val inputStream: InputStream = context.assets.open(fileName)
         val size: Int = inputStream.available()

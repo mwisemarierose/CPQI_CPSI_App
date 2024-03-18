@@ -24,7 +24,7 @@
             android:id="@+id/popUpText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All coffee washing station income and expenses are recorded in."
+            android:text="@string/answer_txt"
             android:layout_toEndOf="@id/popUpTextNumbering"
             android:layout_centerInParent="true"
             android:textSize="14sp"
@@ -33,31 +33,46 @@
 
     <!-- Button group for Question 1 -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center">
 
         <Button
             android:id="@+id/yesButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Yes"
+            android:text="@string/yes_txt"
             android:textSize="18sp"
             android:textColor="@android:color/black"
-            android:background="@color/green"
-            android:layout_marginEnd="8dp"/>
+            android:background="@drawable/border_green"
+            android:layout_marginEnd="8dp"
+            style="?android:attr/buttonBarButtonStyle" />
+
 
         <Button
             android:id="@+id/noButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="No"
+            android:text="@string/no_txt"
             android:textSize="18sp"
-            android:textColor="@android:color/white"
-            android:background="@color/maroon"
-            android:layout_marginStart="8dp"/>
+            android:textColor="@android:color/black"
+            android:background="@drawable/border_maroon"
+            android:layout_marginStart="8dp"
+            style="?android:attr/buttonBarButtonStyle" />
+        <Button
+            android:id="@+id/ignoreButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/ignore"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/border_grey"
+            android:layout_marginStart="14dp"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 </LinearLayout>
