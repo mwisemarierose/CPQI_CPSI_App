@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Window
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tnsapp.parsers.readJsonFromAssets
@@ -22,7 +23,10 @@ class PopupActivity(context: Context, private val auditId: Int, private val audi
         setupUI()
     }
 
+
+
     private fun setupUI() {
+        val closeIcon: ImageView = findViewById(R.id.closeIcon)
         val popupTitle: TextView = findViewById(R.id.popUpTitle)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -32,5 +36,9 @@ class PopupActivity(context: Context, private val auditId: Int, private val audi
         popupTitle.text = catName
         adapter = QuestionAdapter(items)
         recyclerView.adapter = adapter
+
+        closeIcon.setOnClickListener {
+            dismiss()
+        }
     }
 }

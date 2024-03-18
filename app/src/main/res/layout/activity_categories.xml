@@ -28,16 +28,6 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"/>
 
-<!--        <ImageView-->
-<!--            android:id="@+id/menuIcon"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/baseline_more_horiz_24"-->
-<!--            android:padding="8dp"-->
-<!--            android:layout_gravity="end"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:contentDescription="menu_icon" />-->
 
     </androidx.appcompat.widget.Toolbar>
     <ScrollView
