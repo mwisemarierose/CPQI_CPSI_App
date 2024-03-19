@@ -14,10 +14,12 @@ import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.parsers.categoryParser
+import org.json.JSONArray
 import org.json.JSONObject
 
 
 class AddNewActivity : AppCompatActivity() {
+    private var auditName = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addnew)
@@ -26,17 +28,17 @@ class AddNewActivity : AppCompatActivity() {
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         val audit = intent.getStringExtra("audit")
-        val items: List<Categories> = categoryParser(audit!!, auditId)
-        setupUI(items, audit.toString())
-        toolBarTitle.text = "auditName"
+        val parsedAudit = JSONObject(JSONObject(audit!!).getJSONArray("audits")[auditId - 1].toString())
+        setupUI(audit.toString())
+        toolBarTitle.text = parsedAudit["name"].toString()
+        auditName = parsedAudit["name"].toString()
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
     }
 
-    private fun setupUI(items: List<Categories>?, audit: String) {
+    private fun setupUI(audit: String) {
         val auditId = intent.getIntExtra("auditId", 0)
-        val auditName = intent.getStringExtra("auditName")
         val addNewBtn = findViewById<Button>(R.id.addNewBtn)
 
         addNewBtn.setOnClickListener {
@@ -67,6 +69,7 @@ class AddNewActivity : AppCompatActivity() {
         val intent = Intent(this, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)
         intent.putExtra("audit", audit)
+        intent.putExtra("auditName", auditName)
         startActivity(intent)
     }
 }

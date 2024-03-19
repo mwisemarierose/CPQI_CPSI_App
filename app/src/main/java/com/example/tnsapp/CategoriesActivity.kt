@@ -48,7 +48,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         dateTextView.text = "Date: $formattedDate"
 
-        toolBarTitle.text = "auditName"
+        toolBarTitle.text = intent.getStringExtra("auditName")
 
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()

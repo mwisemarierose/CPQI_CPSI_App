@@ -20,6 +20,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        resourceConfigurations += "en"
+        resourceConfigurations += "rw"
     }
 
     buildTypes {
@@ -54,6 +57,7 @@ dependencies {
     implementation ("androidx.fragment:fragment-ktx:1.6.2")
     implementation ("com.github.bumptech.glide:glide:4.14.2")
     implementation ("com.google.code.gson:gson:2.10.1")
+    implementation ("com.github.skydoves:powerspinner:1.2.4")
 
     val roomVersion = "2.6.1"
 

@@ -18,7 +18,7 @@
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_height="300dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/top"
                 android:contentDescription="@string/coffee_image"
@@ -28,11 +28,10 @@
             <Spinner
                 android:id="@+id/languageSpinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="20dp"
                 android:layout_alignParentEnd="true"
-                android:theme="@style/SpinnerTheme"
                 android:entries="@array/languages"
                 />
 
@@ -57,7 +56,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:layout_below="@id/textView" />
 
 <!--    <Button-->

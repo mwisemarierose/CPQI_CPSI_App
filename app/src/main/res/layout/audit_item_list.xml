@@ -27,7 +27,7 @@
         android:text="@string/audit_text"
         android:textColor="@color/maroon"
         android:textSize="22sp"
-        android:layout_marginStart="76dp"
+        android:layout_marginStart="40dp"
         />
 
     </LinearLayout>
