@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Window
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,38 +34,16 @@ class PopupActivity(
     private fun setupUI() {
         val closeIcon: ImageView = findViewById(R.id.closeIcon)
         val popupTitle: TextView = findViewById(R.id.popUpTitle)
-//        val yesBtn: Button = findViewById(R.id.yesButton)
-//        val ignoreBtn: Button = findViewById(R.id.ignoreButton)
-//        val noBtn: Button = findViewById(R.id.noButton)
-//        val answerDetails: Array<Answers> = arrayOf(Answers(0, "responderName", Answers.IGNORE, 0, "cwsName"))
+        val answerDetails: Array<Answers> = arrayOf(Answers(0, respondent, Answers.IGNORE, 0, cwsName))
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         val items: List<Questions> = questionParser(audit, auditId, catId)
 
-
-//        loop through the items and add the answers to the answerDetails array according to button clicked
-//        yesBtn.setOnClickListener {
-//            for (i in items.indices) {
-//                answerDetails[i] = Answers(0, respondent, Answers.YES, items[i].id, cwsName)
-//            }
-//        }
-//
-//        noBtn.setOnClickListener {
-//            for (i in items.indices) {
-//                answerDetails[i] = Answers(0, respondent, Answers.NO, items[i].id, cwsName)
-//            }
-//        }
-//
-//        ignoreBtn.setOnClickListener {
-//            for (i in items.indices) {
-//                answerDetails[i] = Answers(0, respondent, Answers.IGNORE, items[i].id, cwsName)
-//            }
-//        }
-
         popupTitle.text = catName
-        adapter = QuestionAdapter(items)
+        adapter = QuestionAdapter(items, answerDetails)
+
         recyclerView.adapter = adapter
 
         closeIcon.setOnClickListener {

@@ -52,9 +52,6 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
 
                 if (intentLang != selectedLanguage && selectedLanguage == "English") {
                     if (intentLang != null) {
-                        println(selectedLanguage)
-                        println("-----")
-                        println(intentLang)
                         changeLanguage(selectedLanguage)
                     }
                 } else {
