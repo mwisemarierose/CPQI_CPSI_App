@@ -21,7 +21,6 @@ class QuestionAdapter(private val items: List<Questions>, private val answerDeta
                 }
             }
 
-
             noBtn.setOnClickListener {
                 for (i in items.indices) {
                     answerDetails[i] = Answers(0, answerDetails[i].responderName, Answers.NO, items[i].id, answerDetails[i].cwsName)
