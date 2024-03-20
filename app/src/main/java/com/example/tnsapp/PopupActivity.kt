@@ -35,10 +35,10 @@ class PopupActivity(
     private fun setupUI() {
         val closeIcon: ImageView = findViewById(R.id.closeIcon)
         val popupTitle: TextView = findViewById(R.id.popUpTitle)
-        val yesBtn: Button = findViewById(R.id.yesButton)
-        val ignoreBtn: Button = findViewById(R.id.ignoreButton)
-        val noBtn: Button = findViewById(R.id.noButton)
-        val answerDetails: Array<Answers> = arrayOf(Answers(0, "responderName", Answers.IGNORE, 0, "cwsName"))
+//        val yesBtn: Button = findViewById(R.id.yesButton)
+//        val ignoreBtn: Button = findViewById(R.id.ignoreButton)
+//        val noBtn: Button = findViewById(R.id.noButton)
+//        val answerDetails: Array<Answers> = arrayOf(Answers(0, "responderName", Answers.IGNORE, 0, "cwsName"))
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)

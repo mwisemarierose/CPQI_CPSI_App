@@ -24,14 +24,13 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AuditAdapter
     private lateinit var jsonData: String
-    private var isFirstSelection = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audit)
         supportActionBar?.hide()
 
-        setupUI("")
+        intent.getStringExtra("language")?.let { setupUI(it) }
 
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
         setupLanguageSpinner(languageSpinner)
@@ -49,20 +48,18 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
                 val selectedLanguage = parent?.getItemAtPosition(position).toString()
+                val intentLang = intent.getStringExtra("language")
 
-                if (!isFirstSelection) {
-                    if (selectedLanguage == "English") {
-                        changeLanguage("en")
-                    } else {
-                        changeLanguage("rw")
+                if (intentLang != selectedLanguage && selectedLanguage == "English") {
+                    if (intentLang != null) {
+                        println(selectedLanguage)
+                        println("-----")
+                        println(intentLang)
+                        changeLanguage(selectedLanguage)
                     }
-                    setupUI(selectedLanguage)
+                } else {
+                    changeLanguage(if (selectedLanguage == "English" || selectedLanguage == "en") "en" else "rw")
                 }
-                else {
-                    setupUI(intent.getStringExtra("language") ?: "English")
-                    isFirstSelection = false
-                }
-
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -72,10 +69,10 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
     }
 
     private fun changeLanguage(languageCode: String) {
-        println(languageCode)
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
         // Save the selected language in SharedPreferences or any other way you prefer
         saveLanguagePreference(languageCode)
+        setupUI(languageCode)
     }
 
     private fun saveLanguagePreference(language: String) {
@@ -91,18 +88,14 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
 
         // Use "en" as default language if language extra is missing
-        val language = if (selectedLanguage == "") intent.getStringExtra("language") ?: "English" else selectedLanguage
-        val result = if (language == "English" || language == "en") {
+        val result = if (selectedLanguage == "English" || selectedLanguage == "en") {
             "data_en.json"
         } else {
             "data_rw.json"
         }
 
-        val selectedLang = when {
-            selectedLanguage.isEmpty() && (language == "English" || language == "en") -> 0
-            selectedLanguage == "English" -> 0
-            else -> 1
-        }
+        val selectedLang = if (selectedLanguage == "English" || selectedLanguage == "en") 0 else 1
+
         languageSpinner.setSelection(selectedLang)
 
         jsonData = readJsonFromAssets(this, result)
