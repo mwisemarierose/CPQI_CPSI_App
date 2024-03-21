@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.tnsapp.R
 import com.example.tnsapp.data.Categories
 
-class CategoryAdapter(val items: List<Categories>, private val listener: CategoryAdapter.OnItemClickListener) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+class CategoryAdapter(val items: List<Categories>, private val listener: OnItemClickListener) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     inner class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val categoryNameView: TextView = itemView.findViewById(R.id.categoryName)
         val categoryIconView: ImageView = itemView.findViewById(R.id.imageView)

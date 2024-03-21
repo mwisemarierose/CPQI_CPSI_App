@@ -19,18 +19,18 @@ import java.util.Date
 import java.util.Locale
 
 
-class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener {
+class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener, PopupActivity.DialogDismissListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
     private lateinit var respondent:TextView
     private lateinit var cwsName: TextView
+    private lateinit var answerDetails: Array<Answers>
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_categories)
 
-//        remove action bar
         supportActionBar?.hide()
 
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
@@ -41,6 +41,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val items: List<Categories> = categoryParser(audit, auditId)
 
         setupUI(items)
+
         val dateTextView = findViewById<TextView>(R.id.todaysDateTextView)
 
         val currentDate = Date()
@@ -60,7 +61,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private fun setupUI(items: List<Categories>?) {
         respondent = findViewById(R.id.nameEditText)
         cwsName = findViewById(R.id.cwsNameEditText)
-        val answerDetails = Answers(0, "responderName", Answers.IGNORE, 0, "cwsName")
+        answerDetails = arrayOf()
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -70,18 +71,13 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView.adapter = adapter
     }
 
-    @Deprecated("Deprecated in Java")
+    @Deprecated("Deprecated in Java", ReplaceWith(
+        "super.onActivityResult(requestCode, resultCode, data)",
+        "androidx.appcompat.app.AppCompatActivity"
+    )
+    )
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == RESULT_OK) {
-            val responderName = data?.getStringExtra("responderName")
-            val cwsName = data?.getStringExtra("cwsName")
-            val answer = data?.getStringExtra("answer")
-            val qId = data?.getIntExtra("qId", 0)
-
-            val answerDetails = Answers(0, responderName.toString(), answer.toString(), qId!!.toLong(), cwsName.toString())
-        }
     }
 
     override fun onItemClick(position: Int) {
@@ -90,7 +86,12 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
-        val dialog = PopupActivity(this, auditId, audit, position, adapter.items[position - 1].name, respondent.text.toString(), cwsName.text.toString())
+        val dialog = PopupActivity(this, auditId, audit, position, adapter.items[position - 1].name, answerDetails)
+        dialog.setDismissListener(this)
         dialog.show()
+    }
+
+    override fun onDialogDismissed() {
+        println(intent.getStringExtra("answers"))
     }
 }

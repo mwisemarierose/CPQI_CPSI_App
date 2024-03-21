@@ -2,10 +2,13 @@ package com.example.tnsapp
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Window
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.QuestionAdapter
@@ -19,11 +22,11 @@ class PopupActivity(
     private val audit: String,
     private val catId: Int,
     private val catName: String,
-    private val respondent: String,
-    private val cwsName: String
+    private var answerDetails: Array<Answers>
 ) : Dialog(context) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: QuestionAdapter
+    private var dismissListener: DialogDismissListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -31,10 +34,23 @@ class PopupActivity(
         setupUI()
     }
 
+    interface DialogDismissListener {
+        fun onDialogDismissed()
+    }
+
+    fun setDismissListener(listener: DialogDismissListener) {
+        dismissListener = listener
+    }
+
+    // Call this method when the dialog is dismissed
+    private fun notifyDismissListener() {
+        dismissListener?.onDialogDismissed()
+    }
+
     private fun setupUI() {
         val closeIcon: ImageView = findViewById(R.id.closeIcon)
         val popupTitle: TextView = findViewById(R.id.popUpTitle)
-        val answerDetails: Array<Answers> = arrayOf()
+        val saveBtn: Button = findViewById(R.id.saveButton)
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -45,6 +61,20 @@ class PopupActivity(
         adapter = QuestionAdapter(items, answerDetails)
 
         recyclerView.adapter = adapter
+
+        saveBtn.setOnClickListener {
+            val intent = Intent()
+            intent.putExtra("answers", adapter.answerDetails)
+            val allAnswered = adapter.answerDetails.size == items.size && adapter.answerDetails.all { it.qId != 0L }
+
+            if (allAnswered) {
+                notifyDismissListener()
+                dismiss()
+            }
+            else {
+                Toast.makeText(context, "Please answer all questions", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         closeIcon.setOnClickListener {
             dismiss()
