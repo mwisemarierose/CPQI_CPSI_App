@@ -26,6 +26,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var respondent:TextView
     private lateinit var cwsName: TextView
     private lateinit var answerDetails: Array<Answers>
+    private lateinit var dialog: PopupActivity
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
         val items: List<Categories> = categoryParser(audit, auditId)
+
+        println("back here")
 
         setupUI(items)
 
@@ -63,6 +66,64 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         cwsName = findViewById(R.id.cwsNameEditText)
         answerDetails = arrayOf()
 
+//        add respondent name and cws name to answerDetails when the user enters them
+        respondent.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if(answerDetails.isNotEmpty()) {
+                    answerDetails = answerDetails[0].let {
+                        arrayOf(
+                            Answers(
+                                0,
+                                respondent.text.toString(),
+                                it.answer,
+                                it.qId,
+                                cwsName.text.toString()
+                            )
+                        )
+                    }
+                }
+                else {
+                    answerDetails = answerDetails.plus(
+                        Answers(
+                            0,
+                            respondent.text.toString(),
+                            "",
+                            items!![0].id,
+                            cwsName.text.toString()
+                        )
+                    )
+                }
+            }
+        }
+
+        cwsName.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if(answerDetails.isNotEmpty()) {
+                    answerDetails = answerDetails[0].let {
+                        arrayOf(
+                            Answers(
+                                0,
+                                respondent.text.toString(),
+                                it.answer,
+                                it.qId,
+                                cwsName.text.toString()
+                            )
+                        )
+                    }
+                }
+                else {
+                    answerDetails = answerDetails.plus(
+                        Answers(
+                            0,
+                            respondent.text.toString(),
+                            "",
+                            items!![0].id,
+                            cwsName.text.toString()
+                        )
+                    )
+                }
+            }
+        }
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -86,12 +147,13 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
-        val dialog = PopupActivity(this, auditId, audit, position, adapter.items[position - 1].name, answerDetails)
+        dialog = PopupActivity(this, auditId, audit, position, adapter.items[position - 1].name, answerDetails, respondent.text.toString(), cwsName.text.toString())
         dialog.setDismissListener(this)
         dialog.show()
     }
-
-    override fun onDialogDismissed() {
-        println(intent.getStringExtra("answers"))
+    override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
+        answerDetails = answerDetails.map { answer ->
+            updatedAnswers?.find { it.qId == answer.qId } ?: answer
+        }.toTypedArray()
     }
 }

@@ -2,7 +2,6 @@ package com.example.tnsapp
 
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import android.widget.Button
@@ -22,7 +21,9 @@ class PopupActivity(
     private val audit: String,
     private val catId: Int,
     private val catName: String,
-    private var answerDetails: Array<Answers>
+    private var answerDetails: Array<Answers>,
+    private val respondent: String,
+    private val cwsName: String
 ) : Dialog(context) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: QuestionAdapter
@@ -35,7 +36,7 @@ class PopupActivity(
     }
 
     interface DialogDismissListener {
-        fun onDialogDismissed()
+        fun onDialogDismissed(updatedAnswers: Array<Answers>? = null)
     }
 
     fun setDismissListener(listener: DialogDismissListener) {
@@ -43,8 +44,8 @@ class PopupActivity(
     }
 
     // Call this method when the dialog is dismissed
-    private fun notifyDismissListener() {
-        dismissListener?.onDialogDismissed()
+    private fun notifyDismissListener(answerDetails: Array<Answers>) {
+        dismissListener?.onDialogDismissed(answerDetails)
     }
 
     private fun setupUI() {
@@ -58,17 +59,15 @@ class PopupActivity(
         val items: List<Questions> = questionParser(audit, auditId, catId)
 
         popupTitle.text = catName
-        adapter = QuestionAdapter(items, answerDetails)
+        adapter = QuestionAdapter(items, answerDetails, respondent, cwsName)
 
         recyclerView.adapter = adapter
 
         saveBtn.setOnClickListener {
-            val intent = Intent()
-            intent.putExtra("answers", adapter.answerDetails)
-            val allAnswered = adapter.answerDetails.size == items.size && adapter.answerDetails.all { it.qId != 0L }
+            val allAnswered = adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
 
             if (allAnswered) {
-                notifyDismissListener()
+                notifyDismissListener(adapter.answerDetails)
                 dismiss()
             }
             else {

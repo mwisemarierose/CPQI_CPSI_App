@@ -2,6 +2,7 @@ package com.example.tnsapp.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Date
 
 @Entity(tableName = "answers")
 
@@ -11,6 +12,7 @@ data class Answers(
     var answer: String,
     @ColumnInfo(name = "q_id") val qId: Long,
     @ColumnInfo(name = "cws_name") val cwsName: String,
+    @ColumnInfo(name = "date") val date: String = Date().toString()
 ) {
     companion object {
         const val YES = "yes"

@@ -10,17 +10,22 @@ import com.example.tnsapp.R
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.Questions
 
-class QuestionAdapter(private val items: List<Questions>, var answerDetails: Array<Answers>) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
+class QuestionAdapter(
+    private val items: List<Questions>,
+    var answerDetails: Array<Answers>,
+    private val respondent: String,
+    private val cwsName: String
+) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
     inner class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(currentItem: Questions) {
             yesBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
                     if(item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size && answerDetails[index].qId == currentItem.id) {
-                            answerDetails[index] = Answers(index.toLong(), answerDetails[index].responderName, Answers.YES, item.id, answerDetails[index].cwsName)
+                            answerDetails[index] = Answers(index.toLong(), respondent, Answers.YES, item.id, cwsName)
                         }
                         else {
-                            answerDetails = answerDetails.plus(Answers(index.toLong(), "", Answers.YES, item.id, ""))
+                            answerDetails = answerDetails.plus(Answers(index.toLong(), respondent, Answers.YES, item.id, cwsName))
                         }
                     }
                 }
@@ -36,10 +41,10 @@ class QuestionAdapter(private val items: List<Questions>, var answerDetails: Arr
                 items.forEachIndexed { index, item ->
                     if(item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size && answerDetails[index].qId == currentItem.id) {
-                            answerDetails[index] = Answers(index.toLong(), answerDetails[index].responderName, Answers.NO, item.id, answerDetails[index].cwsName)
+                            answerDetails[index] = Answers(index.toLong(), respondent, Answers.NO, item.id, cwsName)
                         }
                         else {
-                            answerDetails = answerDetails.plus(Answers(index.toLong(), "", Answers.YES, item.id, ""))
+                            answerDetails = answerDetails.plus(Answers(index.toLong(), respondent, Answers.NO, item.id, cwsName))
                         }
                     }
                 }
@@ -55,10 +60,10 @@ class QuestionAdapter(private val items: List<Questions>, var answerDetails: Arr
                 items.forEachIndexed { index, item ->
                     if(item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size && answerDetails[index].qId == currentItem.id) {
-                            answerDetails[index] = Answers(index.toLong(), answerDetails[index].responderName, Answers.IGNORE, item.id, answerDetails[index].cwsName)
+                            answerDetails[index] = Answers(index.toLong(), respondent, Answers.IGNORE, item.id, cwsName)
                         }
                         else {
-                            answerDetails = answerDetails.plus(Answers(index.toLong(), "", Answers.YES, item.id, ""))
+                            answerDetails = answerDetails.plus(Answers(index.toLong(), respondent, Answers.IGNORE, item.id, cwsName))
                         }
                     }
                 }
