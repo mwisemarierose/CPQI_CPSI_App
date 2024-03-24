@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-        val getStarted = findViewById<Button>(R.id.getstarted)
+        val getStarted = findViewById<Button>(R.id.get_started)
         getStarted.setOnClickListener {
             val language = getSelectedLanguage()
             openAuditActivity(language)
