@@ -150,6 +150,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dialog = PopupActivity(this, auditId, audit, position, adapter.items[position - 1].name, answerDetails, respondent.text.toString(), cwsName.text.toString())
         dialog.setDismissListener(this)
         dialog.show()
+
     }
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
         answerDetails = answerDetails.map { answer ->

@@ -130,8 +130,9 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="20dp"
         android:textColor="@color/white"
-        android:background="@drawable/rectangle_button"
-        android:backgroundTint="@color/maroon" />
+        android:backgroundTint="@color/maroon"
+
+        />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
