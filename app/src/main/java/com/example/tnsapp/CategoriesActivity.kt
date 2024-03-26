@@ -26,7 +26,6 @@ import java.util.Locale
 
 class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener, PopupActivity.DialogDismissListener {
 
-    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
@@ -159,43 +158,48 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     }
 
-    private fun getSavedAnswersJson(): String? {
-        val sharedPreferences = getSharedPreferences("com.example.tnsapp.PREF_NAME", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("updatedAnswers", "")
-    }
+//    private fun getSavedAnswersJson(): String? {
+//        val sharedPreferences = getSharedPreferences("com.example.tnsapp.PREF_NAME", Context.MODE_PRIVATE)
+//        return sharedPreferences.getString("updatedAnswers", "")
+//    }
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
-        answerDetails = arrayOf()
-        answerDetails = answerDetails.map { answer ->
-            updatedAnswers?.find { it.qId == answer.qId } ?: answer
-        }.toTypedArray()
-
-        val gson = Gson()
-        val jsonAnswers = gson.toJson(updatedAnswers)
-
-        // Save JSON string to SharedPreferences
-        val sharedPreferences = getSharedPreferences("com.example.tnsapp.PREF_NAME", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("updatedAnswers", jsonAnswers)
-        editor.apply() // Use apply instead of commit for asynchronous saving
-
-        val savedJson = getSavedAnswersJson()
-        if (savedJson != null) {
-            if (savedJson.isNotEmpty()) {
-                val gson = Gson()
-                val savedAnswers = gson.fromJson(savedJson, Array<Answers>::class.java)
-                if (updatedAnswers?.contentEquals(savedAnswers) == true) {
-                    Log.d("MyApp", "Answers successfully saved and match retrieved data!")
-                } else {
-                    Log.w("MyApp", "Potential issue: Saved data might differ from updated answers!")
-                }
+        for (index in updatedAnswers?.indices!!) {
+            if (updatedAnswers[index].qId == answerDetails.find { it.qId == updatedAnswers[index].qId }?.qId) {
+                answerDetails[index] = updatedAnswers[index]
             } else {
-                Log.i("MyApp", "No data found in SharedPreferences yet.")
+                println(updatedAnswers[index].toString())
+                answerDetails = answerDetails.plus(updatedAnswers[index])
             }
         }
+        println(answerDetails.size)
 
-        updatedAnswers?.forEachIndexed { _, answer ->
-            println("$answer" )
-        }
+    answerDetails.forEach {
+        println(it.toString())
+    }
+
+//        val gson = Gson()
+//        val jsonAnswers = gson.toJson(updatedAnswers)
+//
+//        // Save JSON string to SharedPreferences
+//        val sharedPreferences = getSharedPreferences("com.example.tnsapp.PREF_NAME", Context.MODE_PRIVATE)
+//        val editor = sharedPreferences.edit()
+//        editor.putString("updatedAnswers", jsonAnswers)
+//        editor.apply() // Use apply instead of commit for asynchronous saving
+//
+//        val savedJson = getSavedAnswersJson()
+//        if (savedJson != null) {
+//            if (savedJson.isNotEmpty()) {
+//                val gson = Gson()
+//                val savedAnswers = gson.fromJson(savedJson, Array<Answers>::class.java)
+//                if (updatedAnswers?.contentEquals(savedAnswers) == true) {
+//                    Log.d("MyApp", "Answers successfully saved and match retrieved data!")
+//                } else {
+//                    Log.w("MyApp", "Potential issue: Saved data might differ from updated answers!")
+//                }
+//            } else {
+//                Log.i("MyApp", "No data found in SharedPreferences yet.")
+//            }
+//        }
 
     }
 

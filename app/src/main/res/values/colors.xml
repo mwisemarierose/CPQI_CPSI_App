@@ -17,5 +17,13 @@
 
     <!-- Dark Theme Colors -->
     <color name="colorButtonBackgroundDark">@color/maroon</color>
+    <style name="CustomToastBackground">
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <!-- Define the custom toast text -->
+    <style name="CustomToastText">
+        <item name="android:textColor">@color/white</item>
+    </style>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.example.tnsapp
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
@@ -47,8 +48,10 @@ class PopupActivity(
     }
 
     // Call this method when the dialog is dismissed
+    @SuppressLint("ResourceType")
     private fun notifyDismissListener(answerDetails: Array<Answers>) {
         dismissListener?.onDialogDismissed(answerDetails)
+        Toast.makeText(context, "Answers saved", Toast.LENGTH_SHORT).show()
     }
 
     private fun setupUI() {

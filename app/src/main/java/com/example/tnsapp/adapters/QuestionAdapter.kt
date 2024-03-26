@@ -21,11 +21,19 @@ class QuestionAdapter(
             yesBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
                     if(item.id == currentItem.id) {
-                        if (answerDetails.isNotEmpty() && index < answerDetails.size && answerDetails[index].qId == currentItem.id) {
-                            answerDetails[index] = Answers(index.toLong(), respondent, Answers.YES, item.id, cwsName)
+                        if (answerDetails.isNotEmpty() && index < answerDetails.size) {
+                            if(answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                                answerDetails[index] = Answers(
+                                    answerDetails.size.toLong(),
+                                    respondent,
+                                    Answers.YES,
+                                    item.id,
+                                    cwsName
+                                )
+                            }
                         }
                         else {
-                            answerDetails = answerDetails.plus(Answers(index.toLong(), respondent, Answers.YES, item.id, cwsName))
+                            answerDetails = answerDetails.plus(Answers(answerDetails.size.toLong(), respondent, Answers.YES, item.id, cwsName))
                         }
                     }
                 }
@@ -40,11 +48,19 @@ class QuestionAdapter(
             noBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
                     if(item.id == currentItem.id) {
-                        if (answerDetails.isNotEmpty() && index < answerDetails.size && answerDetails[index].qId == currentItem.id) {
-                            answerDetails[index] = Answers(index.toLong(), respondent, Answers.NO, item.id, cwsName)
+                        if (answerDetails.isNotEmpty() && index < answerDetails.size) {
+                            if(answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                                answerDetails[index] = Answers(
+                                    answerDetails.size.toLong(),
+                                    respondent,
+                                    Answers.NO,
+                                    item.id,
+                                    cwsName
+                                )
+                            }
                         }
                         else {
-                            answerDetails = answerDetails.plus(Answers(index.toLong(), respondent, Answers.NO, item.id, cwsName))
+                            answerDetails = answerDetails.plus(Answers(answerDetails.size.toLong(), respondent, Answers.NO, item.id, cwsName))
                         }
                     }
                 }
@@ -59,11 +75,19 @@ class QuestionAdapter(
             ignoreBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
                     if(item.id == currentItem.id) {
-                        if (answerDetails.isNotEmpty() && index < answerDetails.size && answerDetails[index].qId == currentItem.id) {
-                            answerDetails[index] = Answers(index.toLong(), respondent, Answers.IGNORE, item.id, cwsName)
+                        if (answerDetails.isNotEmpty() && index < answerDetails.size) {
+                            if(answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                                answerDetails[index] = Answers(
+                                    answerDetails.size.toLong(),
+                                    respondent,
+                                    Answers.IGNORE,
+                                    item.id,
+                                    cwsName
+                                )
+                            }
                         }
                         else {
-                            answerDetails = answerDetails.plus(Answers(index.toLong(), respondent, Answers.IGNORE, item.id, cwsName))
+                            answerDetails = answerDetails.plus(Answers(answerDetails.size.toLong(), respondent, Answers.IGNORE, item.id, cwsName))
                         }
                     }
                 }
