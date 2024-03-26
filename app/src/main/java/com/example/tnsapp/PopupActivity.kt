@@ -2,6 +2,7 @@ package com.example.tnsapp
 
 import android.app.Dialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Window
 import android.widget.Button
@@ -25,9 +26,11 @@ class PopupActivity(
     private val respondent: String,
     private val cwsName: String
 ) : Dialog(context) {
+    private val PREF_NAME = "AnswersPref"
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: QuestionAdapter
     private var dismissListener: DialogDismissListener? = null
+    private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
