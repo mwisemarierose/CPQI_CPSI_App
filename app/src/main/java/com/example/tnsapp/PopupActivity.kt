@@ -27,10 +27,12 @@ class PopupActivity(
     private val respondent: String,
     private val cwsName: String
 ) : Dialog(context) {
+    private lateinit var dismissListener2: DialogDismissListener2
     private val PREF_NAME = "AnswersPref"
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: QuestionAdapter
     private var dismissListener: DialogDismissListener? = null
+    private var answers : List<Answers> = emptyList()
     private lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +48,10 @@ class PopupActivity(
     fun setDismissListener(listener: DialogDismissListener) {
         dismissListener = listener
     }
-
+    fun setDismissListener2(listener: DialogDismissListener2, answers:List<Answers>) {
+         dismissListener2 = listener
+        this.answers = answers
+    }
     // Call this method when the dialog is dismissed
     @SuppressLint("ResourceType")
     private fun notifyDismissListener(answerDetails: Array<Answers>) {
@@ -70,6 +75,8 @@ class PopupActivity(
         recyclerView.adapter = adapter
 
         saveBtn.setOnClickListener {
+            answers = adapter.answerDetails.toList()
+            dismissListener2?.onDialogDismissed(answers)
             val allAnswered = adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
 
             if (allAnswered) {
@@ -86,3 +93,4 @@ class PopupActivity(
         }
     }
 }
+

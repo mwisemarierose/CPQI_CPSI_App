@@ -2,11 +2,8 @@ package com.example.tnsapp
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,13 +15,12 @@ import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.parsers.categoryParser
-import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 
-class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener, PopupActivity.DialogDismissListener {
+class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener, PopupActivity.DialogDismissListener,DialogDismissListener2 {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
@@ -33,7 +29,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var cwsName: TextView
     private lateinit var dialog: PopupActivity
     private lateinit var answerDetails: Array<Answers>
-
+    private var answers : List<Answers> = emptyList()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -154,15 +150,13 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val auditId = intent.getIntExtra("auditId", 0)
         dialog = PopupActivity(this, auditId, audit, position, adapter.items[position - 1].name, answerDetails, respondent.text.toString(), cwsName.text.toString())
         dialog.setDismissListener(this)
+        dialog.setDismissListener2(this,answers)
         dialog.show()
 
     }
 
-//    private fun getSavedAnswersJson(): String? {
-//        val sharedPreferences = getSharedPreferences("com.example.tnsapp.PREF_NAME", Context.MODE_PRIVATE)
-//        return sharedPreferences.getString("updatedAnswers", "")
-//    }
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
+
         for (index in updatedAnswers?.indices!!) {
             if (updatedAnswers[index].qId == answerDetails.find { it.qId == updatedAnswers[index].qId }?.qId) {
                 answerDetails[index] = updatedAnswers[index]
@@ -172,36 +166,19 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             }
         }
         println(answerDetails.size)
-
     answerDetails.forEach {
         println(it.toString())
     }
+    }
 
-//        val gson = Gson()
-//        val jsonAnswers = gson.toJson(updatedAnswers)
-//
-//        // Save JSON string to SharedPreferences
-//        val sharedPreferences = getSharedPreferences("com.example.tnsapp.PREF_NAME", Context.MODE_PRIVATE)
-//        val editor = sharedPreferences.edit()
-//        editor.putString("updatedAnswers", jsonAnswers)
-//        editor.apply() // Use apply instead of commit for asynchronous saving
-//
-//        val savedJson = getSavedAnswersJson()
-//        if (savedJson != null) {
-//            if (savedJson.isNotEmpty()) {
-//                val gson = Gson()
-//                val savedAnswers = gson.fromJson(savedJson, Array<Answers>::class.java)
-//                if (updatedAnswers?.contentEquals(savedAnswers) == true) {
-//                    Log.d("MyApp", "Answers successfully saved and match retrieved data!")
-//                } else {
-//                    Log.w("MyApp", "Potential issue: Saved data might differ from updated answers!")
-//                }
-//            } else {
-//                Log.i("MyApp", "No data found in SharedPreferences yet.")
-//            }
-//        }
+    override fun onDialogDismissed(updatedAnswers: List<Answers>?) {
+        answers?.forEach() {
+            println("answerss"+it.toString())
+        }
 
     }
 
 }
-
+interface DialogDismissListener2 {
+    fun onDialogDismissed(updatedAnswers: List<Answers>? = null)
+}
