@@ -50,6 +50,6 @@
         android:text="@string/save_btn"
         android:textSize="20sp"
         android:textColor="@android:color/white"
-        android:background="@color/maroon"
+        android:backgroundTint="@color/maroon"
         android:layout_marginTop="16dp" />
 </LinearLayout>

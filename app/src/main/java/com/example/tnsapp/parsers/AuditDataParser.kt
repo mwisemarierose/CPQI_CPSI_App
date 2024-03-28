@@ -1,7 +1,6 @@
 package com.example.tnsapp.parsers
 
 import com.example.tnsapp.data.AuditCategories
-import org.json.JSONArray
 import org.json.JSONObject
 
 fun auditParser(jsonString: String): List<AuditCategories> {

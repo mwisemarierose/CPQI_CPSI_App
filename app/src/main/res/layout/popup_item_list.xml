@@ -65,7 +65,7 @@
             android:layout_marginStart="8dp"
             style="?android:attr/buttonBarButtonStyle" />
         <Button
-            android:id="@+id/ignoreButton"
+            android:id="@+id/skipButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
