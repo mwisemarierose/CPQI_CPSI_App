@@ -16,13 +16,13 @@ class QuestionAdapter(
     private val respondent: String,
     private val cwsName: String
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
-    inner class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(currentItem: Questions) {
             yesBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
-                    if(item.id == currentItem.id) {
+                    if (item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
-                            if(answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                            if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
                                     answerDetails.size.toLong(),
                                     respondent,
@@ -31,9 +31,16 @@ class QuestionAdapter(
                                     cwsName
                                 )
                             }
-                        }
-                        else {
-                            answerDetails = answerDetails.plus(Answers(answerDetails.size.toLong(), respondent, Answers.YES, item.id, cwsName))
+                        } else {
+                            answerDetails = answerDetails.plus(
+                                Answers(
+                                    answerDetails.size.toLong(),
+                                    respondent,
+                                    Answers.YES,
+                                    item.id,
+                                    cwsName
+                                )
+                            )
                         }
                     }
                 }
@@ -41,15 +48,15 @@ class QuestionAdapter(
                 yesBtn.setBackgroundColor(itemView.resources.getColor(R.color.green))
                 noBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
                 noBtn.setBackgroundResource(R.drawable.border_maroon)
-                ignoreBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
-                ignoreBtn.setBackgroundResource(R.drawable.border_grey)
+                skipBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
+                skipBtn.setBackgroundResource(R.drawable.border_grey)
             }
 
             noBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
-                    if(item.id == currentItem.id) {
+                    if (item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
-                            if(answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                            if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
                                     answerDetails.size.toLong(),
                                     respondent,
@@ -58,9 +65,16 @@ class QuestionAdapter(
                                     cwsName
                                 )
                             }
-                        }
-                        else {
-                            answerDetails = answerDetails.plus(Answers(answerDetails.size.toLong(), respondent, Answers.NO, item.id, cwsName))
+                        } else {
+                            answerDetails = answerDetails.plus(
+                                Answers(
+                                    answerDetails.size.toLong(),
+                                    respondent,
+                                    Answers.NO,
+                                    item.id,
+                                    cwsName
+                                )
+                            )
                         }
                     }
                 }
@@ -68,31 +82,38 @@ class QuestionAdapter(
                 noBtn.setBackgroundColor(itemView.resources.getColor(R.color.maroon))
                 yesBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
                 yesBtn.setBackgroundResource(R.drawable.border_green)
-                ignoreBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
-                ignoreBtn.setBackgroundResource(R.drawable.border_grey)
+                skipBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
+                skipBtn.setBackgroundResource(R.drawable.border_grey)
             }
 
-            ignoreBtn.setOnClickListener {
+            skipBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
-                    if(item.id == currentItem.id) {
+                    if (item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
-                            if(answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                            if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
                                     answerDetails.size.toLong(),
                                     respondent,
-                                    Answers.IGNORE,
+                                    Answers.SKIP,
                                     item.id,
                                     cwsName
                                 )
                             }
-                        }
-                        else {
-                            answerDetails = answerDetails.plus(Answers(answerDetails.size.toLong(), respondent, Answers.IGNORE, item.id, cwsName))
+                        } else {
+                            answerDetails = answerDetails.plus(
+                                Answers(
+                                    answerDetails.size.toLong(),
+                                    respondent,
+                                    Answers.SKIP,
+                                    item.id,
+                                    cwsName
+                                )
+                            )
                         }
                     }
                 }
 
-                ignoreBtn.setBackgroundColor(itemView.resources.getColor(R.color.grey))
+                skipBtn.setBackgroundColor(itemView.resources.getColor(R.color.grey))
                 yesBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
                 yesBtn.setBackgroundResource(R.drawable.border_green)
                 noBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
@@ -100,15 +121,16 @@ class QuestionAdapter(
             }
         }
 
-        val questionNumberView : TextView = itemView.findViewById(R.id.popUpTextNumbering)
+        val questionNumberView: TextView = itemView.findViewById(R.id.popUpTextNumbering)
         val questionNameView: TextView = itemView.findViewById(R.id.popUpText)
         private val yesBtn: Button = itemView.findViewById(R.id.yesButton)
         private val noBtn: Button = itemView.findViewById(R.id.noButton)
-        private val ignoreBtn: Button = itemView.findViewById(R.id.ignoreButton)
+        private val skipBtn: Button = itemView.findViewById(R.id.skipButton)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.popup_item_list, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.popup_item_list, parent, false)
         return ViewHolder(view)
     }
 

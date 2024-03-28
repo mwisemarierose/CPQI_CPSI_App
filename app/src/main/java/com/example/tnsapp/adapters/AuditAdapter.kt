@@ -11,9 +11,11 @@ import com.bumptech.glide.Glide
 import com.example.tnsapp.R
 import com.example.tnsapp.data.AuditCategories
 
-class AuditAdapter(val items: List<AuditCategories>, private val listener: OnItemClickListener) : RecyclerView.Adapter<AuditAdapter.ViewHolder>() {
+class AuditAdapter(val items: List<AuditCategories>, private val listener: OnItemClickListener) :
+    RecyclerView.Adapter<AuditAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         val auditNameView: TextView = itemView.findViewById(R.id.auditName)
         val auditIconView: ImageView = itemView.findViewById(R.id.auditIcon)
 
@@ -34,7 +36,8 @@ class AuditAdapter(val items: List<AuditCategories>, private val listener: OnIte
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.audit_item_list, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.audit_item_list, parent, false)
         return ViewHolder(view)
     }
 
@@ -52,7 +55,11 @@ class AuditAdapter(val items: List<AuditCategories>, private val listener: OnIte
     private fun loadImageFromUrl(url: String, iconView: ImageView) {
         Glide.with(iconView.context)
             .load(
-                iconView.context.resources.getIdentifier(url, "drawable", iconView.context.packageName)
+                iconView.context.resources.getIdentifier(
+                    url,
+                    "drawable",
+                    iconView.context.packageName
+                )
             )
             .into(iconView)
     }

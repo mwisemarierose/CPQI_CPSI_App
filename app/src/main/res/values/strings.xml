@@ -19,7 +19,7 @@
     <string name="answer_txt">All coffee washing station income and expenses are recorded in.</string>
     <string name="yes_txt">Yes</string>
     <string name="no_txt">No</string>
-    <string name="ignore">ignore</string>
+    <string name="skip">skip</string>
     <string name="audit_icon">Audit Icon</string>
     <string name="category_icon">category icon</string>
     <string name="import_csv">Import CSV</string>

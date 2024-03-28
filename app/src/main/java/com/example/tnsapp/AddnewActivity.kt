@@ -12,9 +12,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
-import com.example.tnsapp.data.Categories
-import com.example.tnsapp.parsers.categoryParser
-import org.json.JSONArray
 import org.json.JSONObject
 
 
@@ -28,7 +25,8 @@ class AddNewActivity : AppCompatActivity() {
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         val audit = intent.getStringExtra("audit")
-        val parsedAudit = JSONObject(JSONObject(audit!!).getJSONArray("audits")[auditId - 1].toString())
+        val parsedAudit =
+            JSONObject(JSONObject(audit!!).getJSONArray("audits")[auditId - 1].toString())
         setupUI(audit.toString())
         toolBarTitle.text = parsedAudit["name"].toString()
         auditName = parsedAudit["name"].toString()
@@ -45,6 +43,7 @@ class AddNewActivity : AppCompatActivity() {
             openCategoryActivity(auditId, audit)
         }
     }
+
     @SuppressLint("RestrictedApi")
     fun showDropdownMenu(v: View?) {
         val menuBuilder = MenuBuilder(this)

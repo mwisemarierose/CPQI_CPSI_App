@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.Window
 import android.widget.Button
@@ -70,13 +71,13 @@ class PopupActivity(
         recyclerView.adapter = adapter
 
         saveBtn.setOnClickListener {
-            val allAnswered = adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
+            val allAnswered =
+                adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
 
             if (allAnswered) {
                 notifyDismissListener(adapter.answerDetails)
                 dismiss()
-            }
-            else {
+            } else {
                 Toast.makeText(context, "Please answer all questions", Toast.LENGTH_SHORT).show()
             }
         }

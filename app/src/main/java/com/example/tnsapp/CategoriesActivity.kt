@@ -1,12 +1,9 @@
 package com.example.tnsapp
 
-
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -18,22 +15,19 @@ import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.parsers.categoryParser
-import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener, PopupActivity.DialogDismissListener {
-
+class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener,
+    PopupActivity.DialogDismissListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
-    private lateinit var respondent:TextView
+    private lateinit var respondent: TextView
     private lateinit var cwsName: TextView
     private lateinit var dialog: PopupActivity
-    private lateinit var answerDetails: Array<Answers>
-
+    private var answerDetails: Array<Answers> = emptyArray()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +36,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         supportActionBar?.hide()
 
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
-        val submitAll : Button = findViewById(R.id.submitAllBtn)
+        val submitAll: Button = findViewById(R.id.submitAllBtn)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
@@ -64,30 +58,29 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        submitAll.isEnabled = false
+        submitAll.backgroundTintList = ColorStateList.valueOf(resources.getColor(if(submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
     }
 
     private fun setupUI(items: List<Categories>?) {
         respondent = findViewById(R.id.nameEditText)
         cwsName = findViewById(R.id.cwsNameEditText)
-        answerDetails = arrayOf()
 
 //        add respondent name and cws name to answerDetails when the user enters them
         respondent.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                if(answerDetails.isNotEmpty()) {
-                    answerDetails = answerDetails[0].let {
-                        arrayOf(
-                            Answers(
-                                0,
-                                respondent.text.toString(),
-                                it.answer,
-                                it.qId,
-                                cwsName.text.toString()
-                            )
+                if (answerDetails.isNotEmpty()) {
+                    answerDetails = answerDetails.map {
+                        Answers(
+                            0,
+                            respondent.text.toString(),
+                            it.answer,
+                            it.qId,
+                            it.cwsName
                         )
-                    }
-                }
-                else {
+                    }.toTypedArray()
+                } else {
                     answerDetails = answerDetails.plus(
                         Answers(
                             0,
@@ -103,20 +96,17 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         cwsName.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                if(answerDetails.isNotEmpty()) {
-                    answerDetails = answerDetails[0].let {
-                        arrayOf(
-                            Answers(
-                                0,
-                                respondent.text.toString(),
-                                it.answer,
-                                it.qId,
-                                cwsName.text.toString()
-                            )
+                if (answerDetails.isNotEmpty()) {
+                    answerDetails = answerDetails.map {
+                        Answers(
+                            0,
+                            it.responderName,
+                            it.answer,
+                            it.qId,
+                            cwsName.text.toString()
                         )
-                    }
-                }
-                else {
+                    }.toTypedArray()
+                } else {
                     answerDetails = answerDetails.plus(
                         Answers(
                             0,
@@ -137,10 +127,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView.adapter = adapter
     }
 
-    @Deprecated("Deprecated in Java", ReplaceWith(
-        "super.onActivityResult(requestCode, resultCode, data)",
-        "androidx.appcompat.app.AppCompatActivity"
-    )
+    @Deprecated(
+        "Deprecated in Java", ReplaceWith(
+            "super.onActivityResult(requestCode, resultCode, data)",
+            "androidx.appcompat.app.AppCompatActivity"
+        )
     )
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -152,31 +143,45 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
-        dialog = PopupActivity(this, auditId, audit, position, adapter.items[position - 1].name, answerDetails, respondent.text.toString(), cwsName.text.toString())
+        dialog = PopupActivity(
+            this,
+            auditId,
+            audit,
+            position,
+            adapter.items[position - 1].name,
+            answerDetails,
+            respondent.text.toString(),
+            cwsName.text.toString()
+        )
         dialog.setDismissListener(this)
         dialog.show()
 
     }
 
-//    private fun getSavedAnswersJson(): String? {
+    //    private fun getSavedAnswersJson(): String? {
 //        val sharedPreferences = getSharedPreferences("com.example.tnsapp.PREF_NAME", Context.MODE_PRIVATE)
 //        return sharedPreferences.getString("updatedAnswers", "")
 //    }
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
-        for (index in updatedAnswers?.indices!!) {
-            if (updatedAnswers[index].qId == answerDetails.find { it.qId == updatedAnswers[index].qId }?.qId) {
-                answerDetails[index] = updatedAnswers[index]
+        updatedAnswers?.forEach { updatedAnswer ->
+            println(updatedAnswer.toString())
+            val existingAnswer = answerDetails.find { it.qId == updatedAnswer.qId }
+            println(existingAnswer.toString())
+            if (existingAnswer != null) {
+                // Update existing answer in answerDetails
+                val index = answerDetails.indexOf(existingAnswer)
+                answerDetails[index] = updatedAnswer
             } else {
-                println(updatedAnswers[index].toString())
-                answerDetails = answerDetails.plus(updatedAnswers[index])
+                // Add new answer to answerDetails
+                answerDetails = answerDetails.plus(updatedAnswer)
             }
         }
+
         println(answerDetails.size)
 
-    answerDetails.forEach {
-        println(it.toString())
-    }
-
+        answerDetails.forEach {
+            println(it.toString())
+        }
 //        val gson = Gson()
 //        val jsonAnswers = gson.toJson(updatedAnswers)
 //

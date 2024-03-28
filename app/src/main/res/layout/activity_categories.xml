@@ -1,5 +1,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -30,13 +31,10 @@
 
 
     </androidx.appcompat.widget.Toolbar>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar">
     <LinearLayout
         android:id="@+id/textInputLayoutContainer"
         android:layout_width="match_parent"
@@ -83,7 +81,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="26dp"
         android:layout_marginTop="8dp"
-        android:text="@string/date_lbl" />
+        android:text="@string/date_lbl"
+        tools:ignore="RelativeOverlap" />
 
     <!-- ProgressBar -->
     <ProgressBar
@@ -96,13 +95,16 @@
         android:layout_marginBottom="2dp"
         android:indeterminate="true"
         android:indeterminateDrawable="@drawable/progress_ring"
-
         />
+            <ScrollView
+                android:id="@+id/scrollLayout"
+                android:layout_width="match_parent"
+                android:layout_height="420dp"
+                android:layout_below="@id/progressBar">
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/progressBar"
         android:layout_margin="5dp"
         android:padding="3dp"
         android:columnCount="2"
@@ -112,27 +114,26 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             />
 
     </GridLayout>
+            </ScrollView>
 
     <Button
         android:id="@+id/submitAllBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/gridLayout"
+        android:layout_below="@id/scrollLayout"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         android:text="@string/submitAll_txt"
         android:textSize="17sp"
         android:padding="15dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
         android:textColor="@color/white"
         android:backgroundTint="@color/maroon"
-
         />
         </RelativeLayout>
-    </ScrollView>
 </RelativeLayout>

@@ -1,4 +1,5 @@
 package com.example.tnsapp.data
+
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -17,6 +18,6 @@ data class Answers(
     companion object {
         const val YES = "yes"
         const val NO = "no"
-        const val IGNORE = "ignore"
+        const val SKIP = "skip"
     }
 }

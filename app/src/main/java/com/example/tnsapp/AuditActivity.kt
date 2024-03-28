@@ -1,23 +1,20 @@
 package com.example.tnsapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
-import android.widget.Button
+import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.AuditAdapter
 import com.example.tnsapp.data.AuditCategories
 import com.example.tnsapp.parsers.auditParser
 import com.example.tnsapp.parsers.readJsonFromAssets
-import android.widget.ArrayAdapter
-import android.content.Context
-import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
-import java.util.Locale
 
 class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
 
@@ -35,8 +32,9 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
         setupLanguageSpinner(languageSpinner)
     }
+
     private fun setupLanguageSpinner(languageSpinner: Spinner) {
-                ArrayAdapter.createFromResource(
+        ArrayAdapter.createFromResource(
             this,
             R.array.languages,
             android.R.layout.simple_spinner_item
@@ -46,7 +44,12 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         }
 
         languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: android.view.View?,
+                position: Int,
+                id: Long
+            ) {
                 val selectedLanguage = parent?.getItemAtPosition(position).toString()
                 val intentLang = intent.getStringExtra("language")
 
@@ -74,11 +77,12 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
 
     private fun saveLanguagePreference(language: String) {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        with (sharedPref.edit()) {
+        with(sharedPref.edit()) {
             putString("language", language)
             apply()
         }
     }
+
     private fun setupUI(selectedLanguage: String) {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
