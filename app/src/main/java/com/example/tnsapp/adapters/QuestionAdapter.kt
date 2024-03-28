@@ -21,6 +21,7 @@ class QuestionAdapter(
             yesBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
                     if(item.id == currentItem.id) {
+
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
                             if(answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(

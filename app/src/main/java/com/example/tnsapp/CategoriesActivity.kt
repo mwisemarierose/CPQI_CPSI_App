@@ -152,7 +152,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dialog.setDismissListener(this)
         dialog.setDismissListener2(this,answers)
         dialog.show()
-
     }
 
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
@@ -161,12 +160,12 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             if (updatedAnswers[index].qId == answerDetails.find { it.qId == updatedAnswers[index].qId }?.qId) {
                 answerDetails[index] = updatedAnswers[index]
             } else {
-                println(updatedAnswers[index].toString())
+//                println(updatedAnswers[index].toString())
                 answerDetails = answerDetails.plus(updatedAnswers[index])
             }
         }
         println(answerDetails.size)
-    answerDetails.forEach {
+    updatedAnswers.forEach {
         println(it.toString())
     }
     }

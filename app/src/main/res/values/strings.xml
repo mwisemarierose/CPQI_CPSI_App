@@ -26,6 +26,7 @@
     <string name="export_csv">Export CSV</string>
     <string name="submitAll_txt" >Submit All</string>
     <string name="close_icon_description" translatable="false">close_icon_description</string>
+    <string name="skip">Skip</string>
 
     <string-array name="languages" translatable="false">
         <item>English</item>
