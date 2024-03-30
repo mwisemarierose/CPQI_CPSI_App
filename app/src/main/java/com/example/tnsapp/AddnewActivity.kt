@@ -3,8 +3,6 @@ package com.example.tnsapp
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,14 +13,22 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
+import com.example.tnsapp.adapters.AddNewListAdapter
+import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
+import com.example.tnsapp.parsers.AddNewListParser
+import kotlinx.coroutines.GlobalScope
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class AddNewActivity : AppCompatActivity() {
+class AddNewActivity : AppCompatActivity() , AddNewListAdapter.OnItemClickListener{
     private var auditName = ""
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
@@ -30,6 +36,8 @@ class AddNewActivity : AppCompatActivity() {
     //    initialize room db
     private lateinit var db: AppDatabase
 
+    @OptIn(DelicateCoroutinesApi::class)
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addnew)
@@ -48,8 +56,27 @@ class AddNewActivity : AppCompatActivity() {
 
         setupUI(audit.toString())
 
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+        val items = mutableListOf<Answers>()
+        val adapter = AddNewListAdapter(items, this)
+
+        recyclerView.adapter = adapter // Set the adapter to the RecyclerView
+
+        // Fetch data from Room Database using AddNewListParser
+        val parser = AddNewListParser(this)
+
+        GlobalScope.launch {
+            val fetchedData = parser.fetchAnswers()
+            withContext(Dispatchers.Main) {
+                items.addAll(fetchedData) //
+                println(fetchedData)//
+                adapter.notifyDataSetChanged()
+            }
+        }
+
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
+
         }
     }
 
@@ -124,5 +151,9 @@ class AddNewActivity : AppCompatActivity() {
         intent.putExtra("audit", audit)
         intent.putExtra("auditName", auditName)
         startActivity(intent)
+    }
+
+    override fun onItemClick(position: Int) {
+        TODO("Not yet implemented")
     }
 }
