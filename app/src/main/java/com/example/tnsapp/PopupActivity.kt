@@ -16,6 +16,7 @@ import com.example.tnsapp.adapters.QuestionAdapter
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.parsers.questionParser
+import com.google.gson.Gson
 
 class PopupActivity(
     context: Context,
@@ -27,11 +28,16 @@ class PopupActivity(
     private val respondent: String,
     private val cwsName: String
 ) : Dialog(context) {
-    private val PREF_NAME = "AnswersPref"
+    private var answersFromSP: Array<Answers> = emptyArray()
+    private val PREFNAME = "AnswersPref"
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: QuestionAdapter
     private var dismissListener: DialogDismissListener? = null
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+    private val gson = Gson()
+    private var json: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -62,10 +68,20 @@ class PopupActivity(
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
+        sharedPreferences = context.getSharedPreferences("AnswersPref", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+
+//        get answers from shared preferences
+        json = sharedPreferences.getString("answers", null).toString()
+
+        if (json != "null") {
+            answersFromSP = gson.fromJson(json, Array<Answers>::class.java)
+        }
+
         val items: List<Questions> = questionParser(audit, auditId, catId)
 
         popupTitle.text = catName
-        adapter = QuestionAdapter(items, answerDetails, respondent, cwsName)
+        adapter = QuestionAdapter(items, answerDetails, respondent, cwsName, answersFromSP)
 
         recyclerView.adapter = adapter
 

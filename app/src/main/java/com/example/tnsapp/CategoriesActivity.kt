@@ -5,15 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -47,9 +42,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
-    private var json:String = ""
+    private var json: String = ""
 
-//    initialize room db
+    //    initialize room db
     private lateinit var db: AppDatabase
 
     @SuppressLint("SetTextI18n", "MissingInflatedId")
@@ -66,12 +61,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val items: List<Categories> = categoryParser(audit, auditId)
         val progressBar: CircularProgressBar = findViewById(R.id.scoreProgressBar)
         val scoreText: TextView = findViewById(R.id.scoreText)
-        val percentageText: TextView = findViewById(R.id.percentageText)// Update progress bar
+        val percentageText: TextView = findViewById(R.id.percentageText)
+        val score = 80
 
-        progressBar.setProgressWithAnimation(60f, 1000) // Progress out of 100
+        progressBar.setProgressWithAnimation(score.toFloat(), 1000) // Progress out of 100
 
-        // Update score text
-        val score = 60
         scoreText.text = applicationContext.getString(R.string.score)
 
         // Update percentage text
@@ -98,12 +92,16 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
 
         submitAll.isEnabled = false
-        submitAll.backgroundTintList = ColorStateList.valueOf(resources.getColor(if(submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
+        submitAll.backgroundTintList =
+            ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
 
         db = AppDatabase.getDatabase(this)!!
 
         submitAll.setOnClickListener {
-            val answers = gson.fromJson(sharedPreferences.getString("answers", json), Array<Answers>::class.java)
+            val answers = gson.fromJson(
+                sharedPreferences.getString("answers", json),
+                Array<Answers>::class.java
+            )
             Thread {
                 db.answerDao().insertAll(answers)
             }.start()
@@ -227,10 +225,12 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         if (answerDetails.isNotEmpty()) {
             submitAll.isEnabled = true
-            submitAll.backgroundTintList = ColorStateList.valueOf(resources.getColor(if(submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
+            submitAll.backgroundTintList =
+                ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
         } else {
             submitAll.isEnabled = false
-            submitAll.backgroundTintList = ColorStateList.valueOf(resources.getColor(if(submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
+            submitAll.backgroundTintList =
+                ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
         }
 
 //        add shared preferences to save answers

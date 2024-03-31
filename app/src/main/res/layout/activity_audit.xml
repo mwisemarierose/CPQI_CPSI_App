@@ -7,8 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:outlineProvider="background"
-        android:background="@drawable/border_radius">
+        android:background="@drawable/border_radius"
+        android:outlineProvider="background">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,10 +19,9 @@
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/top"
                 android:contentDescription="@string/coffee_image"
-                 />
+                android:scaleType="centerCrop"
+                android:src="@drawable/top" />
 
 
             <Spinner
@@ -30,10 +29,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="20dp"
                 android:layout_alignParentEnd="true"
-                android:entries="@array/languages"
-                />
+                android:layout_marginTop="20dp"
+                android:entries="@array/languages" />
 
         </RelativeLayout>
 
@@ -45,10 +43,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/auditCardView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:layout_marginStart="35dp"
-        android:textColor="@color/maroon"
+        android:layout_marginTop="30dp"
         android:text="@string/which_audit_are_you_inclined_to_undertake"
+        android:textColor="@color/maroon"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -56,19 +54,19 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_below="@id/textView" />
+        android:layout_below="@id/textView"
+        android:layout_marginTop="40dp" />
 
-<!--    <Button-->
-<!--        android:id="@+id/continueBtn"-->
-<!--        android:layout_width="190dp"-->
-<!--        android:layout_height="52dp"-->
-<!--        android:layout_below="@id/recyclerView"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="30dp"-->
-<!--        android:text="@string/continue_txt"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:background="@drawable/rectangle_button"-->
-<!--        android:backgroundTint="@color/maroon" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/continueBtn"-->
+    <!--        android:layout_width="190dp"-->
+    <!--        android:layout_height="52dp"-->
+    <!--        android:layout_below="@id/recyclerView"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_marginTop="30dp"-->
+    <!--        android:text="@string/continue_txt"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        android:background="@drawable/rectangle_button"-->
+    <!--        android:backgroundTint="@color/maroon" />-->
 
 </RelativeLayout>

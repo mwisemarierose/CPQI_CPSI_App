@@ -14,10 +14,13 @@ class QuestionAdapter(
     private val items: List<Questions>,
     var answerDetails: Array<Answers>,
     private val respondent: String,
-    private val cwsName: String
+    private val cwsName: String,
+    private val answersFromSP: Array<Answers>
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(currentItem: Questions) {
+            println(currentItem.toString())
+            println(answersFromSP.toString())
             yesBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
                     if (item.id == currentItem.id) {
@@ -30,8 +33,7 @@ class QuestionAdapter(
                                     currentItem.id,
                                     cwsName
                                 )
-                            }
-                            else {
+                            } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
                                         answerDetails.size.toLong(),
@@ -74,8 +76,7 @@ class QuestionAdapter(
                                     currentItem.id,
                                     cwsName
                                 )
-                            }
-                            else {
+                            } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
                                         answerDetails.size.toLong(),
@@ -119,8 +120,7 @@ class QuestionAdapter(
                                     currentItem.id,
                                     cwsName
                                 )
-                            }
-                            else {
+                            } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
                                         answerDetails.size.toLong(),

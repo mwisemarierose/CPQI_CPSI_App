@@ -7,14 +7,11 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Answers::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun answerDao(): AnswersDao
 
     companion object {
-
         @Volatile
         private var INSTANCE: AppDatabase? = null
-        private val LOCK = Any()
 
         fun getDatabase(context: Context): AppDatabase? {
             // if the INSTANCE is not null, then return it,
@@ -38,7 +35,6 @@ abstract class AppDatabase : RoomDatabase() {
                 .build()
         }
     }
-
 }
 
 

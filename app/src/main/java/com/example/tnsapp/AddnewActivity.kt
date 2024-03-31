@@ -3,6 +3,7 @@ package com.example.tnsapp
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,30 +14,27 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.AddNewListAdapter
-import com.example.tnsapp.data.Answers
+import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.AppDatabase
-import com.example.tnsapp.parsers.AddNewListParser
-import kotlinx.coroutines.GlobalScope
+import com.example.tnsapp.data.RecordedAudit
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class AddNewActivity : AppCompatActivity() , AddNewListAdapter.OnItemClickListener{
+class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
+    CategoryAdapter.OnItemClickListener {
     private var auditName = ""
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-
-    //    initialize room db
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: AddNewListAdapter
     private lateinit var db: AppDatabase
 
-    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,27 +54,8 @@ class AddNewActivity : AppCompatActivity() , AddNewListAdapter.OnItemClickListen
 
         setupUI(audit.toString())
 
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        val items = mutableListOf<Answers>()
-        val adapter = AddNewListAdapter(items, this)
-
-        recyclerView.adapter = adapter // Set the adapter to the RecyclerView
-
-        // Fetch data from Room Database using AddNewListParser
-        val parser = AddNewListParser(this)
-
-        GlobalScope.launch {
-            val fetchedData = parser.fetchAnswers()
-            withContext(Dispatchers.Main) {
-                items.addAll(fetchedData) //
-                println(fetchedData)//
-                adapter.notifyDataSetChanged()
-            }
-        }
-
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
-
         }
     }
 
@@ -110,19 +89,43 @@ class AddNewActivity : AppCompatActivity() , AddNewListAdapter.OnItemClickListen
             formattedDate?.compareTo(today) == 0
         }
 
-//        if (todaysAnswers.isNotEmpty()) {
+        if (todaysAnswers.isNotEmpty()) {
 //            addNewBtn.isEnabled = false
-//            addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroonDisabled)
-//        } else {
-//            addNewBtn.isEnabled = true
-//            addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroon)
-//        }
+            addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroonDisabled)
+        } else {
+            addNewBtn.isEnabled = true
+            addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroon)
+        }
+
+        todaysAnswers.forEach {
+            println(it)
+        }
 
         addNewBtn.setOnClickListener {
 //            if (it.isEnabled) {
                 openCategoryActivity(auditId, audit)
 //            }
         }
+
+//        get answers by unique date from datetime
+        val uniqueDates = getAnswers
+            .map { it.date.substring(0, 10) }
+            .distinct()
+
+        val result = uniqueDates.map { date ->
+            val answer = getAnswers.find { it.date.substring(0, 10) == date }
+            RecordedAudit(
+                cwsName = answer?.cwsName ?: "",
+                score = 0,
+                date = date
+            )
+        }
+
+        recyclerView = findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        adapter = AddNewListAdapter(result, this)
+        recyclerView.adapter = adapter
     }
 
     @SuppressLint("RestrictedApi")
