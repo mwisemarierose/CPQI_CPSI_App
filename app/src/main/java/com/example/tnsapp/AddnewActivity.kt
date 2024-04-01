@@ -44,11 +44,12 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         val audit = intent.getStringExtra("audit")
-        val parsedAudit =
-            JSONObject(JSONObject(audit!!).getJSONArray("audits")[auditId - 1].toString())
 
-        toolBarTitle.text = parsedAudit["name"].toString()
-        auditName = parsedAudit["name"].toString()
+        val parsedAudit =
+            if (audit != null) JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString()) else JSONObject()
+
+        toolBarTitle.text = if (parsedAudit.has("name")) parsedAudit["name"].toString() else "Audit"
+        auditName = if (parsedAudit.has("name")) parsedAudit["name"].toString() else "Audit"
         sharedPreferences = getSharedPreferences("AnswersPref", MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
