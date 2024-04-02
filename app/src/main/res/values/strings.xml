@@ -27,6 +27,7 @@
     <string name="close_icon_description" translatable="false">close_icon_description</string>
     <string name="skip">Skip</string>
     <string name="submit">submit</string>
+    <string name="success_alert_msg">Audit recorded successfully!!!</string>
 
     <string-array name="languages" translatable="false">
         <item>English</item>

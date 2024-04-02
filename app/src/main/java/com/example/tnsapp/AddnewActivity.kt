@@ -48,7 +48,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         val audit = intent.getStringExtra("audit")
-        println(auditId)
 
         val parsedAudit =
             if (audit != null) JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString()) else JSONObject()
@@ -93,10 +92,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             }
 
             formattedDate?.compareTo(today) == 0 && it.auditId == auditId.toLong()
-        }
-
-        todaysAnswers.forEach {
-            println(it)
         }
 
         if (todaysAnswers.isNotEmpty()){

@@ -26,5 +26,6 @@
     <string name="submitAll_txt" >Submit All</string>
     <string name="skip">Taruka</string>
     <string name="submit">Emeza</string>
+    <string name="success_alert_msg">Igikorwa cyagenze neza!!!</string>
 
 </resources>

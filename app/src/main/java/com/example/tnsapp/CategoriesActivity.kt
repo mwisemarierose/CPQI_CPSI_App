@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -112,9 +113,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             editor.remove("answers")
             editor.apply()
 
-            val intent = Intent(this, AddNewActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(this, applicationContext.getText(R.string.success_alert_msg), Toast.LENGTH_SHORT).show()
 
+//            add delay before going back to recorded audits activity
+            Thread.sleep(2000)
+
+            val intent = Intent(this, AddNewActivity::class.java)
+            intent.putExtra("auditId", auditId)
+            intent.putExtra("audit", audit)
+            startActivity(intent)
         }
     }
 
