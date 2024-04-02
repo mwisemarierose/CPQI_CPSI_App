@@ -60,6 +60,7 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("com.github.skydoves:powerspinner:1.2.4")
     implementation ("com.mikhaellopez:circularprogressbar:3.1.0")
+    implementation ("com.github.f0ris.sweetalert:library:1.6.0")
 
     val roomVersion = "2.6.1"
 

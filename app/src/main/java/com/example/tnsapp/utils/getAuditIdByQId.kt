@@ -35,7 +35,6 @@ fun getAuditId(jsonString: String, questionId: Int): Int? {
             }
         }
     }
-
     // Return null if question id not found
     return null
 }

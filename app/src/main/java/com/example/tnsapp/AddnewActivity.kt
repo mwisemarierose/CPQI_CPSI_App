@@ -93,8 +93,11 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
             formattedDate?.compareTo(today) == 0
         }
-
-        val selectedAudit = getAuditId(readJsonFromAssets(this, "data_en.json"), todaysAnswers[0].qId.toInt())
+        val selectedAudit = if (todaysAnswers.isNotEmpty()) {
+            getAuditId(readJsonFromAssets(this, "data_en.json"), todaysAnswers[0].qId.toInt())
+        } else {
+            0
+        }
         if (todaysAnswers.isNotEmpty() && auditId == selectedAudit){
 //            addNewBtn.isEnabled = false
             addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroonDisabled)

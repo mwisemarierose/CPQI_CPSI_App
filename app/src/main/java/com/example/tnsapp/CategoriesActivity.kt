@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
@@ -23,6 +24,7 @@ import com.google.gson.Gson
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import java.text.SimpleDateFormat
 import java.util.Date
+import android.os.Handler
 import java.util.Locale
 
 class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener,
@@ -46,7 +48,14 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     //    initialize room db
     private lateinit var db: AppDatabase
+    private fun successMessage() {
+        SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE).setTitleText("SUCCESS!")
+            .setContentText("Audit submitted successfully!").show()
 
+        Handler().postDelayed({
+            dialog.dismiss()
+        }, 100000)
+    }
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +73,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val percentageText: TextView = findViewById(R.id.percentageText)
         val score = 80
 
-        progressBar.setProgressWithAnimation(score.toFloat(), 1000) // Progress out of 100
+        progressBar.setProgressWithAnimation(score.toFloat()) // Progress out of 100
 
         scoreText.text = applicationContext.getString(R.string.score)
 
@@ -84,7 +93,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val formattedDate = dateFormat.format(currentDate)
 
         dateTextView.text = "${applicationContext.getString(R.string.date_lbl)}: $formattedDate"
-
         toolBarTitle.text = intent.getStringExtra("auditName")
 
         backIconBtn.setOnClickListener {
@@ -109,7 +117,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 //            remove shared preferences after submitting answers
             editor.remove("answers")
             editor.apply()
-
+            successMessage()
             val intent = Intent(this, AddNewActivity::class.java)
             startActivity(intent)
 
@@ -238,6 +246,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         editor.putString("answers", json)
         editor.apply()
     }
+
 
     override fun onClick(v: View?) {
         TODO("Not yet implemented")
