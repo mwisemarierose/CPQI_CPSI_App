@@ -48,6 +48,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         val audit = intent.getStringExtra("audit")
+        println(auditId)
 
         val parsedAudit =
             if (audit != null) JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString()) else JSONObject()
@@ -93,11 +94,17 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
             formattedDate?.compareTo(today) == 0
         }
+
+        todaysAnswers.forEach {
+            println(it)
+        }
+
         val selectedAudit = if (todaysAnswers.isNotEmpty()) {
             getAuditId(readJsonFromAssets(this, "data_en.json"), todaysAnswers[0].qId.toInt())
         } else {
-            0
+            0 // Assuming getAuditId should return an integer
         }
+        println(selectedAudit)
         if (todaysAnswers.isNotEmpty() && auditId == selectedAudit){
 //            addNewBtn.isEnabled = false
             addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroonDisabled)
@@ -108,7 +115,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         addNewBtn.setOnClickListener {
 //            if (it.isEnabled) {
-                openCategoryActivity(auditId, audit)
+            openCategoryActivity(auditId, audit)
 //            }
         }
 

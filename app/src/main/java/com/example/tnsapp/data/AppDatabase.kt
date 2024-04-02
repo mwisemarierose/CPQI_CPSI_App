@@ -2,10 +2,12 @@ package com.example.tnsapp.data
 
 import android.content.Context
 import androidx.room.Database
+import androidx.room.migration.Migration
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Answers::class], version = 1)
+@Database(entities = [Answers::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun answerDao(): AnswersDao
 
@@ -32,11 +34,17 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 "cpq_db"
             ).allowMainThreadQueries()
+                .addMigrations(Migration1To2())
                 .build()
         }
     }
-}
 
+    class Migration1To2 : Migration(1, 2) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE Answers ADD COLUMN audit_id INTEGER NOT NULL DEFAULT 0") // Modify this line if needed (e.g., change data type or add constraints)
+        }
+    }
+}
 
 
 
