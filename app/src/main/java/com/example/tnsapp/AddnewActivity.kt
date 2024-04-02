@@ -19,7 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.AddNewListAdapter
 import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.AppDatabase
+import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.RecordedAudit
+import com.example.tnsapp.parsers.categoryParser
+import com.example.tnsapp.parsers.readJsonFromAssets
+import com.example.tnsapp.utils.getAuditId
 import kotlinx.coroutines.DelicateCoroutinesApi
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -90,16 +94,13 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             formattedDate?.compareTo(today) == 0
         }
 
-        if (todaysAnswers.isNotEmpty()) {
+        val selectedAudit = getAuditId(readJsonFromAssets(this, "data_en.json"), todaysAnswers[0].qId.toInt())
+        if (todaysAnswers.isNotEmpty() && auditId == selectedAudit){
 //            addNewBtn.isEnabled = false
             addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroonDisabled)
         } else {
             addNewBtn.isEnabled = true
             addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroon)
-        }
-
-        todaysAnswers.forEach {
-            println(it)
         }
 
         addNewBtn.setOnClickListener {
@@ -125,7 +126,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(result, this)
+        adapter = AddNewListAdapter(if(auditId == selectedAudit) result else emptyList(), this)
         recyclerView.adapter = adapter
     }
 
