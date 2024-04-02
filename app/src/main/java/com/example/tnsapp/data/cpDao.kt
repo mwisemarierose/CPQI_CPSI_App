@@ -17,7 +17,7 @@ interface AnswersDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(answer: Answers)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.NONE)
     fun insertAll(answers: Array<Answers>)
 
     @Delete

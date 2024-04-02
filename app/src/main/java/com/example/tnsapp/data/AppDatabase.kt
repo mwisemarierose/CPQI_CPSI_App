@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Answers::class], version = 1)
+@Database(entities = [Answers::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun answerDao(): AnswersDao
 
@@ -32,6 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 "cpq_db"
             ).allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }
