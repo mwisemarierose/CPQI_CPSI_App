@@ -24,12 +24,14 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.properties.Delegates
 
 class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener,
     PopupActivity.DialogDismissListener, View.OnClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
+    private var auditId by Delegates.notNull<Int>()
     private lateinit var respondent: TextView
     private lateinit var cwsName: TextView
     private lateinit var submitAll: Button
@@ -56,7 +58,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         submitAll = findViewById(R.id.submitAllBtn)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
-        val auditId = intent.getIntExtra("auditId", 0)
+        auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
         val items: List<Categories> = categoryParser(audit, auditId)
         val progressBar: CircularProgressBar = findViewById(R.id.scoreProgressBar)
@@ -126,20 +128,22 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 if (answerDetails.isNotEmpty()) {
                     answerDetails = answerDetails.map {
                         Answers(
-                            0,
+                            null,
                             respondent.text.toString(),
                             it.answer,
                             it.qId,
+                            auditId.toLong(),
                             it.cwsName
                         )
                     }.toTypedArray()
                 } else {
                     answerDetails = answerDetails.plus(
                         Answers(
-                            0,
+                            null,
                             respondent.text.toString(),
                             "",
                             items!![0].id,
+                            auditId.toLong(),
                             cwsName.text.toString()
                         )
                     )
@@ -152,20 +156,22 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 if (answerDetails.isNotEmpty()) {
                     answerDetails = answerDetails.map {
                         Answers(
-                            0,
+                            null,
                             it.responderName,
                             it.answer,
                             it.qId,
+                            auditId.toLong(),
                             cwsName.text.toString()
                         )
                     }.toTypedArray()
                 } else {
                     answerDetails = answerDetails.plus(
                         Answers(
-                            0,
+                            null,
                             respondent.text.toString(),
                             "",
                             items!![0].id,
+                            auditId.toLong(),
                             cwsName.text.toString()
                         )
                     )

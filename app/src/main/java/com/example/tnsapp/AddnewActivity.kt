@@ -48,6 +48,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         val audit = intent.getStringExtra("audit")
+        println(auditId)
 
         val parsedAudit =
             if (audit != null) JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString()) else JSONObject()
@@ -91,11 +92,14 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 )
             }
 
-            formattedDate?.compareTo(today) == 0
+            formattedDate?.compareTo(today) == 0 && it.auditId == auditId.toLong()
         }
 
-        val selectedAudit = getAuditId(readJsonFromAssets(this, "data_en.json"), todaysAnswers[0].qId.toInt())
-        if (todaysAnswers.isNotEmpty() && auditId == selectedAudit){
+        todaysAnswers.forEach {
+            println(it)
+        }
+
+        if (todaysAnswers.isNotEmpty()){
 //            addNewBtn.isEnabled = false
             addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroonDisabled)
         } else {
@@ -115,7 +119,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             .distinct()
 
         val result = uniqueDates.map { date ->
-            val answer = getAnswers.find { it.date.substring(0, 10) == date }
+            val answer = getAnswers.find { it.date.substring(0, 10) == date && it.auditId == auditId.toLong()}
             RecordedAudit(
                 cwsName = answer?.cwsName ?: "",
                 score = 0,
@@ -126,7 +130,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(if(auditId == selectedAudit) result else emptyList(), this)
+        adapter = AddNewListAdapter(result, this)
         recyclerView.adapter = adapter
     }
 

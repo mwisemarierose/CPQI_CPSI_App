@@ -11,6 +11,7 @@ import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.Questions
 
 class QuestionAdapter(
+    private val auditId: Int,
     private val items: List<Questions>,
     var answerDetails: Array<Answers>,
     private val respondent: String,
@@ -19,27 +20,27 @@ class QuestionAdapter(
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(currentItem: Questions) {
-            println(currentItem.toString())
-            println(answersFromSP.toString())
             yesBtn.setOnClickListener {
                 items.forEachIndexed { index, item ->
                     if (item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
                             if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.YES,
                                     currentItem.id,
+                                    auditId.toLong(),
                                     cwsName
                                 )
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
-                                        answerDetails.size.toLong(),
+                                        null,
                                         respondent,
                                         Answers.YES,
                                         currentItem.id,
+                                        auditId.toLong(),
                                         cwsName
                                     )
                                 )
@@ -47,10 +48,11 @@ class QuestionAdapter(
                         } else {
                             answerDetails = answerDetails.plus(
                                 Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.YES,
                                     currentItem.id,
+                                    auditId.toLong(),
                                     cwsName
                                 )
                             )
@@ -70,19 +72,21 @@ class QuestionAdapter(
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
                             if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.NO,
                                     currentItem.id,
+                                    auditId.toLong(),
                                     cwsName
                                 )
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
-                                        answerDetails.size.toLong(),
+                                        null,
                                         respondent,
                                         Answers.YES,
                                         currentItem.id,
+                                        auditId.toLong(),
                                         cwsName
                                     )
                                 )
@@ -90,10 +94,11 @@ class QuestionAdapter(
                         } else {
                             answerDetails = answerDetails.plus(
                                 Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.NO,
                                     currentItem.id,
+                                    auditId.toLong(),
                                     cwsName
                                 )
                             )
@@ -114,19 +119,21 @@ class QuestionAdapter(
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
                             if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.SKIP,
                                     currentItem.id,
+                                    auditId.toLong(),
                                     cwsName
                                 )
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
-                                        answerDetails.size.toLong(),
+                                        null,
                                         respondent,
                                         Answers.YES,
                                         currentItem.id,
+                                        auditId.toLong(),
                                         cwsName
                                     )
                                 )
@@ -134,10 +141,11 @@ class QuestionAdapter(
                         } else {
                             answerDetails = answerDetails.plus(
                                 Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.SKIP,
                                     currentItem.id,
+                                    auditId.toLong(),
                                     cwsName
                                 )
                             )

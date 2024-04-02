@@ -81,7 +81,7 @@ class PopupActivity(
         val items: List<Questions> = questionParser(audit, auditId, catId)
 
         popupTitle.text = catName
-        adapter = QuestionAdapter(items, answerDetails, respondent, cwsName, answersFromSP)
+        adapter = QuestionAdapter(auditId, items, answerDetails, respondent, cwsName, answersFromSP)
 
         recyclerView.adapter = adapter
 
