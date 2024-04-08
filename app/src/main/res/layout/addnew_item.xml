@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingVertical="10dp">
+            android:paddingVertical="2dp">
 
             <!-- Date Dummy Data -->
             <TextView

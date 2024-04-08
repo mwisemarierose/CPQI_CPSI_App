@@ -26,17 +26,18 @@ class QuestionAdapter(
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
                             if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.YES,
                                     currentItem.id,
                                     auditId.toLong(),
                                     cwsName
+
                                 )
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
-                                        answerDetails.size.toLong(),
+                                        null,
                                         respondent,
                                         Answers.YES,
                                         currentItem.id,
@@ -48,7 +49,7 @@ class QuestionAdapter(
                         } else {
                             answerDetails = answerDetails.plus(
                                 Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.YES,
                                     currentItem.id,
@@ -72,7 +73,7 @@ class QuestionAdapter(
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
                             if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.NO,
                                     currentItem.id,
@@ -82,7 +83,7 @@ class QuestionAdapter(
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
-                                        answerDetails.size.toLong(),
+                                        null,
                                         respondent,
                                         Answers.YES,
                                         currentItem.id,
@@ -94,7 +95,7 @@ class QuestionAdapter(
                         } else {
                             answerDetails = answerDetails.plus(
                                 Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.NO,
                                     currentItem.id,
@@ -119,7 +120,7 @@ class QuestionAdapter(
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
                             if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
                                 answerDetails[index] = Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.SKIP,
                                     currentItem.id,
@@ -129,7 +130,7 @@ class QuestionAdapter(
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
-                                        answerDetails.size.toLong(),
+                                        null,
                                         respondent,
                                         Answers.YES,
                                         currentItem.id,
@@ -141,7 +142,7 @@ class QuestionAdapter(
                         } else {
                             answerDetails = answerDetails.plus(
                                 Answers(
-                                    answerDetails.size.toLong(),
+                                    null,
                                     respondent,
                                     Answers.SKIP,
                                     currentItem.id,

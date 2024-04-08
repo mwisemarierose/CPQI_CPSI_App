@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -25,12 +26,30 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audit)
+        val language = getSelectedLanguage()
         supportActionBar?.hide()
+        onClickListener()
 
         intent.getStringExtra("language")?.let { setupUI(it) }
 
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
         setupLanguageSpinner(languageSpinner)
+    }
+    private fun getSelectedLanguage(): String {
+        val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString("language", "en") ?: "en"
+    }
+
+    private fun onClickListener() {
+        val addstation = findViewById<Button>(R.id.addStation)
+        addstation.setOnClickListener {
+            openStationActivity(getSelectedLanguage())
+        }
+    }
+    private fun openStationActivity(language: String) {
+        val intent = Intent(this, NewstationActivity::class.java)
+        intent.putExtra("language", language)
+        startActivity(intent)
     }
 
     private fun setupLanguageSpinner(languageSpinner: Spinner) {
@@ -111,6 +130,8 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
     override fun onItemClick(position: Int) {
         startActivityAfterClick(position)
     }
+
+
 
     private fun startActivityAfterClick(position: Int) {
         val intent = Intent(this, AddNewActivity::class.java)

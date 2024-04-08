@@ -3,7 +3,6 @@ package com.example.tnsapp
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -19,16 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.AddNewListAdapter
 import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.AppDatabase
-import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.RecordedAudit
-import com.example.tnsapp.parsers.categoryParser
-import com.example.tnsapp.parsers.readJsonFromAssets
-import com.example.tnsapp.utils.getAuditId
-import kotlinx.coroutines.DelicateCoroutinesApi
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
     CategoryAdapter.OnItemClickListener {
@@ -48,7 +39,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         val audit = intent.getStringExtra("audit")
-        println(auditId)
 
         val parsedAudit =
             if (audit != null) JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString()) else JSONObject()
@@ -74,69 +64,24 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         db = AppDatabase.getDatabase(this)!!
 
         val getAnswers = db.answerDao().getAll()
-        // Date format for Room DB date
-        val roomDateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
 
-        // Get today's date and format it to yyyy-MM-dd
-        val today = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(Date())
 
-        val todaysAnswers = getAnswers.filter {
-
-            // Get the date from your Room DB
-            val roomDbDate = roomDateFormat.parse(it.date)
-
-            // Format the date to yyyy-MM-dd
-            val formattedDate = roomDbDate?.let { it1 ->
-                SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(
-                    it1
-                )
-            }
-
-            formattedDate?.compareTo(today) == 0
-        }
-
-        todaysAnswers.forEach {
-            println(it)
-        }
-
-        val selectedAudit = if (todaysAnswers.isNotEmpty()) {
-            getAuditId(readJsonFromAssets(this, "data_en.json"), todaysAnswers[0].qId.toInt())
-        } else {
-            0 // Assuming getAuditId should return an integer
-        }
-        println(selectedAudit)
-        if (todaysAnswers.isNotEmpty() && auditId == selectedAudit){
-//            addNewBtn.isEnabled = false
-            addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroonDisabled)
-        } else {
-            addNewBtn.isEnabled = true
-            addNewBtn.backgroundTintList = ColorStateList.valueOf(R.color.maroon)
-        }
 
         addNewBtn.setOnClickListener {
-//            if (it.isEnabled) {
             openCategoryActivity(auditId, audit)
-//            }
         }
 
-//        get answers by unique date from datetime
-        val uniqueDates = getAnswers
-            .map { it.date.substring(0, 10) }
-            .distinct()
-
-        val result = uniqueDates.map { date ->
-            val answer = getAnswers.find { it.date.substring(0, 10) == date }
-            RecordedAudit(
-                cwsName = answer?.cwsName ?: "",
+        // Remove date filtering logic here
+        val result = getAnswers.map {
+            RecordedAudit(cwsName = it.cwsName ?: "",
                 score = 0,
-                date = date
-            )
-        }
+                date = it.date) }
+        println(result)
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(if(auditId == selectedAudit) result else emptyList(), this)
+        adapter = AddNewListAdapter(result, this)
         recyclerView.adapter = adapter
     }
 

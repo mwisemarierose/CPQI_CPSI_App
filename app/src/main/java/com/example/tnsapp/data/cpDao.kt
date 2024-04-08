@@ -23,3 +23,17 @@ interface AnswersDao {
     @Delete
     suspend fun delete(answer: Answers)
 }
+@Dao
+interface CwsDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(cws: Cws)
+
+    @Query("SELECT * FROM cws")
+    fun getAll(): Array<Cws>
+    @Insert(onConflict = OnConflictStrategy.NONE)
+    fun insertAll(cws: Array<Cws>)
+
+    @Delete
+    suspend fun delete(cws: Cws)
+}

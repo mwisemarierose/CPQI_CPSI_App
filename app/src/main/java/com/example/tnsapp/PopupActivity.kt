@@ -27,7 +27,8 @@ class PopupActivity(
     private var answerDetails: Array<Answers>,
     private val respondent: String,
     private val cwsName: String
-) : Dialog(context) {
+
+    ) : Dialog(context) {
     private var answersFromSP: Array<Answers> = emptyArray()
     private val PREFNAME = "AnswersPref"
     private lateinit var recyclerView: RecyclerView

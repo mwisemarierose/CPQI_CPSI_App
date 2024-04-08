@@ -72,18 +72,14 @@
 
             </com.google.android.material.textfield.TextInputLayout>
             <!-- CWS Name Input -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cwsNameInputLayout"
+            <Spinner
+                android:id="@+id/cwsNameSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/cws_name">
+                android:prompt="@string/cws_name"
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cwsNameEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                />
 
-            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
