@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 
 @Dao
 interface AnswersDao {
@@ -26,6 +27,9 @@ interface AnswersDao {
 @Dao
 interface CwsDao {
 
+    @Query("SELECT * FROM cws WHERE cws_name = :name LIMIT 1")
+    suspend fun getCwsByName(name: String): Cws?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(cws: Cws)
 
@@ -36,4 +40,22 @@ interface CwsDao {
 
     @Delete
     suspend fun delete(cws: Cws)
+
+//    @Transaction
+//    @Query("SELECT * FROM cws")
+//    suspend fun getAllWithIds(): List<CwsWithId>
+}
+//data class CwsWithId(
+//    val id: Long,
+//    val cwsName: String, // Assuming cwsName exists in your Cws class
+//)
+
+@Dao
+interface RecordedAuditDao {
+
+    @Query("SELECT * FROM RecordedAudit")
+    suspend fun getAll(): List<RecordedAudit>
+
+    @Query("SELECT EXISTS(SELECT * FROM RecordedAudit WHERE cwsName = :cwsName AND date = :date)")
+    suspend fun existsForCwsToday(cwsName: String, date: String): Boolean
 }

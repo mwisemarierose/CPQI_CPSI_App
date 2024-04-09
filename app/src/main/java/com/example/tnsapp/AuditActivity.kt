@@ -28,7 +28,7 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         setContentView(R.layout.activity_audit)
         val language = getSelectedLanguage()
         supportActionBar?.hide()
-        onClickListener()
+
 
         intent.getStringExtra("language")?.let { setupUI(it) }
 
@@ -40,17 +40,7 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         return sharedPref.getString("language", "en") ?: "en"
     }
 
-    private fun onClickListener() {
-        val addstation = findViewById<Button>(R.id.addStation)
-        addstation.setOnClickListener {
-            openStationActivity(getSelectedLanguage())
-        }
-    }
-    private fun openStationActivity(language: String) {
-        val intent = Intent(this, NewstationActivity::class.java)
-        intent.putExtra("language", language)
-        startActivity(intent)
-    }
+
 
     private fun setupLanguageSpinner(languageSpinner: Spinner) {
         ArrayAdapter.createFromResource(
@@ -130,8 +120,6 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
     override fun onItemClick(position: Int) {
         startActivityAfterClick(position)
     }
-
-
 
     private fun startActivityAfterClick(position: Int) {
         val intent = Intent(this, AddNewActivity::class.java)

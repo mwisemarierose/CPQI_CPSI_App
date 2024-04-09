@@ -76,7 +76,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             RecordedAudit(cwsName = it.cwsName ?: "",
                 score = 0,
                 date = it.date) }
-        println(result)
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)

@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewstationActivity">
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -31,38 +31,77 @@
             android:textColor="@android:color/white"
             android:textSize="27sp" />
     </androidx.appcompat.widget.Toolbar>
-
-    <!-- Input Fields -->
-    <EditText
-        android:id="@+id/cwsName"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/auditCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_below="@id/toolbar"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:hint="CWS NAME"/>
+        android:background="@drawable/border_radius"
+        android:outlineProvider="background">
 
-    <EditText
-        android:id="@+id/cwsLeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cwsName"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:hint=" CWS LEADER"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cwsLeader"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:hint="LOCATION"/>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:contentDescription="@string/coffee_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/top" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+    <!-- Input Fields -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/auditCardView"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Add Station"
+            android:textSize="24sp"
+            android:textColor="@color/maroon"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/cwsName"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="CWS name"/>
+
+        <EditText
+            android:id="@+id/cwsLeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cwsName"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint=" CWS Leader"/>
+
+        <EditText
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cwsLeader"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="Address"/>
 
     <!-- Button -->
     <Button
@@ -75,5 +114,6 @@
         android:text="@string/add"
         android:textColor="@color/white"
         android:backgroundTint="@color/maroon" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -63,6 +63,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         supportActionBar?.hide()
         db = AppDatabase.getDatabase(this)!!
         fetchCwsData()
+        onClickListener()
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         submitAll = findViewById(R.id.submitAllBtn)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
@@ -131,15 +132,30 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             startActivity(intent)
         }
     }
+
+    private fun onClickListener() {
+        val addstation = findViewById<Button>(R.id.addStation)
+        addstation.setOnClickListener {
+            openStationActivity(getSelectedLanguage())
+        }
+    }
+    private fun openStationActivity(language: String) {
+        val intent = Intent(this, NewstationActivity::class.java)
+        intent.putExtra("language", language)
+        startActivity(intent)
+    }
+    private fun getSelectedLanguage(): String {
+        val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString("language", "en") ?: "en"
+    }
     private fun fetchCwsData() {
         CoroutineScope(Dispatchers.IO).launch {
-            val cwsList = db.cwsDao().getAll() // Get all CWS entries
+            val cwsList = db.cwsDao().getAll()
 
             // Create an ArrayAdapter with CWS names (or relevant data)
             val adapter = ArrayAdapter<String>(this@CategoriesActivity,
                 android.R.layout.simple_spinner_dropdown_item,
                 getCwsNames(cwsList))
-
             // Update UI on the main thread
             runOnUiThread {
                 cwsName.adapter = adapter
@@ -149,7 +165,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private fun getCwsNames(cwsList: Array<Cws>): List<String> {
         val names = mutableListOf<String>()
         for (cws in cwsList) {
-            names.add(cws.cwsName)  // Replace with relevant data if needed
+            names.add(cws.cwsName)
         }
         return names
     }
