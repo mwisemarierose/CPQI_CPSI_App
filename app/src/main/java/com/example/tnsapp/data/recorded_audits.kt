@@ -8,7 +8,8 @@ import java.util.Date
 
 @Entity(tableName = "recordedAudit")
 data class RecordedAudit(
-    @PrimaryKey(autoGenerate = true) val id: Long? = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long?,
+    @ColumnInfo(name = "auditId") val auditId: Int,
     @ColumnInfo(name = "cwsName") val cwsName: String,
     @ColumnInfo(name = "score") val score: Int,
     @ColumnInfo(name = "date") val date: String = Date().toString()

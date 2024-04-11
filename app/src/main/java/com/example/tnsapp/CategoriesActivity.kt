@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -40,6 +41,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
     private var auditId by Delegates.notNull<Int>()
+    private lateinit var respondentContainer: LinearLayout
     private lateinit var respondent: TextView
 //    private lateinit var cwsName: TextView
     private lateinit var submitAll: Button
@@ -80,7 +82,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         scoreText.text = applicationContext.getString(R.string.score)
 
         // Update percentage text
-        percentageText.text = "$score%"
+        percentageText.text = ": $score%"
 
         sharedPreferences = getSharedPreferences("AnswersPref", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -108,11 +110,20 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         db = AppDatabase.getDatabase(this)!!
 
+
+
         submitAll.setOnClickListener {
             val answers = gson.fromJson(
                 sharedPreferences.getString("answers", json),
                 Array<Answers>::class.java
             )
+
+//            if respondent or cwsName is not selected, show error message
+            if (respondent.text.isEmpty() || cwsName.selectedItem == null) {
+                Toast.makeText(this, applicationContext.getText(R.string.missing_field_error_alert_msg), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             Thread {
                 db.answerDao().insertAll(answers)
             }.start()
@@ -170,6 +181,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         return names
     }
     private fun setupUI(items: List<Categories>?) {
+        respondentContainer = findViewById(R.id.textInputLayoutContainer)
         respondent = findViewById(R.id.nameEditText)
 //        cwsName = findViewById(R.id.cwsNameEditText)
         cwsName = findViewById(R.id.cwsNameSpinner)
@@ -258,6 +270,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
+
         dialog = PopupActivity(
             this,
             auditId,
@@ -266,9 +279,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             adapter.items[position - 1].name,
             answerDetails,
             respondent.text.toString(),
-//            cwsName.text.toString(),
-            cwsName.selectedItem.toString()
-
+            if(cwsName.selectedItem != null) cwsName.selectedItem.toString() else ""
         )
         dialog.setDismissListener(this)
         dialog.show()

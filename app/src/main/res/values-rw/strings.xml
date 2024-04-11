@@ -10,7 +10,7 @@
     <string name="add_new">Kora irindi</string>
     <string name="date">Itariki</string>
     <string name="cws_name">Izina rya station</string>
-    <string name="score">Amanota:</string>
+    <string name="score">Amanota</string>
     <string name="no_records">no records</string>
     <string name="name_txt">Amazina</string>
     <string name="date_lbl">Itariki:</string>
@@ -27,8 +27,11 @@
     <string name="skip">Taruka</string>
     <string name="submit">Emeza</string>
     <string name="success_alert_msg">Igikorwa cyagenze neza!!!</string>
-    <string name="new_station">New Station</string>
-    <string name="Add_station">Add Station</string>
+    <string name="new_station">Sitasiyo Nshya</string>
+    <string name="Add_station">Shyiramo Sitasiyo</string>
     <string name="add">Add</string>
+    <string name="no_items_to_display">Nta kintu kirimo</string>
+    <string name="missing_field_error_alert_msg">Uzuza ibikenewe byose</string>
+    <string name="select_cws_name">Hitamo Izina rya CWS</string>
 
 </resources>

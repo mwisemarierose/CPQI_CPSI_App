@@ -10,7 +10,7 @@
     <string name="add_new">Add New</string>
     <string name="date">Date</string>
     <string name="cws_name">CWS Name</string>
-    <string name="score">Score:</string>
+    <string name="score">Score</string>
     <string name="no_records">no records</string>
     <string name="name_txt">Name</string>
     <string name="date_lbl">Date:</string>
@@ -31,6 +31,9 @@
     <string name="new_station">New Station</string>
     <string name="Add_station">Add Station</string>
     <string name="add">Add</string>
+    <string name="no_items_to_display">No items to display</string>
+    <string name="missing_field_error_alert_msg">Some Fields Are Empty</string>
+    <string name="select_cws_name">Select CWS Name</string>
 
     <string-array name="languages" translatable="false">
         <item>English</item>
