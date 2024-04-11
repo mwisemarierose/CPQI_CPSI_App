@@ -96,7 +96,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
         val formattedDate = dateFormat.format(currentDate)
 
-        dateTextView.text = "${applicationContext.getString(R.string.date_lbl)}: $formattedDate"
+        dateTextView.text = "${applicationContext.getString(R.string.date_lbl)} $formattedDate"
 
         toolBarTitle.text = intent.getStringExtra("auditName")
 
