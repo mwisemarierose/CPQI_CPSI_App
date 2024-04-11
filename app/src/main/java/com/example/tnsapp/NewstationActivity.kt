@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +48,10 @@ class NewstationActivity : AppCompatActivity() {
         db = AppDatabase.getDatabase(this)!!
 
         val addBtn = findViewById<Button>(R.id.Add)
+        val backIconBtn: ImageView = findViewById(R.id.backIcon)
+        backIconBtn.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
         addBtn.setOnClickListener {
             val cwsName = findViewById<EditText>(R.id.cwsName).text.toString()
             val cwsLeader = findViewById<EditText>(R.id.cwsLeader).text.toString()

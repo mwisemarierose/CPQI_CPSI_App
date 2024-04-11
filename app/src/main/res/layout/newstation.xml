@@ -29,13 +29,14 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/Add_station"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:textSize="27sp" />
     </androidx.appcompat.widget.Toolbar>
     <com.smarteist.autoimageslider.SliderView
         android:id="@+id/slider"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="450dp"
+        android:layout_marginTop="10dp"
         android:layout_centerInParent="true"
         android:layout_below="@id/toolbar"
         app:sliderAnimationDuration="600"
@@ -56,14 +57,14 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/slider"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register_your_station"
-            android:textSize="24sp"
+            android:textSize="34sp"
             android:textColor="@color/maroon"
             android:textStyle="bold" />
         <EditText

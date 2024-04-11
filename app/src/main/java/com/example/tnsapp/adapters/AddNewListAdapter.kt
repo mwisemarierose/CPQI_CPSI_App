@@ -6,13 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.R
-import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.RecordedAudit
 
 
-class AddNewListAdapter(val items: List<RecordedAudit>, private val listener: OnItemClickListener) :
+class AddNewListAdapter(val items: List<RecordedAudit>, private val totalScore:Int) :
     RecyclerView.Adapter<AddNewListAdapter.ViewHolder>() {
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         val auditCwsNameView: TextView = itemView.findViewById(R.id.auditCWSName)
@@ -36,10 +34,10 @@ class AddNewListAdapter(val items: List<RecordedAudit>, private val listener: On
         val currentItem = items[position]
         holder.auditCwsNameView.text = currentItem.cwsName
         holder.auditDateView.text = currentItem.date
-        holder.auditScoreView.text = currentItem.score.toString()
+        holder.auditScoreView.text = totalScore.toString()
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return if (items.isEmpty()) 0 else items.size
     }
 }

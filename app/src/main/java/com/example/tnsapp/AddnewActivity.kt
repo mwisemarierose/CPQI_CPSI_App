@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.AddNewListAdapter
 import com.example.tnsapp.adapters.CategoryAdapter
+import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
 import com.example.tnsapp.data.RecordedAudit
 import org.json.JSONObject
@@ -27,6 +28,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyView: TextView
     private lateinit var adapter: AddNewListAdapter
     private lateinit var db: AppDatabase
 
@@ -65,23 +67,38 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         val getAnswers = db.answerDao().getAll()
 
-
-
         addNewBtn.setOnClickListener {
             openCategoryActivity(auditId, audit)
         }
 
+
         // Remove date filtering logic here
         val result = getAnswers.map {
-            RecordedAudit(cwsName = it.cwsName ?: "",
-                score = 0,
+            RecordedAudit(null, it.auditId.toInt(), cwsName = it.cwsName,
+                score = if(it.answer == Answers.YES) 1 else 0,
                 date = it.date) }
 
+        result.forEach {
+            println(it.toString())
+        }
+
+        val lastItem = result.lastOrNull()
+
+        emptyView = findViewById(R.id.emptyTextView)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(result, this)
+        adapter = AddNewListAdapter(lastItem?.let { listOf(it) } ?: emptyList(),
+            result.sumOf { it.score })
         recyclerView.adapter = adapter
+
+        if (result.isEmpty() || result[0].auditId != auditId) {
+            emptyView.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        } else {
+            emptyView.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -102,7 +119,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
-
 
     private fun openCategoryActivity(auditId: Int, audit: String?) {
         val intent = Intent(this, CategoriesActivity::class.java)

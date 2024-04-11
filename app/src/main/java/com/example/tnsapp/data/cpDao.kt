@@ -26,9 +26,11 @@ interface AnswersDao {
 }
 @Dao
 interface CwsDao {
-
     @Query("SELECT * FROM cws WHERE cws_name = :name LIMIT 1")
     suspend fun getCwsByName(name: String): Cws?
+
+    @Query("SELECT * FROM cws WHERE cws_name = :name")
+    suspend fun getAllCwsByName(name: String): Cws?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(cws: Cws)
