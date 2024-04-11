@@ -10,7 +10,7 @@
     <string name="add_new">Kora irindi</string>
     <string name="date">Itariki</string>
     <string name="cws_name">Izina rya station</string>
-    <string name="score">Amanota:</string>
+    <string name="score">Amanota</string>
     <string name="no_records">no records</string>
     <string name="name_txt">Amazina</string>
     <string name="date_lbl">Itariki:</string>
@@ -27,8 +27,12 @@
     <string name="skip">Taruka</string>
     <string name="submit">Emeza</string>
     <string name="success_alert_msg">Igikorwa cyagenze neza!!!</string>
-    <string name="new_station">New Station</string>
-    <string name="Add_station">Add Station</string>
-    <string name="add">Add</string>
+    <string name="new_station">Ongeramo Station</string>
+    <string name="Add_station">Ongeramo Station</string>
+    <string name="add">Bika</string>
+    <string name="register_your_station">Ongeramo station yawe</string>
+    <string name="address">Aderesi</string>
+    <string name="cws_leader">Umuyobozi wa station</string>
+    <string name="cws_Name">Izina rya station</string>
 
 </resources>

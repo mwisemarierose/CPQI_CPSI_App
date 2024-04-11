@@ -10,7 +10,7 @@
     <string name="add_new">Add New</string>
     <string name="date">Date</string>
     <string name="cws_name">CWS Name</string>
-    <string name="score">Score:</string>
+    <string name="score">Score</string>
     <string name="no_records">no records</string>
     <string name="name_txt">Name</string>
     <string name="date_lbl">Date:</string>
@@ -31,6 +31,10 @@
     <string name="new_station">New Station</string>
     <string name="Add_station">Add Station</string>
     <string name="add">Add</string>
+    <string name="register_your_station">Register your station</string>
+    <string name="cws_leader">CWS Leader</string>
+    <string name="address">Address</string>
+    <string name="cws_Name">CWS Name</string>
 
     <string-array name="languages" translatable="false">
         <item>English</item>

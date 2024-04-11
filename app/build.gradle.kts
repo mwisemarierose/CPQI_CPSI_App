@@ -62,6 +62,9 @@ dependencies {
     implementation ("com.github.skydoves:powerspinner:1.2.4")
     implementation ("com.mikhaellopez:circularprogressbar:3.1.0")
     implementation ("com.github.f0ris.sweetalert:library:1.6.0")
+    implementation ("androidx.viewpager2:viewpager2:1.1.0-beta01")
+    implementation ("com.github.smarteist:autoimageslider:1.3.9")
+
 
     val roomVersion = "2.6.1"
 
