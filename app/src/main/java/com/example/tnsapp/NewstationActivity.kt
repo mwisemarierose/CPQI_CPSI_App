@@ -1,6 +1,7 @@
 package com.example.tnsapp
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -56,14 +57,13 @@ class NewstationActivity : AppCompatActivity() {
             val cwsName = findViewById<EditText>(R.id.cwsName).text.toString()
             val cwsLeader = findViewById<EditText>(R.id.cwsLeader).text.toString()
             val location = findViewById<EditText>(R.id.location).text.toString()
-
             lifecycleScope.launch {
                 val existingCws = db.cwsDao().getCwsByName(cwsName)
 
                 if (existingCws == null) {
                     val cws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location)
                     db.cwsDao().insert(cws)
-                    withContext(Dispatchers.Main) {
+                    withContext(Dispatchers.Main) { // Switch to Main thread for UI updates
                         Toast.makeText(this@NewstationActivity, "CWS added successfully", Toast.LENGTH_SHORT).show()
                     }
                     finish()

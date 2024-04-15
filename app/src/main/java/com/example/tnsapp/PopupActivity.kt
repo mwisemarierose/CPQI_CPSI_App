@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.QuestionAdapter
 import com.example.tnsapp.data.Answers
+import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.parsers.questionParser
 import com.google.gson.Gson
@@ -26,9 +27,8 @@ class PopupActivity(
     private val catName: String,
     private var answerDetails: Array<Answers>,
     private val respondent: String,
-    private val cwsName: String
-
-    ) : Dialog(context) {
+    private val cwsName: String,
+) : Dialog(context) {
     private var answersFromSP: Array<Answers> = emptyArray()
     private val PREFNAME = "AnswersPref"
     private lateinit var recyclerView: RecyclerView
@@ -38,7 +38,16 @@ class PopupActivity(
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
     private var json: String = ""
-
+    private val items: List<Categories>
+        get() {
+            TODO()
+        }
+    private fun updateCategoryCompletion() {
+        val currentCategory = items.find { it.id.toInt() == catId }
+        if (currentCategory != null) {
+            currentCategory.completed= true
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -60,7 +69,6 @@ class PopupActivity(
         dismissListener?.onDialogDismissed(answerDetails)
         Toast.makeText(context, "Answers saved", Toast.LENGTH_SHORT).show()
     }
-
     private fun setupUI() {
         val closeIcon: ImageView = findViewById(R.id.closeIcon)
         val popupTitle: TextView = findViewById(R.id.popUpTitle)
@@ -91,6 +99,7 @@ class PopupActivity(
                 adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
 
             if (allAnswered) {
+                updateCategoryCompletion()
                 notifyDismissListener(adapter.answerDetails)
                 dismiss()
             } else {

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -43,7 +44,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private var auditId by Delegates.notNull<Int>()
     private lateinit var respondentContainer: LinearLayout
     private lateinit var respondent: TextView
-//    private lateinit var cwsName: TextView
+    //    private lateinit var cwsName: TextView
     private lateinit var submitAll: Button
     private lateinit var dialog: PopupActivity
     private var answerDetails: Array<Answers> = emptyArray()
@@ -64,7 +65,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         setContentView(R.layout.activity_categories)
         supportActionBar?.hide()
         db = AppDatabase.getDatabase(this)!!
-        fetchCwsData()
+            fetchCwsData ()
         onClickListener()
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         submitAll = findViewById(R.id.submitAllBtn)
@@ -154,11 +155,14 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val intent = Intent(this, NewstationActivity::class.java)
         intent.putExtra("language", language)
         startActivity(intent)
+
     }
     private fun getSelectedLanguage(): String {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         return sharedPref.getString("language", "en") ?: "en"
     }
+
+
     private fun fetchCwsData() {
         CoroutineScope(Dispatchers.IO).launch {
             val cwsList = db.cwsDao().getAll()
@@ -279,11 +283,12 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             adapter.items[position - 1].name,
             answerDetails,
             respondent.text.toString(),
-            if(cwsName.selectedItem != null) cwsName.selectedItem.toString() else ""
+            if(cwsName.selectedItem != null) cwsName.selectedItem.toString() else "",
         )
         dialog.setDismissListener(this)
         dialog.show()
     }
+
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
         updatedAnswers?.forEach { updatedAnswer ->
             val existingAnswer = answerDetails.find { it.qId == updatedAnswer.qId }
