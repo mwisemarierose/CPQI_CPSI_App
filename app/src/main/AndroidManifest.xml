@@ -20,6 +20,9 @@
         android:theme="@style/Base.Theme.TNSapp"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".EditauditActivity"
+            android:exported="false" />
+        <activity
             android:name=".NewstationActivity"
             android:exported="false" />
         <activity
