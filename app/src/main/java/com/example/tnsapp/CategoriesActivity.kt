@@ -184,7 +184,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         return names
     }
-    private fun setupUI(items: List<Categories>?) {
+    private fun setupUI(items: List<Categories>) {
         respondentContainer = findViewById(R.id.textInputLayoutContainer)
         respondent = findViewById(R.id.nameEditText)
 //        cwsName = findViewById(R.id.cwsNameEditText)
@@ -253,7 +253,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = items?.let { CategoryAdapter(it, this) }!!
+        adapter = items?.let { CategoryAdapter(it, this,applicationContext) }!!
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
     }
@@ -289,7 +289,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dialog.show()
     }
 
-    override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
+    override fun onDialogDismissed(updatedAnswers: Array<Answers>?,categoryId: Int) {
+        adapter.updateColor(categoryId)
+
+        adapter.notifyDataSetChanged()
+
         updatedAnswers?.forEach { updatedAnswer ->
             val existingAnswer = answerDetails.find { it.qId == updatedAnswer.qId }
             if (existingAnswer != null) {
