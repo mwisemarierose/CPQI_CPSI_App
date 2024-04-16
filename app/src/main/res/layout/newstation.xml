@@ -35,7 +35,7 @@
     <com.smarteist.autoimageslider.SliderView
         android:id="@+id/slider"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="380dp"
         android:layout_centerInParent="true"
         android:layout_below="@id/toolbar"
         app:sliderAnimationDuration="600"
@@ -52,7 +52,6 @@
         app:sliderScrollTimeInSec="3" />
     <!-- Input Fields -->
 
-    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

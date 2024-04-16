@@ -161,14 +161,12 @@ class QuestionAdapter(
                 noBtn.setBackgroundResource(R.drawable.border_maroon)
             }
         }
-
         val questionNumberView: TextView = itemView.findViewById(R.id.popUpTextNumbering)
         val questionNameView: TextView = itemView.findViewById(R.id.popUpText)
         private val yesBtn: Button = itemView.findViewById(R.id.yesButton)
         private val noBtn: Button = itemView.findViewById(R.id.noButton)
         private val skipBtn: Button = itemView.findViewById(R.id.skipButton)
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.popup_item_list, parent, false)
