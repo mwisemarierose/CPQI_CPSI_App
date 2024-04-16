@@ -1,6 +1,7 @@
 package com.example.tnsapp
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -17,15 +18,16 @@ import com.example.tnsapp.data.Cws
 import com.smarteist.autoimageslider.SliderView
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class NewstationActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
     private val imageResources = arrayOf(
-        R.drawable.image1,
-        R.drawable.top,
-        R.drawable.reach
+        R.drawable.donna,
+        R.drawable.reach,
+        R.drawable.inside
     )
     @SuppressLint("MissingInflatedId")
     @OptIn(DelicateCoroutinesApi::class)
@@ -59,17 +61,21 @@ class NewstationActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 val existingCws = db.cwsDao().getCwsByName(cwsName)
+                val successMessage = getString(R.string.toast_message)
+                val duplicateMessage = getString(R.string.toast_message)
 
                 if (existingCws == null) {
                     val cws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location)
                     db.cwsDao().insert(cws)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@NewstationActivity, "CWS added successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@NewstationActivity, successMessage, Toast.LENGTH_SHORT).show()
                     }
+                    delay(2000)
+                    setResult(Activity.RESULT_OK)
                     finish()
                 } else {
                     withContext(Dispatchers.Main) { // Update UI on Main thread
-                        Toast.makeText(this@NewstationActivity, "CWS already exists", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@NewstationActivity, duplicateMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

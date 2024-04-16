@@ -23,6 +23,8 @@ interface AnswersDao {
 
     @Delete
     suspend fun delete(answer: Answers)
+    @Query("SELECT COUNT(*) > 0 FROM answers WHERE cws_name = :cwsName")
+    fun hasCompletedAudit(cwsName: String): Boolean
 }
 @Dao
 interface CwsDao {

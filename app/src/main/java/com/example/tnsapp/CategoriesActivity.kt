@@ -1,6 +1,7 @@
 package com.example.tnsapp
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -37,13 +38,16 @@ import kotlin.properties.Delegates
 
 class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener,
     PopupActivity.DialogDismissListener, View.OnClickListener {
+    companion object {
+        private const val REQUEST_CODE_ADD_CWS = 100  // You can choose any unique value
+    }
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
     private var auditId by Delegates.notNull<Int>()
     private lateinit var respondentContainer: LinearLayout
     private lateinit var respondent: TextView
-//    private lateinit var cwsName: TextView
+    //    private lateinit var cwsName: TextView
     private lateinit var submitAll: Button
     private lateinit var dialog: PopupActivity
     private var answerDetails: Array<Answers> = emptyArray()
@@ -73,16 +77,16 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         audit = intent.getStringExtra("audit").toString()
         val items: List<Categories> = categoryParser(audit, auditId)
         val progressBar: CircularProgressBar = findViewById(R.id.scoreProgressBar)
-        val scoreText: TextView = findViewById(R.id.scoreText)
-        val percentageText: TextView = findViewById(R.id.percentageText)
-        val score = 80
+//        val scoreText: TextView = findViewById(R.id.scoreText)
+//        val percentageText: TextView = findViewById(R.id.percentageText)
+//        val score = 80
 
-        progressBar.setProgressWithAnimation(score.toFloat(), 1000) // Progress out of 100
+//        progressBar.setProgressWithAnimation(score.toFloat(), 1000)
 
-        scoreText.text = applicationContext.getString(R.string.score)
-
-        // Update percentage text
-        percentageText.text = ": $score%"
+//        scoreText.text = applicationContext.getString(R.string.score)
+//
+//        // Update percentage text
+//        percentageText.text = ": $score%"
 
         sharedPreferences = getSharedPreferences("AnswersPref", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -109,8 +113,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
 
         db = AppDatabase.getDatabase(this)!!
-
-
 
         submitAll.setOnClickListener {
             val answers = gson.fromJson(
@@ -153,7 +155,16 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private fun openStationActivity(language: String) {
         val intent = Intent(this, NewstationActivity::class.java)
         intent.putExtra("language", language)
-        startActivity(intent)
+        startActivityForResult(intent, REQUEST_CODE_ADD_CWS)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_ADD_CWS && resultCode == Activity.RESULT_OK) {
+            fetchCwsData()
+        }
     }
     private fun getSelectedLanguage(): String {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -254,15 +265,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView.adapter = adapter
     }
 
-    @Deprecated(
-        "Deprecated in Java", ReplaceWith(
-            "super.onActivityResult(requestCode, resultCode, data)",
-            "androidx.appcompat.app.AppCompatActivity"
-        )
-    )
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    }
+//    @Deprecated(
+//        "Deprecated in Java", ReplaceWith(
+//            "super.onActivityResult(requestCode, resultCode, data)",
+//            "androidx.appcompat.app.AppCompatActivity"
+//        )
+//    )
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//    }
 
     override fun onItemClick(position: Int) {
         startActivityAfterClick(position)

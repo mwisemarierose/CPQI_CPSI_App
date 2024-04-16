@@ -71,7 +71,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             openCategoryActivity(auditId, audit)
         }
 
-
         // Remove date filtering logic here
         val result = getAnswers.map {
             RecordedAudit(null, it.auditId.toInt(), cwsName = it.cwsName,
