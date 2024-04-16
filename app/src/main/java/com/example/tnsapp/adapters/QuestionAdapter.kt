@@ -85,7 +85,7 @@ class QuestionAdapter(
                                     Answers(
                                         null,
                                         respondent,
-                                        Answers.YES,
+                                        Answers.NO,
                                         currentItem.id,
                                         auditId.toLong(),
                                         cwsName
@@ -132,7 +132,7 @@ class QuestionAdapter(
                                     Answers(
                                         null,
                                         respondent,
-                                        Answers.YES,
+                                        Answers.SKIP,
                                         currentItem.id,
                                         auditId.toLong(),
                                         cwsName

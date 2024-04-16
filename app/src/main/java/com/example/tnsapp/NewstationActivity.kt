@@ -30,7 +30,6 @@ class NewstationActivity : AppCompatActivity() {
         R.drawable.inside
     )
     @SuppressLint("MissingInflatedId")
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

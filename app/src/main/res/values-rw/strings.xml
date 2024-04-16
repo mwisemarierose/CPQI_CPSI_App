@@ -10,7 +10,10 @@
     <string name="add_new">Kora irindi</string>
     <string name="date">Itariki</string>
     <string name="cws_name">Izina rya station</string>
+    <string name="cws">Station</string>
+    <string name="total_answered">Hasubijwe</string>
     <string name="score">Amanota</string>
+    <string name="answered_score">Amanota y\' Ibyasubijwe</string>
     <string name="no_records">no records</string>
     <string name="name_txt">Amazina</string>
     <string name="date_lbl">Itariki:</string>
@@ -23,7 +26,7 @@
     <string name="category_icon">category icon</string>
     <string name="import_csv">Import CSV</string>
     <string name="export_csv">Export CSV</string>
-    <string name="submitAll_txt" >Submit All</string>
+    <string name="submitAll_txt">Submit All</string>
     <string name="skip">Taruka</string>
     <string name="submit">Emeza</string>
     <string name="success_alert_msg">Igikorwa cyagenze neza!!!</string>
@@ -39,6 +42,5 @@
     <string name="select_cws_name">Hitamo Izina rya CWS</string>
     <string name="toast_message">Gushyiramo Sitasiyo byagenze neza </string>
     <string name="toast_message1">Sitasiyo isanzwe irimo!</string>
-
-
+    <string name="already_recorded_error_alert_msg">Iyi station yamaze gukorerwa.</string>
 </resources>

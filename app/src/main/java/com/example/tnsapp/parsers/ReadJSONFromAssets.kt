@@ -6,7 +6,7 @@ import java.io.InputStream
 import java.nio.charset.Charset
 
 fun readJsonFromAssets(context: Context, fileName: String): String {
-    var json: String = ""
+    var json = ""
     try {
         val inputStream: InputStream = context.assets.open(fileName)
         val size: Int = inputStream.available()
