@@ -19,7 +19,12 @@ import com.example.tnsapp.adapters.AddNewListAdapter
 import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
+import com.example.tnsapp.data.Categories
+import com.example.tnsapp.data.Questions
 import com.example.tnsapp.data.RecordedAudit
+import com.example.tnsapp.parsers.allAuditQuestionsParser
+import com.example.tnsapp.parsers.categoryParser
+import com.example.tnsapp.utils.formatDate
 import org.json.JSONObject
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
@@ -31,6 +36,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var emptyView: TextView
     private lateinit var adapter: AddNewListAdapter
     private lateinit var db: AppDatabase
+    private lateinit var items: List<Questions>
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +47,10 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         val auditId = intent.getIntExtra("auditId", 0)
         val audit = intent.getStringExtra("audit")
+        items = audit?.let { allAuditQuestionsParser(it, auditId) }!!
 
         val parsedAudit =
-            if (audit != null) JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString()) else JSONObject()
+            JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString())
 
         toolBarTitle.text = if (parsedAudit.has("name")) parsedAudit["name"].toString() else "Audit"
         auditName = if (parsedAudit.has("name")) parsedAudit["name"].toString() else "Audit"
@@ -77,18 +84,21 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 score = if(it.answer == Answers.YES) 1 else 0,
                 date = it.date) }
 
-        result.forEach {
-            println(it.toString())
-        }
+        val uniqueResult = result
+            .groupBy { it.cwsName to formatDate(it.date) }
+            .mapValues { (_, audits) -> audits.sumBy { it.score } }
 
-        val lastItem = result.lastOrNull()
+        // Print the result
+        uniqueResult.forEach { (key, value) ->
+            val (cwsName, date) = key
+            println("cwsName: $cwsName, Date: $date, Total Score: $value")
+        }
 
         emptyView = findViewById(R.id.emptyTextView)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(lastItem?.let { listOf(it) } ?: emptyList(),
-            result.sumOf { it.score })
+        adapter = AddNewListAdapter(uniqueResult, result.size, items.size)
         recyclerView.adapter = adapter
 
         if (result.isEmpty() || result[0].auditId != auditId) {

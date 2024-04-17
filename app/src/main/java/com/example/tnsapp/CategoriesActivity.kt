@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -26,8 +27,8 @@ import com.example.tnsapp.data.AppDatabase
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.Cws
 import com.example.tnsapp.parsers.categoryParser
+import com.example.tnsapp.utils.formatDate
 import com.google.gson.Gson
-import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,15 +54,16 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private var answerDetails: Array<Answers> = emptyArray()
     private lateinit var cwsName: Spinner
     private var progress = 0
-    private var scoreText = ""
-    private var percentage = ""
-
+    private lateinit var progressBar: ProgressBar
+    private lateinit var percentageText: TextView
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
     private var json: String = ""
+
     //    initialize room db
     private lateinit var db: AppDatabase
+
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,17 +78,14 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
         val items: List<Categories> = categoryParser(audit, auditId)
-        val progressBar: CircularProgressBar = findViewById(R.id.scoreProgressBar)
-//        val scoreText: TextView = findViewById(R.id.scoreText)
-//        val percentageText: TextView = findViewById(R.id.percentageText)
-//        val score = 80
+        progressBar = findViewById(R.id.scoreProgressBar)
+        percentageText = findViewById(R.id.percentageText)
+        val score = 0
 
-//        progressBar.setProgressWithAnimation(score.toFloat(), 1000)
+        progressBar.progress = score
 
-//        scoreText.text = applicationContext.getString(R.string.score)
-//
-//        // Update percentage text
-//        percentageText.text = ": $score%"
+        // Update percentage text
+        percentageText.text = "$score%"
 
         sharedPreferences = getSharedPreferences("AnswersPref", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -122,7 +121,25 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
 //            if respondent or cwsName is not selected, show error message
             if (respondent.text.isEmpty() || cwsName.selectedItem == null) {
-                Toast.makeText(this, applicationContext.getText(R.string.missing_field_error_alert_msg), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    applicationContext.getText(R.string.missing_field_error_alert_msg),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+//            check if in answers there is cwName equal to selected cwsName and it is recorded today
+            val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val cwsName = cwsName.selectedItem.toString()
+            val existingAnswers = db.answerDao().getAll()
+                .filter { it.cwsName == cwsName && formatDate(it.date) == today }
+            if (existingAnswers.isNotEmpty()) {
+                Toast.makeText(
+                    this,
+                    applicationContext.getText(R.string.already_recorded_error_alert_msg),
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
@@ -134,7 +151,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             editor.remove("answers")
             editor.apply()
 
-            Toast.makeText(this, applicationContext.getText(R.string.success_alert_msg), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                applicationContext.getText(R.string.success_alert_msg),
+                Toast.LENGTH_SHORT
+            ).show()
 
 //            add delay before going back to recorded audits activity
             Thread.sleep(2000)
@@ -147,11 +168,12 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     }
 
     private fun onClickListener() {
-        val addstation = findViewById<Button>(R.id.addStation)
-        addstation.setOnClickListener {
+        val addStation = findViewById<Button>(R.id.addStation)
+        addStation.setOnClickListener {
             openStationActivity(getSelectedLanguage())
         }
     }
+
     private fun openStationActivity(language: String) {
         val intent = Intent(this, NewstationActivity::class.java)
         intent.putExtra("language", language)
@@ -166,24 +188,29 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             fetchCwsData()
         }
     }
+
     private fun getSelectedLanguage(): String {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         return sharedPref.getString("language", "en") ?: "en"
     }
+
     private fun fetchCwsData() {
         CoroutineScope(Dispatchers.IO).launch {
             val cwsList = db.cwsDao().getAll()
 
             // Create an ArrayAdapter with CWS names (or relevant data)
-            val adapter = ArrayAdapter<String>(this@CategoriesActivity,
+            val adapter = ArrayAdapter<String>(
+                this@CategoriesActivity,
                 android.R.layout.simple_spinner_dropdown_item,
-                getCwsNames(cwsList))
+                getCwsNames(cwsList)
+            )
             // Update UI on the main thread
             runOnUiThread {
                 cwsName.adapter = adapter
             }
         }
     }
+
     private fun getCwsNames(cwsList: Array<Cws>): List<String> {
         val names = mutableListOf<String>()
         for (cws in cwsList) {
@@ -191,6 +218,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         return names
     }
+
     private fun setupUI(items: List<Categories>?) {
         respondentContainer = findViewById(R.id.textInputLayoutContainer)
         respondent = findViewById(R.id.nameEditText)
@@ -227,7 +255,12 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
 
         cwsName.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 if (answerDetails.isNotEmpty()) {
                     answerDetails = answerDetails.map {
                         Answers(
@@ -265,16 +298,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView.adapter = adapter
     }
 
-//    @Deprecated(
-//        "Deprecated in Java", ReplaceWith(
-//            "super.onActivityResult(requestCode, resultCode, data)",
-//            "androidx.appcompat.app.AppCompatActivity"
-//        )
-//    )
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//    }
-
     override fun onItemClick(position: Int) {
         startActivityAfterClick(position)
     }
@@ -290,11 +313,13 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             adapter.items[position - 1].name,
             answerDetails,
             respondent.text.toString(),
-            if(cwsName.selectedItem != null) cwsName.selectedItem.toString() else ""
+            if (cwsName.selectedItem != null) cwsName.selectedItem.toString() else ""
         )
         dialog.setDismissListener(this)
         dialog.show()
     }
+
+    @SuppressLint("SetTextI18n")
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
         updatedAnswers?.forEach { updatedAnswer ->
             val existingAnswer = answerDetails.find { it.qId == updatedAnswer.qId }
@@ -318,6 +343,20 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
         }
 
+//        Update progress bar
+        answerDetails.forEach {
+            println(it.toString())
+        }
+
+        progress = (answerDetails.count { it.answer == Answers.YES } * 100) / answerDetails.size
+        println(progress)
+        val score = progress
+
+        progressBar.progress = score
+
+        // Update percentage text
+        percentageText.text = "$score%"
+
 //        add shared preferences to save answers
         json = gson.toJson(answerDetails)
         editor.putString("answers", json)
@@ -327,5 +366,4 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     override fun onClick(v: View?) {
         TODO("Not yet implemented")
     }
-
 }

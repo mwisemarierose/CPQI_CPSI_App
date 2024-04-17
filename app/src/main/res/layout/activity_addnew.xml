@@ -60,7 +60,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/addNewBtn"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="25dp"
@@ -99,7 +99,18 @@
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/cws_name"
+                    android:text="@string/cws"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <!-- CWSName Column -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/total_answered"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
@@ -110,7 +121,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="@string/score"
+                    android:text="@string/answered_score"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -129,7 +140,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
 
             <include layout="@layout/items_empty_layout"/>
         </androidx.cardview.widget.CardView>
