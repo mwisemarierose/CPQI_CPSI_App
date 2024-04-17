@@ -9,7 +9,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import java.io.File
+import java.io.FileWriter
+import android.os.Environment
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
@@ -29,6 +33,8 @@ import org.json.JSONObject
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
     CategoryAdapter.OnItemClickListener {
+
+
     private var auditName = ""
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
@@ -37,6 +43,31 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var adapter: AddNewListAdapter
     private lateinit var db: AppDatabase
     private lateinit var items: List<Questions>
+
+
+    private fun exportToExcel(data: Map<Pair<String, String>, Int>) {
+        val fileName = "audit_data.csv"
+        val filePath = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
+
+        try {
+            FileWriter(filePath).use { writer ->
+                // Write headers
+                writer.append("CWS Name, Date, Total Score")
+                writer.append('\n')
+
+                // Write data
+                data.forEach { (key, value) ->
+                    writer.append("${key.first}, ${key.second}, $value")
+                    writer.append('\n')
+                }
+            }
+
+            Toast.makeText(this, "Exported to $filePath", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(this, "Export failed", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {

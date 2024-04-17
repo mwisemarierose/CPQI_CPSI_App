@@ -16,7 +16,8 @@ class QuestionAdapter(
     var answerDetails: Array<Answers>,
     private val respondent: String,
     private val cwsName: String,
-    private val answersFromSP: Array<Answers>
+    private val answersFromSP: Array<Answers>,
+//    private val savedAnswers: Array<Answers>
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(currentItem: Questions) {

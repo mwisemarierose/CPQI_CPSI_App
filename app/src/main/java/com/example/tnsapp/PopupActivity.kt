@@ -53,10 +53,18 @@ class PopupActivity(
     fun setDismissListener(listener: DialogDismissListener) {
         dismissListener = listener
     }
-
+//    private fun saveAnswersToSharedPreferences(answers: Array<Answers>) {
+//        val answersJson = gson.toJson(answers)
+//        editor.putString("answers_${catId}", answersJson)
+//        editor.apply()
+//    }
     // Call this method when the dialog is dismissed
     @SuppressLint("ResourceType")
     private fun notifyDismissListener(answerDetails: Array<Answers>) {
+//        saveAnswersToSharedPreferences(answerDetails)
+
+        // Notify the dismiss listener
+        dismissListener?.onDialogDismissed(answerDetails)
         dismissListener?.onDialogDismissed(answerDetails)
         Toast.makeText(context, "Answers saved", Toast.LENGTH_SHORT).show()
     }
@@ -71,6 +79,9 @@ class PopupActivity(
 
         sharedPreferences = context.getSharedPreferences("AnswersPref", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
+
+//        val savedAnswersJson = sharedPreferences.getString("answers_${catId}", null)
+//        val savedAnswers = gson.fromJson(savedAnswersJson, Array<Answers>::class.java) ?: emptyArray()
 
 //        get answers from shared preferences
         json = sharedPreferences.getString("answers", null).toString()

@@ -18,6 +18,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -119,13 +120,10 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 Array<Answers>::class.java
             )
 
-//            if respondent or cwsName is not selected, show error message
-            if (respondent.text.isEmpty() || cwsName.selectedItem == null) {
-                Toast.makeText(
-                    this,
-                    applicationContext.getText(R.string.missing_field_error_alert_msg),
-                    Toast.LENGTH_SHORT
-                ).show()
+//            if respondent is not selected, show error message
+            if (respondent.text.isEmpty()) {
+                respondent.error = getString(R.string.missing_respondent_error)
+                respondent.requestFocus()
                 return@setOnClickListener
             }
 
@@ -218,6 +216,28 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         return names
     }
+    private fun disableRecyclerView(recyclerView: RecyclerView) {
+        // Disable all child views of the RecyclerView
+        for (i in 0 until recyclerView.childCount) {
+            val child = recyclerView.getChildAt(i)
+            child.isClickable = false
+            child.isFocusable = false
+        }
+        // Change background color of RecyclerView to grey
+        recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.lightGrey))
+    }
+
+    private fun enableRecyclerView(recyclerView: RecyclerView) {
+        // Enable all child views of the RecyclerView
+        for (i in 0 until recyclerView.childCount) {
+            val child = recyclerView.getChildAt(i)
+            child.isClickable = true
+            child.isFocusable = true
+        }
+        // Change background color of RecyclerView to white
+        recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.lightPink))
+    }
+
 
     private fun setupUI(items: List<Categories>?) {
         respondentContainer = findViewById(R.id.textInputLayoutContainer)
@@ -261,28 +281,43 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 position: Int,
                 id: Long
             ) {
-                if (answerDetails.isNotEmpty()) {
-                    answerDetails = answerDetails.map {
-                        Answers(
-                            null,
-                            it.responderName,
-                            it.answer,
-                            it.qId,
-                            auditId.toLong(),
-                            cwsName.selectedItem.toString()
-                        )
-                    }.toTypedArray()
+                val selectedCwsName = cwsName.selectedItem.toString()
+                val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                val existingAnswers = db.answerDao().getAll()
+                    .filter { it.cwsName == selectedCwsName && formatDate(it.date) == today }
+
+                if (existingAnswers.isNotEmpty()) {
+                    // Display error message immediately
+                    (parent?.getChildAt(0) as? TextView)?.error = getString(R.string.already_recorded_error_alert_msg)
+                    // display alert-dialog with error message
+                    Toast.makeText(
+                        this@CategoriesActivity,
+                        applicationContext.getText(R.string.already_recorded_error_alert_msg),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    //disable the gridLayout below spinner
+                    disableRecyclerView(recyclerView)
+
+
                 } else {
-                    answerDetails = answerDetails.plus(
-                        Answers(
-                            null,
-                            respondent.text.toString(),
-                            "",
-                            items!![0].id,
-                            auditId.toLong(),
-                            cwsName.selectedItem.toString()
+                    // No existing answers found, proceed with adding/updating answerDetails
+                    if (answerDetails.isNotEmpty()) {
+                        answerDetails = answerDetails.map {
+                            it.copy(cwsName = selectedCwsName)
+                        }.toTypedArray()
+                    } else {
+                        answerDetails = arrayOf(
+                            Answers(
+                                null,
+                                respondent.text.toString(),
+                                "",
+                                items?.getOrNull(0)?.id ?: 0,
+                                auditId.toLong(),
+                                selectedCwsName
+                            )
                         )
-                    )
+                    }
+                    enableRecyclerView(recyclerView)
                 }
             }
 
@@ -290,6 +325,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 // Do nothing if nothing is selected
             }
         }
+
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -349,7 +385,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
 
         progress = (answerDetails.count { it.answer == Answers.YES } * 100) / answerDetails.size
-        println(progress)
+//        println(progress)
         val score = progress
 
         progressBar.progress = score

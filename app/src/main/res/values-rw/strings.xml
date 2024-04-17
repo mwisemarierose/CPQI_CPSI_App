@@ -43,4 +43,6 @@
     <string name="toast_message">Gushyiramo Sitasiyo byagenze neza </string>
     <string name="toast_message1">Sitasiyo isanzwe irimo!</string>
     <string name="already_recorded_error_alert_msg">Iyi station yamaze gukorerwa.</string>
+    <string name="missing_respondent_error">Please enter a respondent.</string>
+    <string name="Score" />
 </resources>
