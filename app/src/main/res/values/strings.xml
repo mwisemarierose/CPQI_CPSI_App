@@ -46,6 +46,7 @@
     <string name="already_recorded_error_alert_msg">The Audit for this Station was already recorded today.</string>
     <string name="missing_respondent_error">Please enter a respondent.</string>
     <string name="Score" />
+    <string name="scores">Scores</string>
     <string-array name="languages" translatable="false">
         <item>English</item>
         <item>Kinyarwanda</item>

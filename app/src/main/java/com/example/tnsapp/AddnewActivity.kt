@@ -68,7 +68,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             Toast.makeText(this, "Export failed", Toast.LENGTH_SHORT).show()
         }
     }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -159,7 +158,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
-
     private fun openCategoryActivity(auditId: Int, audit: String?) {
         val intent = Intent(this, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)
@@ -167,7 +165,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         intent.putExtra("auditName", auditName)
         startActivity(intent)
     }
-
     override fun onItemClick(position: Int) {
         TODO("Not yet implemented")
     }

@@ -38,10 +38,7 @@ class PopupActivity(
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
     private var json: String = ""
-    private val items: List<Categories>
-        get() {
-            TODO()
-        }
+    private val items: List<Categories> = emptyList()
     private fun updateCategoryCompletion() {
         val currentCategory = items.find { it.id.toInt() == catId }
         if (currentCategory != null) {
@@ -56,7 +53,7 @@ class PopupActivity(
     }
 
     interface DialogDismissListener {
-        fun onDialogDismissed(updatedAnswers: Array<Answers>? = null)
+        fun onDialogDismissed(updatedAnswers: Array<Answers>? = null,categoryId: Int)
     }
 
     fun setDismissListener(listener: DialogDismissListener) {
@@ -70,11 +67,8 @@ class PopupActivity(
     // Call this method when the dialog is dismissed
     @SuppressLint("ResourceType")
     private fun notifyDismissListener(answerDetails: Array<Answers>) {
-//        saveAnswersToSharedPreferences(answerDetails)
-
         // Notify the dismiss listener
-        dismissListener?.onDialogDismissed(answerDetails)
-        dismissListener?.onDialogDismissed(answerDetails)
+    dismissListener?.onDialogDismissed(answerDetails,catId)
         Toast.makeText(context, "Answers saved", Toast.LENGTH_SHORT).show()
     }
     private fun setupUI() {
@@ -110,9 +104,9 @@ class PopupActivity(
                 adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
 
             if (allAnswered) {
-                updateCategoryCompletion()
                 notifyDismissListener(adapter.answerDetails)
                 dismiss()
+                updateCategoryCompletion()
             } else {
                 Toast.makeText(context, "Please answer all questions", Toast.LENGTH_SHORT).show()
             }

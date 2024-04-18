@@ -28,6 +28,8 @@ import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.Cws
+import com.example.tnsapp.data.Questions
+import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.formatDate
 import com.google.gson.Gson
@@ -65,6 +67,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     //    initialize room db
     private lateinit var db: AppDatabase
+    private var items: List<Categories> = emptyList()
+    private var allCatQuestions: List<Questions> = emptyList()
 
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +83,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
-        val items: List<Categories> = categoryParser(audit, auditId)
+        items = categoryParser(audit, auditId)
+        allCatQuestions=allAuditQuestionsParser(audit, auditId)
         progressBar = findViewById(R.id.scoreProgressBar)
         percentageText = findViewById(R.id.percentageText)
         val score = 0
@@ -330,7 +335,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = items?.let { CategoryAdapter(it, this) }!!
+        adapter = items?.let { CategoryAdapter(it, this,applicationContext) }!!
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
     }
@@ -357,7 +362,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onDialogDismissed(updatedAnswers: Array<Answers>?) {
+    override fun onDialogDismissed(updatedAnswers: Array<Answers>?,categoryId: Int) {
+        adapter.updateColor(categoryId)
+        adapter.notifyDataSetChanged()
         updatedAnswers?.forEach { updatedAnswer ->
             val existingAnswer = answerDetails.find { it.qId == updatedAnswer.qId }
             if (existingAnswer != null) {
@@ -385,7 +392,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             println(it.toString())
         }
 
-        progress = (answerDetails.count { it.answer == Answers.YES } * 100) / answerDetails.size
+        progress = (answerDetails.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
 //        println(progress)
         val score = progress
 
@@ -403,4 +410,5 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     override fun onClick(v: View?) {
         TODO("Not yet implemented")
     }
+
 }
