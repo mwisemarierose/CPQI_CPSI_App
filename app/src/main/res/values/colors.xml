@@ -7,6 +7,7 @@
     <color name="lightPink">#FFE6EE</color>
     <color name="grey">#808080</color>
     <color name="lightGrey">#e6e6e6</color>
+    <color name="LightPink1">#F9EAEA</color>
     <color name="default_button_color">#FFFFFFFF</color>
     <color name="pressed_button_color">#FFE6EE</color>
     <color name="button_border_color">#800000</color>

@@ -235,7 +235,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             child.isFocusable = true
         }
         // Change background color of RecyclerView to white
-        recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.lightPink))
+        recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.LightPink1))
     }
 
 

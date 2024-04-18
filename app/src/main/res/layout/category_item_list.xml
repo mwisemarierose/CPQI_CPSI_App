@@ -11,6 +11,7 @@
     app:cardCornerRadius="15dp">
 
     <LinearLayout
+        android:id="@+id/card1"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:orientation="vertical"
@@ -46,7 +47,7 @@
             android:layout_gravity="bottom"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:background="@color/maroon" />
+            android:background="@color/grey" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
