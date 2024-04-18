@@ -2,6 +2,7 @@ package com.example.tnsapp
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -57,7 +58,6 @@ class NewstationActivity : AppCompatActivity() {
             val cwsName = findViewById<EditText>(R.id.cwsName).text.toString()
             val cwsLeader = findViewById<EditText>(R.id.cwsLeader).text.toString()
             val location = findViewById<EditText>(R.id.location).text.toString()
-
             lifecycleScope.launch {
                 val existingCws = db.cwsDao().getCwsByName(cwsName)
                 val successMessage = getString(R.string.toast_message)

@@ -24,7 +24,7 @@
     <string name="category_icon">category icon</string>
     <string name="import_csv">Import CSV</string>
     <string name="export_csv">Export CSV</string>
-    <string name="submitAll_txt" >Submit All</string>
+    <string name="submitAll_txt">Submit All</string>
     <string name="close_icon_description" translatable="false">close_icon_description</string>
     <string name="skip">Skip</string>
     <string name="submit">submit</string>
