@@ -175,12 +175,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private fun onClickListener() {
         val addStation = findViewById<Button>(R.id.addStation)
         addStation.setOnClickListener {
+            val auditId = intent.getIntExtra("auditId", 0)
+            println(auditId)
             openStationActivity(getSelectedLanguage())
         }
     }
 
     private fun openStationActivity(language: String) {
         val intent = Intent(this, NewstationActivity::class.java)
+        intent.putExtra("auditId", auditId)
         intent.putExtra("language", language)
         startActivityForResult(intent, REQUEST_CODE_ADD_CWS)
     }
@@ -291,7 +294,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 val selectedCwsName = cwsName.selectedItem.toString()
                 val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                 val existingAnswers = db.answerDao().getAll()
-                    .filter { it.cwsName == selectedCwsName && formatDate(it.date) == today }
+                    .filter { it.cwsName == selectedCwsName && formatDate(it.date) == today && it.auditId.toInt() == auditId }
 
                 if (existingAnswers.isNotEmpty()) {
                     // Display error message immediately

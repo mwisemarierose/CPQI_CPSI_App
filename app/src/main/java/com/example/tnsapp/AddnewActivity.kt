@@ -94,7 +94,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         sharedPreferences = getSharedPreferences("AnswersPref", MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
-        setupUI(audit.toString())
+        setupUI(audit.toString(),auditId)
 
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -102,14 +102,14 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun setupUI(audit: String) {
-        val auditId = intent.getIntExtra("auditId", 0)
+    private fun setupUI(audit: String, auditId: Int) {
+//        val auditId = intent.getIntExtra("auditId", 0)
         val addNewBtn = findViewById<Button>(R.id.addNewBtn)
 
 //        access answers from room db
         db = AppDatabase.getDatabase(this)!!
 
-        val getAnswers = db.answerDao().getAll()
+        val getAnswers = db.answerDao().getAllByAuditId(auditId)
 
         addNewBtn.setOnClickListener {
             openCategoryActivity(auditId, audit)

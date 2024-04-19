@@ -35,6 +35,7 @@ class NewstationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.newstation)
+
         val sliderView: SliderView = findViewById(R.id.slider)
         val sliderAdapter = ImageSliderAdapter(imageResources)
         sliderView.setSliderAdapter(sliderAdapter)
@@ -58,13 +59,15 @@ class NewstationActivity : AppCompatActivity() {
             val cwsName = findViewById<EditText>(R.id.cwsName).text.toString()
             val cwsLeader = findViewById<EditText>(R.id.cwsLeader).text.toString()
             val location = findViewById<EditText>(R.id.location).text.toString()
+
             lifecycleScope.launch {
                 val existingCws = db.cwsDao().getCwsByName(cwsName)
                 val successMessage = getString(R.string.toast_message)
                 val duplicateMessage = getString(R.string.toast_message)
 
                 if (existingCws == null) {
-                    val cws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location)
+                    val auditId = intent.getIntExtra("audit_id", 0)
+                    val cws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location, auditId = auditId)
                     db.cwsDao().insert(cws)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@NewstationActivity, successMessage, Toast.LENGTH_SHORT).show()

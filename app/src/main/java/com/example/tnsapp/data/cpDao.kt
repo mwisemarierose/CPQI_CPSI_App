@@ -9,11 +9,16 @@ import androidx.room.Transaction
 
 @Dao
 interface AnswersDao {
+
+
     @Query("SELECT * FROM answers")
     fun getAll(): Array<Answers>
 
     @Query("SELECT * FROM answers WHERE q_id = :questionId")
     suspend fun getByQuestionId(questionId: Long): Array<Answers>
+
+    @Query("SELECT * FROM answers WHERE audit_id = :auditId")
+     fun getAllByAuditId(auditId: Int): Array<Answers>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(answer: Answers)
@@ -44,6 +49,8 @@ interface CwsDao {
 
     @Delete
     suspend fun delete(cws: Cws)
+    @Query("SELECT * FROM cws WHERE audit_id = :auditId")
+    fun getCwsByAuditId(auditId: Int): List<Cws>
 
 //    @Transaction
 //    @Query("SELECT * FROM cws")
