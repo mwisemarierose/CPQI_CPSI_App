@@ -29,6 +29,7 @@ import com.example.tnsapp.data.RecordedAudit
 import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.formatDate
+import kotlinx.coroutines.delay
 import org.json.JSONObject
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
@@ -45,10 +46,15 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var items: List<Questions>
 
 
-    private fun exportToExcel(data: Map<Pair<String, String>, Int>) {
+    private fun exportDataToExcel() {
+        // Gather data to export (you may need to adjust this based on your specific requirements)
+        val dataToExport = adapter.getDataToExport()
         val fileName = "audit_data.csv"
         val filePath = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
+        exportToExcel(dataToExport, filePath)
+    }
 
+    private fun exportToExcel(data: Map<Pair<String, String>, Int>, filePath: File) {
         try {
             FileWriter(filePath).use { writer ->
                 // Write headers
@@ -62,12 +68,13 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 }
             }
 
-            Toast.makeText(this, "Exported to $filePath", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Exported to ${filePath.absolutePath}", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Export failed", Toast.LENGTH_SHORT).show()
         }
     }
+
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +120,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             RecordedAudit(null, it.auditId.toInt(), cwsName = it.cwsName,
                 score = if(it.answer == Answers.YES) 1 else 0,
                 date = it.date) }
-
+//        progress = (answerDetails.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
         val uniqueResult = result
             .groupBy { it.cwsName to formatDate(it.date) }
             .mapValues { (_, audits) -> audits.sumBy { it.score } }
@@ -145,12 +152,22 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val menuBuilder = MenuBuilder(this)
         val inflater = MenuInflater(this)
         inflater.inflate(R.menu.dropdown_menu, menuBuilder)
+
+        // Add an export menu item
+
         val optionsMenu = v?.let { MenuPopupHelper(this, menuBuilder, it) }
         optionsMenu?.setForceShowIcon(true)
 
         menuBuilder.setCallback(object : MenuBuilder.Callback {
             override fun onMenuItemSelected(menu: MenuBuilder, item: MenuItem): Boolean {
-                return false
+                return when (item.itemId) {
+                    R.id.export_option -> {
+                        // Handle export action
+                        exportDataToExcel()
+                        true
+                    }
+                    else -> false
+                }
             }
 
             override fun onMenuModeChange(menu: MenuBuilder) {}
@@ -158,6 +175,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
+
     private fun openCategoryActivity(auditId: Int, audit: String?) {
         val intent = Intent(this, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)

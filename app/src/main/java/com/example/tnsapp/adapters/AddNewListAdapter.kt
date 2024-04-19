@@ -26,6 +26,26 @@ class AddNewListAdapter(
         override fun onClick(v: View?) {}
     }
 
+
+    // function getDataToExport()
+
+    fun getDataToExport(): Map<Pair<String, String>, Int> {
+        val dataToExport = mutableMapOf<Pair<String, String>, Int>()
+
+        for ((key, value) in items) {
+            val category = key.first // Get category name
+            val date = key.second // Get date
+
+            // Combine category and date into a Pair
+            val pairKey = Pair(category, date)
+
+            // Add the score to the map
+            dataToExport[pairKey as Pair<String, String>] = value
+        }
+
+        return dataToExport
+    }
+
     interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
@@ -42,7 +62,7 @@ class AddNewListAdapter(
         holder.auditCwsNameView.text = currentItem.first
         holder.auditDateView.text = currentItem.second
         holder.totalAView.text = "${items.entries.elementAt(position).value}/ $auditQSize"
-        holder.auditScoreView.text = ((items.entries.elementAt(position).value * 100) / totalItems).toString() + "%"
+        holder.auditScoreView.text = ((items.entries.elementAt(position).value * 100) / auditQSize).toString() + "%"
     }
 
     override fun getItemCount(): Int {

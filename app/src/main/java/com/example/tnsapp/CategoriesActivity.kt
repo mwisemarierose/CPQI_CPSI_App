@@ -56,6 +56,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var submitAll: Button
     private lateinit var dialog: PopupActivity
     private var answerDetails: Array<Answers> = emptyArray()
+    private var answersFromSP: Array<Answers> = emptyArray()
     private lateinit var cwsName: Spinner
     private var progress = 0
     private lateinit var progressBar: ProgressBar
@@ -355,13 +356,14 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             adapter.items[position - 1].name,
             answerDetails,
             respondent.text.toString(),
-            if (cwsName.selectedItem != null) cwsName.selectedItem.toString() else ""
+            if (cwsName.selectedItem != null) cwsName.selectedItem.toString() else "",
+            answersFromSP
         )
         dialog.setDismissListener(this)
         dialog.show()
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?,categoryId: Int) {
         adapter.updateColor(categoryId)
         adapter.notifyDataSetChanged()
@@ -400,6 +402,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         // Update percentage text
         percentageText.text = "$score%"
+//        println(percentageText)
 
 //        add shared preferences to save answers
         json = gson.toJson(answerDetails)

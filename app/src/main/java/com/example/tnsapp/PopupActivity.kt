@@ -28,6 +28,7 @@ class PopupActivity(
     private var answerDetails: Array<Answers>,
     private val respondent: String,
     private val cwsName: String,
+    private val answersSP: Array<Answers>,
 ) : Dialog(context) {
     private var answersFromSP: Array<Answers> = emptyArray()
     private val PREFNAME = "AnswersPref"
@@ -59,11 +60,7 @@ class PopupActivity(
     fun setDismissListener(listener: DialogDismissListener) {
         dismissListener = listener
     }
-//    private fun saveAnswersToSharedPreferences(answers: Array<Answers>) {
-//        val answersJson = gson.toJson(answers)
-//        editor.putString("answers_${catId}", answersJson)
-//        editor.apply()
-//    }
+
     // Call this method when the dialog is dismissed
     @SuppressLint("ResourceType")
     private fun notifyDismissListener(answerDetails: Array<Answers>) {
@@ -81,9 +78,6 @@ class PopupActivity(
 
         sharedPreferences = context.getSharedPreferences("AnswersPref", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
-
-//        val savedAnswersJson = sharedPreferences.getString("answers_${catId}", null)
-//        val savedAnswers = gson.fromJson(savedAnswersJson, Array<Answers>::class.java) ?: emptyArray()
 
 //        get answers from shared preferences
         json = sharedPreferences.getString("answers", null).toString()
