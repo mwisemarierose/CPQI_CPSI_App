@@ -20,5 +20,4 @@ fun questionParser(jsonString: String, parentId: Int, catId: Int): List<Question
     }
 
     return items
-
 }

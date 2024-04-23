@@ -28,24 +28,23 @@ class PopupActivity(
     private var answerDetails: Array<Answers>,
     private val respondent: String,
     private val cwsName: String,
-    private val answersSP: Array<Answers>,
+    private val editMode: Boolean,
+    private val existingAnswers: List<Answers>,
 ) : Dialog(context) {
-    private var answersFromSP: Array<Answers> = emptyArray()
-    private val PREFNAME = "AnswersPref"
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: QuestionAdapter
     private var dismissListener: DialogDismissListener? = null
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
-    private val gson = Gson()
     private var json: String = ""
     private val items: List<Categories> = emptyList()
     private fun updateCategoryCompletion() {
         val currentCategory = items.find { it.id.toInt() == catId }
         if (currentCategory != null) {
-            currentCategory.completed= true
+            currentCategory.completed = true
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -54,7 +53,7 @@ class PopupActivity(
     }
 
     interface DialogDismissListener {
-        fun onDialogDismissed(updatedAnswers: Array<Answers>? = null,categoryId: Int)
+        fun onDialogDismissed(updatedAnswers: Array<Answers>? = null, categoryId: Int)
     }
 
     fun setDismissListener(listener: DialogDismissListener) {
@@ -65,9 +64,10 @@ class PopupActivity(
     @SuppressLint("ResourceType")
     private fun notifyDismissListener(answerDetails: Array<Answers>) {
         // Notify the dismiss listener
-    dismissListener?.onDialogDismissed(answerDetails,catId)
+        dismissListener?.onDialogDismissed(answerDetails, catId)
         Toast.makeText(context, "Answers saved", Toast.LENGTH_SHORT).show()
     }
+
     private fun setupUI() {
         val closeIcon: ImageView = findViewById(R.id.closeIcon)
         val popupTitle: TextView = findViewById(R.id.popUpTitle)
@@ -81,15 +81,18 @@ class PopupActivity(
 
 //        get answers from shared preferences
         json = sharedPreferences.getString("answers", null).toString()
-
-        if (json != "null") {
-            answersFromSP = gson.fromJson(json, Array<Answers>::class.java)
-        }
-
         val items: List<Questions> = questionParser(audit, auditId, catId)
 
         popupTitle.text = catName
-        adapter = QuestionAdapter(auditId, items, answerDetails, respondent, cwsName, answersFromSP)
+        adapter = QuestionAdapter(
+            auditId,
+            items,
+            answerDetails,
+            respondent,
+            cwsName,
+            editMode,
+            existingAnswers
+        )
 
         recyclerView.adapter = adapter
 
