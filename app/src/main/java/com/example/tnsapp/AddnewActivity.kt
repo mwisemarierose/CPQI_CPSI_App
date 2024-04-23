@@ -1,8 +1,6 @@
 package com.example.tnsapp
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,12 +13,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Environment
-import android.util.Log
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.AddNewListAdapter
@@ -32,13 +24,10 @@ import com.example.tnsapp.data.RecordedAudit
 import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.utils.formatDate
 import org.json.JSONObject
-import java.io.File
-import java.io.IOException
+import kotlin.properties.Delegates
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
     CategoryAdapter.OnItemClickListener {
-
-
     private var auditName = ""
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
@@ -47,6 +36,9 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var adapter: AddNewListAdapter
     private lateinit var db: AppDatabase
     private lateinit var items: List<Questions>
+    private var auditId by Delegates.notNull<Int>()
+    private lateinit var audit: String
+
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +46,9 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         supportActionBar?.hide()
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
-        val auditId = intent.getIntExtra("auditId", 0)
-        val audit = intent.getStringExtra("audit")
-        items = audit?.let { allAuditQuestionsParser(it, auditId) }!!
+        auditId = intent.getIntExtra("auditId", 0)
+        audit = intent.getStringExtra("audit").toString()
+        items = allAuditQuestionsParser(audit, auditId)
 
         val parsedAudit =
             JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString())
@@ -66,7 +58,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         sharedPreferences = getSharedPreferences("AnswersPref", MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
-        setupUI(audit.toString(),auditId)
+        setupUI(audit.toString(), auditId)
 
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -89,15 +81,18 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         // Remove date filtering logic here
         val result = getAnswers.map {
-            RecordedAudit(null, it.auditId.toInt(), cwsName = it.cwsName,
-                score = if(it.answer == Answers.YES) 1 else 0,
-                date = it.date,)
+            RecordedAudit(
+                null, it.auditId.toInt(), cwsName = it.cwsName,
+                score = if (it.answer == Answers.YES) 1 else 0,
+                date = it.date,
+            )
 
         }
 
         val uniqueResult = result
             .groupBy { it.cwsName to formatDate(it.date) }
-            .mapValues { (_, audits) -> audits.sumBy { it.score }
+            .mapValues { (_, audits) ->
+                audits.sumBy { it.score }
             }
 
         // Print the result
@@ -110,7 +105,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(uniqueResult, result.size, items.size,this)
+        adapter = AddNewListAdapter(uniqueResult, result.size, items.size, this)
         recyclerView.adapter = adapter
 
         if (result.isEmpty() || result[0].auditId != auditId) {
@@ -142,6 +137,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
                         true
                     }
+
                     else -> false
                 }
             }
@@ -160,11 +156,11 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         intent.putExtra("auditName", auditName)
         startActivity(intent)
     }
+
     override fun onItemClick(position: Int) {
-        val clickedAudit = items[position]
-        println(items)
         val intent = Intent(this@AddNewActivity, CategoriesActivity::class.java)
-        intent.putExtra("auditId", clickedAudit.id)
+        intent.putExtra("auditId", auditId)
+        intent.putExtra("audit", audit)
         intent.putExtra("editMode", true) // Flag to indicate edit mode
         startActivity(intent)
     }

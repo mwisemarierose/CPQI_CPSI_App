@@ -17,8 +17,8 @@ class QuestionAdapter(
     var answerDetails: Array<Answers>,
     private val respondent: String,
     private val cwsName: String,
-    private val answersFromSP: Array<Answers>,
-//    private val savedAnswers: Array<Answers>
+    private val editMode: Boolean,
+    private val existingAnswers: List<Answers>
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(currentItem: Questions) {
@@ -165,12 +165,14 @@ class QuestionAdapter(
                 noBtn.setBackgroundResource(R.drawable.border_maroon)
             }
         }
+
         val questionNumberView: TextView = itemView.findViewById(R.id.popUpTextNumbering)
         val questionNameView: TextView = itemView.findViewById(R.id.popUpText)
         val yesBtn: Button = itemView.findViewById(R.id.yesButton)
         val noBtn: Button = itemView.findViewById(R.id.noButton)
         val skipBtn: Button = itemView.findViewById(R.id.skipButton)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.popup_item_list, parent, false)
@@ -188,16 +190,18 @@ class QuestionAdapter(
         holder.questionNameView.text = currentItem.qName
 
         // Find the answer for this question from answersFromSP
-        val answer = answersFromSP.find { it.qId == currentItem.id }
+        val answer = existingAnswers.find { it.qId == currentItem.id }
 
         // Set background color based on the answer (optional, selection highlights remain)
         when (answer?.answer) {
             Answers.YES -> {
                 holder.yesBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.green))
             }
+
             Answers.NO -> {
                 holder.noBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.maroon))
             }
+
             Answers.SKIP -> {
                 holder.skipBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.grey))
             }

@@ -1,9 +1,7 @@
 package com.example.tnsapp.adapters
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +10,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.tnsapp.R
+import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.Categories
+import com.example.tnsapp.data.Questions
 
-class CategoryAdapter(val items: List<Categories>, private val listener: OnItemClickListener,val context: Context) :
+class CategoryAdapter(
+    val items: List<Categories>,
+    private val listener: OnItemClickListener,
+    val context: Context,
+    private val editMode: Boolean,
+    private val existingAnswers: List<Answers>,
+    val allCatQuestions: List<Questions>
+) :
     RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     private var selectedCategoryIds: MutableSet<Int> = mutableSetOf()
 
@@ -50,10 +57,32 @@ class CategoryAdapter(val items: List<Categories>, private val listener: OnItemC
         val currentItem = items[position]
         holder.categoryNameView.text = currentItem.name
 
-        if(selectedCategoryIds.contains(currentItem.id.toInt())){
+        items.forEach {
+            println(it.toString())
+        }
+
+        println(editMode)
+
+        existingAnswers.forEach {
+            println(it.toString())
+        }
+
+        if (editMode) {
+//            get the questions for the category
+            val questions = allCatQuestions.filter { it.catId.toInt() == currentItem.id.toInt() }
+            val answeredQuestions =
+                existingAnswers.filter { it.qId.toInt() == currentItem.id.toInt() }
+            if (questions.size == answeredQuestions.size) {
+                selectedCategoryIds.add(currentItem.id.toInt())
+            }
+        }
+
+        if (selectedCategoryIds.contains(currentItem.id.toInt())) {
             holder.progressBar.setBackgroundColor(context.getColor(R.color.maroon))
-        }else
+        } else {
             holder.progressBar.setBackgroundColor(context.getColor(R.color.grey))
+        }
+
         loadImageFromUrl(currentItem.iconPath, holder.categoryIconView)
     }
 

@@ -12,8 +12,8 @@ fun auditParser(jsonString: String): List<AuditCategories> {
         val id = itemJson.getLong("id")
         val name = itemJson.getString("name")
         val iconUrl = itemJson.getString("icon_path")
-
         val listItem = AuditCategories(id, name, iconUrl)
+
         items.add(listItem)
     }
 

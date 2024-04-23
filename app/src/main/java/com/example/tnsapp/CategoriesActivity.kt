@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -46,25 +45,29 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     companion object {
         private const val REQUEST_CODE_ADD_CWS = 100
     }
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
     private var auditId by Delegates.notNull<Int>()
     private lateinit var respondentContainer: LinearLayout
     private lateinit var respondent: TextView
+
     //    private lateinit var cwsName: TextView
     private lateinit var submitAll: Button
     private lateinit var dialog: PopupActivity
     private var answerDetails: Array<Answers> = emptyArray()
-    private var answersFromSP: Array<Answers> = emptyArray()
     private lateinit var cwsName: Spinner
     private var progress = 0
     private lateinit var progressBar: ProgressBar
     private lateinit var percentageText: TextView
+    private lateinit var addStation: Button
+    private var editMode = false
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
     private var json: String = ""
+    private var existingAnswers: List<Answers> = emptyList()
 
     //    initialize room db
     private lateinit var db: AppDatabase
@@ -77,18 +80,19 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         setContentView(R.layout.activity_categories)
         supportActionBar?.hide()
         db = AppDatabase.getDatabase(this)!!
-        fetchCwsData ()
-        onClickListener()
-        val editMode = intent.getBooleanExtra("editMode", false)
+        fetchCwsData()
+        editMode = intent.getBooleanExtra("editMode", false)
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         submitAll = findViewById(R.id.submitAllBtn)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
         items = categoryParser(audit, auditId)
-        allCatQuestions=allAuditQuestionsParser(audit, auditId)
+        allCatQuestions = allAuditQuestionsParser(audit, auditId)
         progressBar = findViewById(R.id.scoreProgressBar)
         percentageText = findViewById(R.id.percentageText)
+        addStation = findViewById(R.id.addStation)
+        onClickListener(addStation)
         val score = 0
 
         progressBar.progress = score
@@ -162,11 +166,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
     }
 
-    private fun onClickListener() {
-        val addStation = findViewById<Button>(R.id.addStation)
+    private fun onClickListener(addStation: Button) {
         addStation.setOnClickListener {
             val auditId = intent.getIntExtra("auditId", 0)
-            println(auditId)
             openStationActivity(getSelectedLanguage())
         }
     }
@@ -197,7 +199,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             val cwsList = db.cwsDao().getAll()
 
             // Create an ArrayAdapter with CWS names (or relevant data)
-            val adapter = ArrayAdapter<String>(
+            val adapter = ArrayAdapter(
                 this@CategoriesActivity,
                 android.R.layout.simple_spinner_dropdown_item,
                 getCwsNames(cwsList)
@@ -216,6 +218,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         return names
     }
+
     private fun disableRecyclerView(recyclerView: RecyclerView) {
         // Disable all child views of the RecyclerView
         for (i in 0 until recyclerView.childCount) {
@@ -242,8 +245,42 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private fun setupUI(items: List<Categories>?) {
         respondentContainer = findViewById(R.id.textInputLayoutContainer)
         respondent = findViewById(R.id.nameEditText)
-//        cwsName = findViewById(R.id.cwsNameEditText)
         cwsName = findViewById(R.id.cwsNameSpinner)
+
+//        if editMode is true, load answers
+        if (editMode) {
+//            get today's answers corresponding with auditId
+            val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            existingAnswers = db.answerDao().getAll()
+                .filter { formatDate(it.date) == today && it.auditId.toInt() == auditId }
+
+            respondent.text = existingAnswers.first().responderName
+            respondent.isEnabled = false
+
+            val cwsList = db.cwsDao().getAll()
+
+            // Create an ArrayAdapter with CWS names (or relevant data)
+            val adapter = ArrayAdapter(
+                this@CategoriesActivity,
+                android.R.layout.simple_spinner_dropdown_item,
+                getCwsNames(cwsList)
+            )
+
+            cwsName.setSelection(adapter.getPosition(existingAnswers.first().cwsName))
+            cwsName.isEnabled = false
+
+            addStation.visibility = View.GONE
+
+//            update progress bar
+            progress =
+                (existingAnswers.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
+            val score = progress
+
+            progressBar.progress = score
+
+            // Update percentage text
+            percentageText.text = "$score%"
+        }
 
 //        add respondent name and cws name to answerDetails when the user enters them
         respondent.setOnFocusChangeListener { _, hasFocus ->
@@ -288,7 +325,10 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
                 if (existingAnswers.isNotEmpty()) {
                     // Display error message immediately
-                    (parent?.getChildAt(0) as? TextView)?.error = getString(R.string.already_recorded_error_alert_msg)
+                    if (!editMode) {
+                        (parent?.getChildAt(0) as? TextView)?.error =
+                            getString(R.string.already_recorded_error_alert_msg)
+                    }
                     // display alert-dialog with error message
                     Toast.makeText(
                         this@CategoriesActivity,
@@ -296,9 +336,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                         Toast.LENGTH_SHORT
                     ).show()
                     //disable the gridLayout below spinner
-                    disableRecyclerView(recyclerView)
-
-
+                    if (!editMode) disableRecyclerView(recyclerView)
                 } else {
                     // No existing answers found, proceed with adding/updating answerDetails
                     if (answerDetails.isNotEmpty()) {
@@ -317,7 +355,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                             )
                         )
                     }
-                    enableRecyclerView(recyclerView)
+                    if (!editMode) enableRecyclerView(recyclerView)
                 }
             }
 
@@ -329,7 +367,16 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = items?.let { CategoryAdapter(it, this,applicationContext) }!!
+        adapter = items?.let {
+            CategoryAdapter(
+                it,
+                this,
+                applicationContext,
+                editMode,
+                existingAnswers,
+                allCatQuestions
+            )
+        }!!
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
     }
@@ -350,14 +397,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             answerDetails,
             respondent.text.toString(),
             if (cwsName.selectedItem != null) cwsName.selectedItem.toString() else "",
-            answersFromSP
+            editMode,
+            existingAnswers
         )
         dialog.setDismissListener(this)
         dialog.show()
     }
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
-    override fun onDialogDismissed(updatedAnswers: Array<Answers>?,categoryId: Int) {
+    override fun onDialogDismissed(updatedAnswers: Array<Answers>?, categoryId: Int) {
         adapter.updateColor(categoryId)
         adapter.notifyDataSetChanged()
         updatedAnswers?.forEach { updatedAnswer ->
@@ -380,11 +428,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             submitAll.isEnabled = false
             submitAll.backgroundTintList =
                 ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
-        }
-
-//        Update progress bar
-        answerDetails.forEach {
-            println(it.toString())
         }
 
         progress = (answerDetails.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
