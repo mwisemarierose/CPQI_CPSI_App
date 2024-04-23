@@ -1,9 +1,7 @@
 package com.example.tnsapp.adapters
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +12,13 @@ import com.bumptech.glide.Glide
 import com.example.tnsapp.R
 import com.example.tnsapp.data.Categories
 
-class CategoryAdapter(val items: List<Categories>, private val listener: OnItemClickListener,val context: Context) :
-    RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
-    private var selectedCategoryIds: MutableSet<Int> = mutableSetOf()
+class EditAuditAdapter(
+    private val items: List<Categories>,
+    private val listener: OnItemClickListener,
+    applicationContext: Context
+) : RecyclerView.Adapter<EditAuditAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val categoryNameView: TextView = itemView.findViewById(R.id.categoryName)
         val categoryIconView: ImageView = itemView.findViewById(R.id.imageView)
         val progressBar: View = itemView.findViewById(R.id.progressBar)
@@ -29,7 +28,7 @@ class CategoryAdapter(val items: List<Categories>, private val listener: OnItemC
         }
 
         override fun onClick(v: View?) {
-            val position = items[adapterPosition].id.toInt()
+            val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 listener.onItemClick(position)
             }
@@ -40,21 +39,16 @@ class CategoryAdapter(val items: List<Categories>, private val listener: OnItemC
         fun onItemClick(position: Int)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryAdapter.ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.category_item_list, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.editaudit_item, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: CategoryAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = items[position]
         holder.categoryNameView.text = currentItem.name
-
-        if(selectedCategoryIds.contains(currentItem.id.toInt())){
-            holder.progressBar.setBackgroundColor(context.getColor(R.color.maroon))
-        }else
-            holder.progressBar.setBackgroundColor(context.getColor(R.color.grey))
         loadImageFromUrl(currentItem.iconPath, holder.categoryIconView)
+        holder.progressBar.visibility = View.VISIBLE // Assuming you want to always show the progress bar
     }
 
     override fun getItemCount(): Int {
@@ -63,14 +57,7 @@ class CategoryAdapter(val items: List<Categories>, private val listener: OnItemC
 
     @SuppressLint("DiscouragedApi")
     private fun loadImageFromUrl(url: String, iconView: ImageView) {
-        val resourceId =
-            iconView.context.resources.getIdentifier(url, "drawable", iconView.context.packageName)
-        Glide.with(iconView.context)
-            .load(resourceId)
-            .into(iconView)
-    }
-
-    fun updateColor(categoryId: Int) {
-        selectedCategoryIds.add(categoryId)
+        val resourceId = iconView.context.resources.getIdentifier(url, "drawable", iconView.context.packageName)
+        Glide.with(iconView.context).load(resourceId).into(iconView)
     }
 }

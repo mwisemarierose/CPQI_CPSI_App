@@ -7,13 +7,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.R
+import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.RecordedAudit
 
 
 class AddNewListAdapter(
     val items: Map<Pair<String, String?>, Int>,
     private val totalItems: Int,
-    private val auditQSize: Int
+    private val auditQSize: Int,
+    private val itemClickListener: OnItemClickListener,
 ) :
     RecyclerView.Adapter<AddNewListAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -42,7 +44,6 @@ class AddNewListAdapter(
             // Add the score to the map
             dataToExport[pairKey as Pair<String, String>] = value
         }
-
         return dataToExport
     }
 
@@ -63,6 +64,9 @@ class AddNewListAdapter(
         holder.auditDateView.text = currentItem.second
         holder.totalAView.text = "${items.entries.elementAt(position).value}/ $auditQSize"
         holder.auditScoreView.text = ((items.entries.elementAt(position).value * 100) / auditQSize).toString() + "%"
+        holder.itemView.setOnClickListener {
+            itemClickListener.onItemClick(position)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -65,6 +65,8 @@ class NewstationActivity : AppCompatActivity() {
                 val successMessage = getString(R.string.toast_message)
                 val duplicateMessage = getString(R.string.toast_message)
 
+
+
                 if (existingCws == null) {
                     val auditId = intent.getIntExtra("audit_id", 0)
                     val cws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location, auditId = auditId)

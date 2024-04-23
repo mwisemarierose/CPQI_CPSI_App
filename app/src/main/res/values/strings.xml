@@ -47,6 +47,7 @@
     <string name="missing_respondent_error">Please enter a respondent.</string>
     <string name="Score" />
     <string name="scores">Scores</string>
+    <string name="edit_audit">Edit Audit</string>
     <string-array name="languages" translatable="false">
         <item>English</item>
         <item>Kinyarwanda</item>

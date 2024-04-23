@@ -44,7 +44,7 @@ import kotlin.properties.Delegates
 class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener,
     PopupActivity.DialogDismissListener, View.OnClickListener {
     companion object {
-        private const val REQUEST_CODE_ADD_CWS = 100  // You can choose any unique value
+        private const val REQUEST_CODE_ADD_CWS = 100
     }
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
@@ -79,6 +79,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         db = AppDatabase.getDatabase(this)!!
         fetchCwsData ()
         onClickListener()
+        val editMode = intent.getBooleanExtra("editMode", false)
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         submitAll = findViewById(R.id.submitAllBtn)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
@@ -126,31 +127,22 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 sharedPreferences.getString("answers", json),
                 Array<Answers>::class.java
             )
-
 //            if respondent is not selected, show error message
             if (respondent.text.isEmpty()) {
                 respondent.error = getString(R.string.missing_respondent_error)
                 respondent.requestFocus()
                 return@setOnClickListener
             }
-
-//            check if in answers there is cwName equal to selected cwsName and it is recorded today
-            val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-            val cwsName = cwsName.selectedItem.toString()
-            val existingAnswers = db.answerDao().getAll()
-                .filter { it.cwsName == cwsName && formatDate(it.date) == today }
-            if (existingAnswers.isNotEmpty()) {
-                Toast.makeText(
-                    this,
-                    applicationContext.getText(R.string.already_recorded_error_alert_msg),
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@setOnClickListener
+            if (editMode) {
+//                Thread {
+//                    db.answerDao().updateAnswer(answers)
+//                }.start()
+            } else {
+                // Create mode logic: Insert new answers
+                Thread {
+                    db.answerDao().insertAll(answers)
+                }.start()
             }
-
-            Thread {
-                db.answerDao().insertAll(answers)
-            }.start()
 
 //            remove shared preferences after submitting answers
             editor.remove("answers")

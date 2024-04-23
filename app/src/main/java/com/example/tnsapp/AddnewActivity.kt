@@ -1,6 +1,8 @@
 package com.example.tnsapp
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -9,28 +11,29 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import java.io.File
-import java.io.FileWriter
-import android.os.Environment
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Environment
+import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.AddNewListAdapter
 import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
-import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.data.RecordedAudit
 import com.example.tnsapp.parsers.allAuditQuestionsParser
-import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.formatDate
-import kotlinx.coroutines.delay
 import org.json.JSONObject
+import java.io.File
+import java.io.IOException
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
     CategoryAdapter.OnItemClickListener {
@@ -44,37 +47,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var adapter: AddNewListAdapter
     private lateinit var db: AppDatabase
     private lateinit var items: List<Questions>
-
-
-    private fun exportDataToExcel() {
-        // Gather data to export (you may need to adjust this based on your specific requirements)
-        val dataToExport = adapter.getDataToExport()
-        val fileName = "audit_data.csv"
-        val filePath = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
-        exportToExcel(dataToExport, filePath)
-    }
-
-    private fun exportToExcel(data: Map<Pair<String, String>, Int>, filePath: File) {
-        try {
-            FileWriter(filePath).use { writer ->
-                // Write headers
-                writer.append("CWS Name, Date, Total Score")
-                writer.append('\n')
-
-                // Write data
-                data.forEach { (key, value) ->
-                    writer.append("${key.first}, ${key.second}, $value")
-                    writer.append('\n')
-                }
-            }
-
-            Toast.makeText(this, "Exported to ${filePath.absolutePath}", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(this, "Export failed", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,11 +91,14 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val result = getAnswers.map {
             RecordedAudit(null, it.auditId.toInt(), cwsName = it.cwsName,
                 score = if(it.answer == Answers.YES) 1 else 0,
-                date = it.date) }
-//        progress = (answerDetails.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
+                date = it.date,)
+
+        }
+
         val uniqueResult = result
             .groupBy { it.cwsName to formatDate(it.date) }
-            .mapValues { (_, audits) -> audits.sumBy { it.score } }
+            .mapValues { (_, audits) -> audits.sumBy { it.score }
+            }
 
         // Print the result
         uniqueResult.forEach { (key, value) ->
@@ -135,7 +110,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(uniqueResult, result.size, items.size)
+        adapter = AddNewListAdapter(uniqueResult, result.size, items.size,this)
         recyclerView.adapter = adapter
 
         if (result.isEmpty() || result[0].auditId != auditId) {
@@ -162,8 +137,9 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             override fun onMenuItemSelected(menu: MenuBuilder, item: MenuItem): Boolean {
                 return when (item.itemId) {
                     R.id.export_option -> {
+
                         // Handle export action
-                        exportDataToExcel()
+
                         true
                     }
                     else -> false
@@ -184,6 +160,11 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         startActivity(intent)
     }
     override fun onItemClick(position: Int) {
-        TODO("Not yet implemented")
+        val clickedAudit = items[position]
+        println(items)
+        val intent = Intent(this@AddNewActivity, CategoriesActivity::class.java)
+        intent.putExtra("auditId", clickedAudit.id)
+        intent.putExtra("editMode", true) // Flag to indicate edit mode
+        startActivity(intent)
     }
 }

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 
 @Dao
 interface AnswersDao {
@@ -25,6 +26,10 @@ interface AnswersDao {
 
     @Insert(onConflict = OnConflictStrategy.NONE)
     fun insertAll(answers: Array<Answers>)
+
+    @Update
+    fun updateAnswer(answers: Array<Answers>)
+
 
     @Delete
     suspend fun delete(answer: Answers)
