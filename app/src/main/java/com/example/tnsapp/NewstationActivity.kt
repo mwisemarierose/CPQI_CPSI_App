@@ -2,7 +2,6 @@ package com.example.tnsapp
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -17,20 +16,19 @@ import com.example.tnsapp.adapters.ImageSliderAdapter
 import com.example.tnsapp.data.AppDatabase
 import com.example.tnsapp.data.Cws
 import com.smarteist.autoimageslider.SliderView
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class NewstationActivity : AppCompatActivity() {
+class  NewstationActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
     private val imageResources = arrayOf(
         R.drawable.donna,
         R.drawable.reach,
         R.drawable.inside
     )
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -65,7 +63,22 @@ class NewstationActivity : AppCompatActivity() {
                 val successMessage = getString(R.string.toast_message)
                 val duplicateMessage = getString(R.string.toast_message)
 
-
+              //set error on empty fields if any
+                if (cwsName.isEmpty()) {
+                    findViewById<EditText>(R.id.cwsName).error = getString(R.string.cws_error)
+                    findViewById<EditText>(R.id.cwsName).requestFocus()
+                    return@launch
+                }
+                if (cwsLeader.isEmpty()) {
+                    findViewById<EditText>(R.id.cwsLeader).error = getString(R.string.leader_error)
+                    findViewById<EditText>(R.id.cwsLeader).requestFocus()
+                    return@launch
+                }
+                if (location.isEmpty()) {
+                    findViewById<EditText>(R.id.location).error = getString(R.string.address_error)
+                    findViewById<EditText>(R.id.location).requestFocus()
+                    return@launch
+                }
 
                 if (existingCws == null) {
                     val auditId = intent.getIntExtra("audit_id", 0)

@@ -30,7 +30,7 @@
     <string name="skip">Taruka</string>
     <string name="submit">Emeza</string>
     <string name="success_alert_msg">Igikorwa cyagenze neza!!!</string>
-    <string name="register_your_station">Ongeramo station yawe</string>
+    <string name="register_your_station">Ongeramo station </string>
     <string name="address">Aderesi</string>
     <string name="cws_leader">Umuyobozi wa station</string>
     <string name="cws_Name">Izina rya station</string>
@@ -47,4 +47,7 @@
     <string name="Score" />
     <string name="scores">Scores</string>
     <string name="edit_audit">Edit Audit</string>
+    <string name="cws_error">Andika izina rya station</string>
+    <string name="leader_error">Andika izina ryumuyobozi</string>
+    <string name="address_error">Andika izina rya Aderesi</string>
 </resources>

@@ -48,6 +48,9 @@
     <string name="Score" />
     <string name="scores">Scores</string>
     <string name="edit_audit">Edit Audit</string>
+    <string name="cws_error">CWS name cannot be empty</string>
+    <string name="leader_error">CWS leader cannot be empty</string>
+    <string name="address_error">CWS address cannot be empty</string>
     <string-array name="languages" translatable="false">
         <item>English</item>
         <item>Kinyarwanda</item>

@@ -143,7 +143,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                     db.answerDao().insertAll(answers)
                 }.start()
             }
-
 //            remove shared preferences after submitting answers
             editor.remove("answers")
             editor.apply()
@@ -153,7 +152,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 applicationContext.getText(R.string.success_alert_msg),
                 Toast.LENGTH_SHORT
             ).show()
-
 //            add delay before going back to recorded audits activity
             Thread.sleep(2000)
 

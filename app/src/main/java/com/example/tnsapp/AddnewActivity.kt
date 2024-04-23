@@ -151,6 +151,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
+    //function to export data in csv format to external storage
 
     private fun openCategoryActivity(auditId: Int, audit: String?) {
         val intent = Intent(this, CategoriesActivity::class.java)
