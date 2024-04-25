@@ -18,7 +18,8 @@ class QuestionAdapter(
     private val respondent: String,
     private val cwsName: String,
     private val editMode: Boolean,
-    private val existingAnswers: List<Answers>
+    private val viewMode: Boolean,
+    private var existingAnswers: List<Answers>
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(currentItem: Questions) {
@@ -212,6 +213,25 @@ class QuestionAdapter(
             Answers.SKIP -> {
                 holder.skipBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.grey))
             }
+            else-> {
+                if(editMode || viewMode ){
+
+                    val existingAnswer = existingAnswers.find { it.qId == currentItem.id }
+                    when (existingAnswer?.answer) {
+                        Answers.YES -> {
+                            holder.yesBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.green))
+                        }
+
+                        Answers.NO -> {
+                            holder.noBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.maroon))
+                        }
+
+                        Answers.SKIP -> {
+                            holder.skipBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.grey))
+                        }
+                }
+            }
+        }
         }
 
         holder.bind(currentItem)

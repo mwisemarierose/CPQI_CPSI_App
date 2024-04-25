@@ -131,6 +131,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         db = AppDatabase.getDatabase(this)!!
 
+
+        //handle submission on new answers and already existing answers in edit mode updating the existing answers in the db
+
         submitAll.setOnClickListener {
             val groupedAnswersId = UUID.randomUUID().toString()
 
@@ -139,28 +142,37 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 Array<Answers>::class.java
             )
 
-//            update each answer with a unique id
+            // Update each answer with a unique id
             answers.forEach {
                 it.groupedAnswersId = groupedAnswersId
             }
 
-//            if respondent is not selected, show error message
+            // If respondent is not selected, show error message
             if (respondent.text.isEmpty()) {
                 respondent.error = getString(R.string.missing_respondent_error)
                 respondent.requestFocus()
                 return@setOnClickListener
             }
-            if (editMode) {
-//                Thread {
-//                    db.answerDao().updateAnswer(answers)
-//                }.start()
-            } else {
-                // Create mode logic: Insert new answers
+
+            if (!editMode) {
+                // Insert new answers into the database
                 Thread {
                     db.answerDao().insertAll(answers)
                 }.start()
+            } else {
+                // Update existing answers in the database
+                Thread {
+                    existingAnswers.forEach { existingAnswer ->
+                        val updatedAnswer = answers.find { it.qId == existingAnswer.qId }
+                        if (updatedAnswer != null) {
+                            existingAnswer.answer = updatedAnswer.answer
+                            existingAnswer.groupedAnswersId = updatedAnswer.groupedAnswersId
+                            db.answerDao().updateAnswer(existingAnswers.toTypedArray())
+                        }
+                    }
+                }
             }
-//            remove shared preferences after submitting answers
+            // Remove shared preferences after submitting answers
             editor.remove("answers")
             editor.apply()
 
@@ -169,7 +181,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 applicationContext.getText(R.string.success_alert_msg),
                 Toast.LENGTH_SHORT
             ).show()
-//            add delay before going back to recorded audits activity
             Thread.sleep(2000)
 
             val intent = Intent(this, AddNewActivity::class.java)
@@ -177,6 +188,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             intent.putExtra("audit", audit)
             startActivity(intent)
         }
+
     }
 
     private fun onClickListener(addStation: Button) {
@@ -290,7 +302,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             progressBar.progress = score
 
-            // Update percentage text
             percentageText.text = "$score%"
         } else if (viewMode) {
             // Get today's answers corresponding with auditId
@@ -323,6 +334,10 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             // Update percentage text
             percentageText.text = "$score%"
+
+            //handle submission of edited answers updated the existing answers in the db
+
+
         } else {
             progressBar.progress = 0
             percentageText.text = "0%"
@@ -445,6 +460,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             respondent.text.toString(),
             if (cwsName.selectedItem != null) cwsName.selectedItem.toString() else "",
             editMode,
+            viewMode,
             existingAnswers
         )
         dialog.setDismissListener(this)

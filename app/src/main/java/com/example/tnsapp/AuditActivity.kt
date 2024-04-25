@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -107,7 +106,6 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         jsonData = readJsonFromAssets(this, result)
 
         val items: List<AuditCategories> = auditParser(jsonData)
-
         // Handle case where JSON parsing fails or data is empty
         adapter = AuditAdapter(items, this)
         recyclerView.adapter = adapter

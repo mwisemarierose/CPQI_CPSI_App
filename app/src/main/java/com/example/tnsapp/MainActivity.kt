@@ -18,17 +18,20 @@ import com.example.tnsapp.parsers.auditParser
 import com.example.tnsapp.parsers.readJsonFromAssets
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var jsonData: String
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
-        intent.getStringExtra("language")?.let { setupUI(it) }
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
         setupLanguageSpinner(languageSpinner)
-//        val language = getSelectedLanguage()
-//        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language))
+        val language = getSelectedLanguage()
+        setupUI(language)
+        println(language)
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language))
         onClickListener()
     }
 
@@ -95,6 +98,8 @@ class MainActivity : AppCompatActivity() {
 
         val selectedLang = if (selectedLanguage == "English" || selectedLanguage == "en") 0 else 1
         languageSpinner.setSelection(selectedLang)
+
+        jsonData = readJsonFromAssets(this, result)
 
     }
     private fun onClickListener() {
