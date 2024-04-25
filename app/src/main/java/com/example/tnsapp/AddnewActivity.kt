@@ -225,7 +225,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         intent.putExtra("auditName", auditName)
         startActivity(intent)
     }
-
     override fun onItemClick(position: Int) {
         val intent = Intent(this@AddNewActivity, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)

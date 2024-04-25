@@ -29,7 +29,6 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         val language = getSelectedLanguage()
         supportActionBar?.hide()
 
-
         intent.getStringExtra("language")?.let { setupUI(it) }
 
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
@@ -39,8 +38,6 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         return sharedPref.getString("language", "en") ?: "en"
     }
-
-
 
     private fun setupLanguageSpinner(languageSpinner: Spinner) {
         ArrayAdapter.createFromResource(
@@ -76,7 +73,6 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
             }
         }
     }
-
     private fun changeLanguage(languageCode: String) {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
         // Save the selected language in SharedPreferences or any other way you prefer

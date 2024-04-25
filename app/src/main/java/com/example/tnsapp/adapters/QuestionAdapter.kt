@@ -172,7 +172,6 @@ class QuestionAdapter(
         val noBtn: Button = itemView.findViewById(R.id.noButton)
         val skipBtn: Button = itemView.findViewById(R.id.skipButton)
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.popup_item_list, parent, false)
@@ -190,7 +189,7 @@ class QuestionAdapter(
         holder.questionNameView.text = currentItem.qName
 
         // Find the answer for this question from answersFromSP
-        val answer = existingAnswers.find { it.qId == currentItem.id }
+        val answer = answerDetails.find { it.qId == currentItem.id }
 
         // Set background color based on the answer (optional, selection highlights remain)
         when (answer?.answer) {
