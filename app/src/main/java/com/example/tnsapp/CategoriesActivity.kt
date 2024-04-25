@@ -31,7 +31,6 @@ import com.example.tnsapp.data.Questions
 import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.formatDate
-import com.example.tnsapp.utils.isTodayDate
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +38,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 import kotlin.properties.Delegates
 
 class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListener,
@@ -65,6 +65,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var addStation: Button
     private var editMode = false
     private var viewMode = false
+    private var selectedGroupedAnswerId = ""
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
@@ -85,6 +86,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         fetchCwsData()
         editMode = intent.getBooleanExtra("editMode", false)
         viewMode = intent.getBooleanExtra("viewMode", false)
+        selectedGroupedAnswerId = intent.getStringExtra("selectedGroupedAnswerId").toString()
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         submitAll = findViewById(R.id.submitAllBtn)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
@@ -132,10 +134,18 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         db = AppDatabase.getDatabase(this)!!
 
         submitAll.setOnClickListener {
+            val groupedAnswersId = UUID.randomUUID().toString()
+
             val answers = gson.fromJson(
                 sharedPreferences.getString("answers", json),
                 Array<Answers>::class.java
             )
+
+//            update each answer with a unique id
+            answers.forEach {
+                it.groupedAnswersId = groupedAnswersId
+            }
+
 //            if respondent is not selected, show error message
             if (respondent.text.isEmpty()) {
                 respondent.error = getString(R.string.missing_respondent_error)
@@ -258,7 +268,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         if (editMode) {
 //            get today's answers corresponding with auditId
             existingAnswers = db.answerDao().getAll()
-                .filter { isTodayDate(it.date) && it.auditId.toInt() == auditId }
+                .filter { it.groupedAnswersId == selectedGroupedAnswerId }
+
+            existingAnswers.forEach {
+                println(it.toString())
+            }
 
             respondent.text = existingAnswers.first().responderName
             respondent.isEnabled = false
@@ -289,7 +303,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         } else if (viewMode) {
             // Get today's answers corresponding with auditId
             existingAnswers = db.answerDao().getAll()
-                .filter { it.auditId.toInt() == auditId }
+                .filter { it.groupedAnswersId == selectedGroupedAnswerId }
 
             respondent.text = existingAnswers.first().responderName
             respondent.isEnabled = false
@@ -318,7 +332,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             // Update percentage text
             percentageText.text = "$score%"
         } else {
-            println("here")
             progressBar.progress = 0
             percentageText.text = "0%"
         }
@@ -334,7 +347,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                             it.answer,
                             it.qId,
                             auditId.toLong(),
-                            cwsName.selectedItem.toString()
+                            cwsName.selectedItem.toString(),
+                            ""
                         )
                     }.toTypedArray()
                 } else {
@@ -345,7 +359,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                             "",
                             items!![0].id,
                             auditId.toLong(),
-                            cwsName.selectedItem.toString()
+                            cwsName.selectedItem.toString(),
+                            ""
                         )
                     )
                 }
@@ -392,7 +407,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                                 "",
                                 items?.getOrNull(0)?.id ?: 0,
                                 auditId.toLong(),
-                                selectedCwsName
+                                selectedCwsName,
+                                ""
                             )
                         )
                     }

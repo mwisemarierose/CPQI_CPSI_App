@@ -14,6 +14,7 @@ data class Answers(
     @ColumnInfo(name = "q_id") val qId: Long,
     @ColumnInfo(name = "audit_id") val auditId: Long,
     @ColumnInfo(name = "cws_name") val cwsName: String,
+    @ColumnInfo(name = "grouped_answers_id") var groupedAnswersId: String,
     @ColumnInfo(name = "date") val date: String = Date().toString()
 ) {
     companion object {
