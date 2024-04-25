@@ -26,6 +26,7 @@ import com.example.tnsapp.data.Questions
 import com.example.tnsapp.data.RecordedAudit
 import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.utils.formatDate
+import com.example.tnsapp.utils.isTodayDate
 import org.json.JSONObject
 import java.io.OutputStream
 import java.io.PrintWriter
@@ -229,7 +230,17 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val intent = Intent(this@AddNewActivity, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)
         intent.putExtra("audit", audit)
-        intent.putExtra("editMode", true) // Flag to indicate edit mode
+        intent.putExtra(
+            "editMode",
+            db.answerDao().getAllByAuditId(auditId).isNotEmpty() && isTodayDate(
+                db.answerDao().getAllByAuditId(auditId)[0].date
+            )
+        )
+        intent.putExtra(
+            "viewMode", db.answerDao().getAllByAuditId(auditId).isNotEmpty() && !isTodayDate(
+                db.answerDao().getAllByAuditId(auditId)[0].date
+            )
+        )
         startActivity(intent)
     }
 }
