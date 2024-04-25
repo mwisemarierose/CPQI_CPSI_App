@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.R
-import com.example.tnsapp.data.Answers
-import com.example.tnsapp.data.RecordedAudit
 
 
 class AddNewListAdapter(
@@ -27,7 +25,6 @@ class AddNewListAdapter(
 
         override fun onClick(v: View?) {}
     }
-
 
     // function getDataToExport()
 
@@ -63,7 +60,8 @@ class AddNewListAdapter(
         holder.auditCwsNameView.text = currentItem.first
         holder.auditDateView.text = currentItem.second
         holder.totalAView.text = "${items.entries.elementAt(position).value}/ $auditQSize"
-        holder.auditScoreView.text = ((items.entries.elementAt(position).value * 100) / auditQSize).toString() + "%"
+        holder.auditScoreView.text =
+            ((items.entries.elementAt(position).value * 100) / auditQSize).toString() + "%"
         holder.itemView.setOnClickListener {
             itemClickListener.onItemClick(position)
         }
