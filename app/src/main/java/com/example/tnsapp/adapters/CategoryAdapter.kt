@@ -20,7 +20,7 @@ class CategoryAdapter(
     val context: Context,
     private val editMode: Boolean,
     private val existingAnswers: List<Answers>,
-    val allCatQuestions: List<Questions>
+    private val allCatQuestions: List<Questions>
 ) :
     RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     private var selectedCategoryIds: MutableSet<Int> = mutableSetOf()
@@ -57,20 +57,29 @@ class CategoryAdapter(
         val currentItem = items[position]
         holder.categoryNameView.text = currentItem.name
 
+        println(currentItem.toString())
+
         if (editMode) {
 //            get the questions for the category
-            val questions = allCatQuestions.filter { it.catId.toInt() == currentItem.id.toInt() }
+            val questions =
+                allCatQuestions.filter { it.catId.toInt() == (currentItem.id.toInt() - 1) }
+            questions.forEach {
+                println(it.toString())
+            }
             val answeredQuestions =
-                existingAnswers.filter { it.qId.toInt() == currentItem.id.toInt() }
-            if (questions.size == answeredQuestions.size) {
+                existingAnswers.filter { it.qId.toInt() in questions.map { it -> it.id.toInt() } }
+            answeredQuestions.forEach {
+                println(it.toString())
+            }
+            if (answeredQuestions.isNotEmpty()) {
                 selectedCategoryIds.add(currentItem.id.toInt())
             }
         }
 
+        println(selectedCategoryIds.toString())
+
         if (selectedCategoryIds.contains(currentItem.id.toInt())) {
             holder.progressBar.setBackgroundColor(context.getColor(R.color.maroon))
-        } else {
-            holder.progressBar.setBackgroundColor(context.getColor(R.color.grey))
         }
 
         loadImageFromUrl(currentItem.iconPath, holder.categoryIconView)

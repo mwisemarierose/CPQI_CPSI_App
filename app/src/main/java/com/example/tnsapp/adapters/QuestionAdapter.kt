@@ -33,8 +33,8 @@ class QuestionAdapter(
                                     Answers.YES,
                                     currentItem.id,
                                     auditId.toLong(),
-                                    cwsName
-
+                                    cwsName,
+                                    ""
                                 )
                             } else {
                                 answerDetails = answerDetails.plus(
@@ -44,7 +44,8 @@ class QuestionAdapter(
                                         Answers.YES,
                                         currentItem.id,
                                         auditId.toLong(),
-                                        cwsName
+                                        cwsName,
+                                        ""
                                     )
                                 )
                             }
@@ -56,7 +57,8 @@ class QuestionAdapter(
                                     Answers.YES,
                                     currentItem.id,
                                     auditId.toLong(),
-                                    cwsName
+                                    cwsName,
+                                    ""
                                 )
                             )
                         }
@@ -82,7 +84,8 @@ class QuestionAdapter(
                                     Answers.NO,
                                     currentItem.id,
                                     auditId.toLong(),
-                                    cwsName
+                                    cwsName,
+                                    ""
                                 )
                             } else {
                                 answerDetails = answerDetails.plus(
@@ -92,7 +95,8 @@ class QuestionAdapter(
                                         Answers.NO,
                                         currentItem.id,
                                         auditId.toLong(),
-                                        cwsName
+                                        cwsName,
+                                        ""
                                     )
                                 )
                             }
@@ -104,7 +108,8 @@ class QuestionAdapter(
                                     Answers.NO,
                                     currentItem.id,
                                     auditId.toLong(),
-                                    cwsName
+                                    cwsName,
+                                    ""
                                 )
                             )
                         }
@@ -129,7 +134,8 @@ class QuestionAdapter(
                                     Answers.SKIP,
                                     currentItem.id,
                                     auditId.toLong(),
-                                    cwsName
+                                    cwsName,
+                                    ""
                                 )
                             } else {
                                 answerDetails = answerDetails.plus(
@@ -139,7 +145,8 @@ class QuestionAdapter(
                                         Answers.SKIP,
                                         currentItem.id,
                                         auditId.toLong(),
-                                        cwsName
+                                        cwsName,
+                                        ""
                                     )
                                 )
                             }
@@ -151,7 +158,8 @@ class QuestionAdapter(
                                     Answers.SKIP,
                                     currentItem.id,
                                     auditId.toLong(),
-                                    cwsName
+                                    cwsName,
+                                    ""
                                 )
                             )
                         }

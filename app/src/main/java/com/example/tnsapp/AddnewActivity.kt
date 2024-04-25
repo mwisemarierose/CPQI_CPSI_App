@@ -25,7 +25,6 @@ import com.example.tnsapp.data.AppDatabase
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.data.RecordedAudit
 import com.example.tnsapp.parsers.allAuditQuestionsParser
-import com.example.tnsapp.utils.formatDate
 import com.example.tnsapp.utils.isTodayDate
 import org.json.JSONObject
 import java.io.OutputStream
@@ -44,6 +43,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var items: List<Questions>
     private var auditId by Delegates.notNull<Int>()
     private lateinit var audit: String
+    private lateinit var uniqueResult: Map<String, RecordedAudit>
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,21 +91,24 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 null, it.auditId.toInt(), cwsName = it.cwsName,
                 score = if (it.answer == Answers.YES) 1 else 0,
                 date = it.date,
+                groupedAnswersId = it.groupedAnswersId
             )
-
         }
 
-        val uniqueResult = result
-            .groupBy { it.cwsName to formatDate(it.date) }
+        uniqueResult = result
+            .groupBy { it.groupedAnswersId }
             .mapValues { (_, audits) ->
-                audits.sumBy { it.score }
+                audits.reduce { _, audit ->
+                    RecordedAudit(
+                        null,
+                        audit.auditId,
+                        audit.cwsName,
+                        audits.sumBy { it.score },
+                        audit.groupedAnswersId,
+                        audit.date
+                    )
+                }
             }
-
-        // Print the result
-        uniqueResult.forEach { (key, value) ->
-            val (cwsName, date) = key
-            println("cwsName: $cwsName, Date: $date, Total Score: $value")
-        }
 
         emptyView = findViewById(R.id.emptyTextView)
         recyclerView = findViewById(R.id.recyclerView)
@@ -229,17 +232,23 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val intent = Intent(this@AddNewActivity, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)
         intent.putExtra("audit", audit)
-        intent.putExtra(
-            "editMode",
-            db.answerDao().getAllByAuditId(auditId).isNotEmpty() && isTodayDate(
-                db.answerDao().getAllByAuditId(auditId)[0].date
+        if (db.answerDao().getAllByAuditId(auditId).isNotEmpty()) {
+            intent.putExtra(
+                "selectedGroupedAnswerId",
+                uniqueResult.entries.elementAt(position).value.groupedAnswersId
             )
-        )
-        intent.putExtra(
-            "viewMode", db.answerDao().getAllByAuditId(auditId).isNotEmpty() && !isTodayDate(
-                db.answerDao().getAllByAuditId(auditId)[0].date
+            intent.putExtra(
+                "editMode",
+                isTodayDate(
+                    db.answerDao().getAllByAuditId(auditId)[0].date
+                )
             )
-        )
+            intent.putExtra(
+                "viewMode", !isTodayDate(
+                    db.answerDao().getAllByAuditId(auditId)[0].date
+                )
+            )
+        }
         startActivity(intent)
     }
 }

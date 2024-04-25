@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.R
+import com.example.tnsapp.data.RecordedAudit
 
 
 class AddNewListAdapter(
-    val items: Map<Pair<String, String?>, Int>,
+    val items: Map<String, RecordedAudit>,
     private val totalItems: Int,
     private val auditQSize: Int,
     private val itemClickListener: OnItemClickListener,
@@ -28,21 +29,21 @@ class AddNewListAdapter(
 
     // function getDataToExport()
 
-    fun getDataToExport(): Map<Pair<String, String>, Int> {
-        val dataToExport = mutableMapOf<Pair<String, String>, Int>()
-
-        for ((key, value) in items) {
-            val category = key.first // Get category name
-            val date = key.second // Get date
-
-            // Combine category and date into a Pair
-            val pairKey = Pair(category, date)
-
-            // Add the score to the map
-            dataToExport[pairKey as Pair<String, String>] = value
-        }
-        return dataToExport
-    }
+//    fun getDataToExport(): Map<Pair<String, String>, Int> {
+//        val dataToExport = mutableMapOf<Pair<String, String>, Int>()
+//
+//        for ((key, value) in items) {
+//            val category = key.first // Get category name
+//            val date = key.second // Get date
+//
+//            // Combine category and date into a Pair
+//            val pairKey = Pair(category, date)
+//
+//            // Add the score to the map
+//            dataToExport[pairKey as Pair<String, String>] = value
+//        }
+//        return dataToExport
+//    }
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
@@ -56,12 +57,12 @@ class AddNewListAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem = items.keys.elementAt(position)
-        holder.auditCwsNameView.text = currentItem.first
-        holder.auditDateView.text = currentItem.second
-        holder.totalAView.text = "${items.entries.elementAt(position).value}/ $auditQSize"
+        val currentItem = items.entries.elementAt(position).value
+        holder.auditCwsNameView.text = currentItem.cwsName
+        holder.auditDateView.text = currentItem.date
+        holder.totalAView.text = "${currentItem.score}/ $auditQSize"
         holder.auditScoreView.text =
-            ((items.entries.elementAt(position).value * 100) / auditQSize).toString() + "%"
+            ((currentItem.score * 100) / auditQSize).toString() + "%"
         holder.itemView.setOnClickListener {
             itemClickListener.onItemClick(position)
         }

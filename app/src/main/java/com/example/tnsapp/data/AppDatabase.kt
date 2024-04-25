@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Answers::class, Cws::class,RecordedAudit::class], version = 8)
+@Database(entities = [Answers::class, Cws::class,RecordedAudit::class], version = 10)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun answerDao(): AnswersDao
     abstract fun cwsDao(): CwsDao
