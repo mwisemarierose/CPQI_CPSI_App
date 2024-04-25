@@ -57,16 +57,6 @@ class CategoryAdapter(
         val currentItem = items[position]
         holder.categoryNameView.text = currentItem.name
 
-        items.forEach {
-            println(it.toString())
-        }
-
-        println(editMode)
-
-        existingAnswers.forEach {
-            println(it.toString())
-        }
-
         if (editMode) {
 //            get the questions for the category
             val questions = allCatQuestions.filter { it.catId.toInt() == currentItem.id.toInt() }
