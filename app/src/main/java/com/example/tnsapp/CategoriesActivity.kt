@@ -52,8 +52,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private var auditId by Delegates.notNull<Int>()
     private lateinit var respondentContainer: LinearLayout
     private lateinit var respondent: TextView
-
-    //    private lateinit var cwsName: TextView
     private lateinit var submitAll: Button
     private lateinit var dialog: PopupActivity
     private var answerDetails: Array<Answers> = emptyArray()
@@ -210,7 +208,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             }
         }
     }
-
     private fun getCwsNames(cwsList: Array<Cws>): List<String> {
         val names = mutableListOf<String>()
         for (cws in cwsList) {
@@ -218,7 +215,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         return names
     }
-
     private fun disableRecyclerView(recyclerView: RecyclerView) {
         // Disable all child views of the RecyclerView
         for (i in 0 until recyclerView.childCount) {
@@ -229,7 +225,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         // Change background color of RecyclerView to grey
         recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.lightGrey))
     }
-
     private fun enableRecyclerView(recyclerView: RecyclerView) {
         // Enable all child views of the RecyclerView
         for (i in 0 until recyclerView.childCount) {
@@ -240,8 +235,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         // Change background color of RecyclerView to white
         recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.LightPink1))
     }
-
-
+    @SuppressLint("SetTextI18n")
     private fun setupUI(items: List<Categories>?) {
         respondentContainer = findViewById(R.id.textInputLayoutContainer)
         respondent = findViewById(R.id.nameEditText)
@@ -380,11 +374,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
     }
-
     override fun onItemClick(position: Int) {
         startActivityAfterClick(position)
     }
-
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
 
@@ -403,7 +395,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dialog.setDismissListener(this)
         dialog.show()
     }
-
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?, categoryId: Int) {
         adapter.updateColor(categoryId)
@@ -433,19 +424,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         progress = (answerDetails.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
 //        println(progress)
         val score = progress
-
         progressBar.progress = score
-
         // Update percentage text
         percentageText.text = "$score%"
-//        println(percentageText)
 
 //        add shared preferences to save answers
         json = gson.toJson(answerDetails)
         editor.putString("answers", json)
         editor.apply()
     }
-
     override fun onClick(v: View?) {
         TODO("Not yet implemented")
     }

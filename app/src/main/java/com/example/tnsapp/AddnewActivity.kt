@@ -121,7 +121,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             recyclerView.visibility = View.VISIBLE
         }
     }
-
     @SuppressLint("RestrictedApi")
     fun showDropdownMenu(v: View?) {
         val menuBuilder = MenuBuilder(this)
