@@ -31,6 +31,7 @@ import com.example.tnsapp.data.Questions
 import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.formatDate
+import com.example.tnsapp.utils.isTodayDate
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -63,6 +64,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var percentageText: TextView
     private lateinit var addStation: Button
     private var editMode = false
+    private var viewMode = false
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
@@ -82,6 +84,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         db = AppDatabase.getDatabase(this)!!
         fetchCwsData()
         editMode = intent.getBooleanExtra("editMode", false)
+        viewMode = intent.getBooleanExtra("viewMode", false)
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         submitAll = findViewById(R.id.submitAllBtn)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
@@ -119,6 +122,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        if (viewMode) submitAll.visibility = View.GONE else submitAll.visibility = View.VISIBLE
 
         submitAll.isEnabled = false
         submitAll.backgroundTintList =
@@ -252,9 +257,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 //        if editMode is true, load answers
         if (editMode) {
 //            get today's answers corresponding with auditId
-            val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             existingAnswers = db.answerDao().getAll()
-                .filter { formatDate(it.date) == today && it.auditId.toInt() == auditId }
+                .filter { isTodayDate(it.date) && it.auditId.toInt() == auditId }
 
             respondent.text = existingAnswers.first().responderName
             respondent.isEnabled = false
@@ -282,6 +286,41 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             // Update percentage text
             percentageText.text = "$score%"
+        } else if (viewMode) {
+            // Get today's answers corresponding with auditId
+            existingAnswers = db.answerDao().getAll()
+                .filter { it.auditId.toInt() == auditId }
+
+            respondent.text = existingAnswers.first().responderName
+            respondent.isEnabled = false
+
+            val cwsList = db.cwsDao().getAll()
+
+            // Create an ArrayAdapter with CWS names (or relevant data)
+            val adapter = ArrayAdapter(
+                this@CategoriesActivity,
+                android.R.layout.simple_spinner_dropdown_item,
+                getCwsNames(cwsList)
+            )
+
+            cwsName.setSelection(adapter.getPosition(existingAnswers.first().cwsName))
+            cwsName.isEnabled = false
+
+            addStation.visibility = View.GONE
+
+            // Update progress bar
+            progress =
+                (existingAnswers.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
+            val score = progress
+
+            progressBar.progress = score
+
+            // Update percentage text
+            percentageText.text = "$score%"
+        } else {
+            println("here")
+            progressBar.progress = 0
+            percentageText.text = "0%"
         }
 
 //        add respondent name and cws name to answerDetails when the user enters them
