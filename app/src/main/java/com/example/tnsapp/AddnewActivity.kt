@@ -2,7 +2,6 @@ package com.example.tnsapp
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -12,7 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContract
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
@@ -27,7 +26,6 @@ import com.example.tnsapp.data.RecordedAudit
 import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.utils.isTodayDate
 import org.json.JSONObject
-import java.io.OutputStream
 import java.io.PrintWriter
 import kotlin.properties.Delegates
 
@@ -125,6 +123,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             recyclerView.visibility = View.VISIBLE
         }
     }
+
     @SuppressLint("RestrictedApi")
     fun showDropdownMenu(v: View?) {
         val menuBuilder = MenuBuilder(this)
@@ -140,16 +139,11 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             override fun onMenuItemSelected(menu: MenuBuilder, item: MenuItem): Boolean {
                 return when (item.itemId) {
                     R.id.export_option -> {
-                        // Handle export action
+                        // Export data to CSV
+                        downloadCsv(this@AddNewActivity)
 
-                        val people = listOf(
-                            Person("Alice", 30),
-                            Person("Bob", 25),
-                            Person("Charlie", 35)
-                        )
-                        val fileName = "people.csv"
-                        exportToCSV(people, fileName)
-
+                        Toast.makeText(this@AddNewActivity, "Exporting data...", Toast.LENGTH_SHORT)
+                            .show()
                         true
                     }
 
@@ -162,64 +156,62 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
-    //function to export data in csv format to external storage
-
-    data class Person(val name: String, val age: Int)
-
-    // Define an activity result contract for starting activities for result
-    class MyStartActivityForResultContract : ActivityResultContract<Intent, ActivityResult>() {
-        override fun createIntent(context: Context, input: Intent): Intent {
-            return input
-        }
-
-        override fun parseResult(resultCode: Int, intent: Intent?): ActivityResult {
-            return ActivityResult(resultCode, intent)
-        }
-    }
 
     // Define a data class to hold the activity result
     data class ActivityResult(val resultCode: Int, val data: Intent?)
 
-    // Function to launch activity for result
-    private fun startMyActivityForResult(
-        intent: Intent,
-        callback: (ActivityResult) -> Unit
-    ) {
-        val launcher = registerForActivityResult(MyStartActivityForResultContract()) { result ->
-            callback(result)
+    // Assuming this function is called from an Activity or Fragment
+    fun downloadCsv(activity: Activity) {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/csv"
+            putExtra(
+                Intent.EXTRA_TITLE, "cpqi_audits-${
+                    System.currentTimeMillis()
+                }.csv"
+            )
         }
-        launcher.launch(intent)
+
+        activity.startActivityForResult(intent, REQUEST_CODE_CREATE_DOCUMENT)
     }
 
-    fun exportToCSV(people: List<Person>, fileName: String) {
-        val createDocumentLauncher = startMyActivityForResult(intent) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                // Handle the result as needed
-                if (data != null) {
-                    val uri = data.data
-                    uri?.let {
-                        val contentResolver = applicationContext.contentResolver
-                        val outputStream: OutputStream? = contentResolver.openOutputStream(uri)
+    private val REQUEST_CODE_CREATE_DOCUMENT = 1001
 
-                        if (outputStream != null) {
-                            PrintWriter(outputStream.bufferedWriter()).use { writer ->
-                                // Write the header row
-                                writer.println("Name,Age")
+    // This function should be called from onActivityResult in the calling Activity or Fragment
+    private fun handleActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+        uniqueResult: Map<String, RecordedAudit>,
+        activity: Activity
+    ) {
+        if (requestCode == REQUEST_CODE_CREATE_DOCUMENT && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                activity.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    PrintWriter(outputStream.bufferedWriter()).use { writer ->
+                        writer.println("CWS Name, Score, Date")
 
-                                // Write each farm's data
-                                for (person in people) {
-                                    val line =
-                                        "${person.name},${person.age}"
-                                    writer.println(line)
-                                }
-                            }
+                        for (p in uniqueResult) {
+                            val line = "${p.value.cwsName}, ${p.value.score}, ${p.value.date}"
+                            writer.println(line)
                         }
+
+                        writer.flush()
                     }
                 }
             }
         }
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_CREATE_DOCUMENT) {
+            handleActivityResult(requestCode, resultCode, data, uniqueResult, this)
+        }
+    }
+
 
     private fun openCategoryActivity(auditId: Int, audit: String?) {
         val intent = Intent(this, CategoriesActivity::class.java)
@@ -228,6 +220,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         intent.putExtra("auditName", auditName)
         startActivity(intent)
     }
+
     override fun onItemClick(position: Int) {
         val intent = Intent(this@AddNewActivity, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)
