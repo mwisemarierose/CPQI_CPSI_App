@@ -131,7 +131,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         db = AppDatabase.getDatabase(this)!!
 
-
         //handle submission on new answers and already existing answers in edit mode updating the existing answers in the db
 
         submitAll.setOnClickListener {
@@ -193,7 +192,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun onClickListener(addStation: Button) {
         addStation.setOnClickListener {
-            val auditId = intent.getIntExtra("auditId", 0)
             openStationActivity(getSelectedLanguage())
         }
     }
@@ -235,6 +233,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             }
         }
     }
+
     private fun getCwsNames(cwsList: Array<Cws>): List<String> {
         val names = mutableListOf<String>()
         for (cws in cwsList) {
@@ -242,6 +241,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         return names
     }
+
     private fun disableRecyclerView(recyclerView: RecyclerView) {
         // Disable all child views of the RecyclerView
         for (i in 0 until recyclerView.childCount) {
@@ -252,6 +252,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         // Change background color of RecyclerView to grey
         recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.lightGrey))
     }
+
     private fun enableRecyclerView(recyclerView: RecyclerView) {
         // Enable all child views of the RecyclerView
         for (i in 0 until recyclerView.childCount) {
@@ -262,6 +263,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         // Change background color of RecyclerView to white
         recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.LightPink1))
     }
+
     @SuppressLint("SetTextI18n")
     private fun setupUI(items: List<Categories>?) {
         respondentContainer = findViewById(R.id.textInputLayoutContainer)
@@ -273,10 +275,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 //            get today's answers corresponding with auditId
             existingAnswers = db.answerDao().getAll()
                 .filter { it.groupedAnswersId == selectedGroupedAnswerId }
-
-            existingAnswers.forEach {
-                println(it.toString())
-            }
 
             respondent.text = existingAnswers.first().responderName
             respondent.isEnabled = false
@@ -334,10 +332,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             // Update percentage text
             percentageText.text = "$score%"
-
-            //handle submission of edited answers updated the existing answers in the db
-
-
         } else {
             progressBar.progress = 0
             percentageText.text = "0%"
@@ -437,6 +431,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 this,
                 applicationContext,
                 editMode,
+                viewMode,
                 existingAnswers,
                 allCatQuestions
             )
@@ -444,9 +439,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
     }
+
     override fun onItemClick(position: Int) {
         startActivityAfterClick(position)
     }
+
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
 
@@ -466,6 +463,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dialog.setDismissListener(this)
         dialog.show()
     }
+
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?, categoryId: Int) {
         adapter.updateColor(categoryId)
@@ -504,8 +502,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         editor.putString("answers", json)
         editor.apply()
     }
+
     override fun onClick(v: View?) {
         TODO("Not yet implemented")
     }
-
 }

@@ -101,7 +101,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                         null,
                         audit.auditId,
                         audit.cwsName,
-                        audits.sumBy { it.score },
+                        audits.sumOf { it.score },
                         audit.groupedAnswersId,
                         audit.date
                     )
@@ -156,9 +156,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
-
-    // Define a data class to hold the activity result
-    data class ActivityResult(val resultCode: Int, val data: Intent?)
 
     // Assuming this function is called from an Activity or Fragment
     fun downloadCsv(activity: Activity) {
@@ -233,12 +230,12 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             intent.putExtra(
                 "editMode",
                 isTodayDate(
-                    db.answerDao().getAllByAuditId(auditId)[0].date
+                    uniqueResult.entries.elementAt(position).value.date
                 )
             )
             intent.putExtra(
                 "viewMode", !isTodayDate(
-                    db.answerDao().getAllByAuditId(auditId)[0].date
+                    uniqueResult.entries.elementAt(position).value.date
                 )
             )
         }

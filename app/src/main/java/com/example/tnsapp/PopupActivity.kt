@@ -17,7 +17,6 @@ import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.parsers.questionParser
-import com.google.gson.Gson
 
 class PopupActivity(
     context: Context,
@@ -92,7 +91,7 @@ class PopupActivity(
             respondent,
             cwsName,
             editMode,
-            viewMode ,
+            viewMode,
             existingAnswers
         )
 
