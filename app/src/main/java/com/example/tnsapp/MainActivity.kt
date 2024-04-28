@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         setupLanguageSpinner(languageSpinner)
         val language = getSelectedLanguage()
         setupUI(language)
-        println(language)
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language))
         onClickListener()
     }
@@ -110,8 +109,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun openAuditActivity(language: String) {
-        val intent = Intent(this, AuditActivity::class.java)
+        val intent = Intent(this, AddNewActivity::class.java)
         intent.putExtra("language", language)
+        intent.putExtra("auditId", 1)
+        intent.putExtra("audit", jsonData)
         startActivity(intent)
     }
 }

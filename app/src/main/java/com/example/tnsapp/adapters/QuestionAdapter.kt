@@ -24,16 +24,6 @@ class QuestionAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(currentItem: Questions) {
             yesBtn.setOnClickListener {
-                if (editMode) {
-                    existingAnswers.forEachIndexed { index, item ->
-                        if (item.qId == currentItem.id) {
-                            existingAnswers[index].answer = Answers.YES
-                        }
-                    }
-
-                    return@setOnClickListener
-                }
-
                 items.forEachIndexed { index, item ->
                     if (item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
@@ -85,16 +75,6 @@ class QuestionAdapter(
             }
 
             noBtn.setOnClickListener {
-                if (editMode) {
-                    existingAnswers.forEachIndexed { index, item ->
-                        if (item.qId == currentItem.id) {
-                            existingAnswers[index].answer = Answers.NO
-                        }
-                    }
-
-                    return@setOnClickListener
-                }
-
                 items.forEachIndexed { index, item ->
                     if (item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
@@ -145,16 +125,6 @@ class QuestionAdapter(
             }
 
             skipBtn.setOnClickListener {
-                if (editMode) {
-                    existingAnswers.forEachIndexed { index, item ->
-                        if (item.qId == currentItem.id) {
-                            existingAnswers[index].answer = Answers.SKIP
-                        }
-                    }
-
-                    return@setOnClickListener
-                }
-
                 items.forEachIndexed { index, item ->
                     if (item.id == currentItem.id) {
                         if (answerDetails.isNotEmpty() && index < answerDetails.size) {
@@ -202,6 +172,16 @@ class QuestionAdapter(
                 yesBtn.setBackgroundResource(R.drawable.border_green)
                 noBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
                 noBtn.setBackgroundResource(R.drawable.border_maroon)
+            }
+
+            if (viewMode) {
+                yesBtn.isEnabled = false
+                noBtn.isEnabled = false
+                skipBtn.isEnabled = false
+            } else {
+                yesBtn.isEnabled = true
+                noBtn.isEnabled = true
+                skipBtn.isEnabled = true
             }
         }
 

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
@@ -101,7 +102,7 @@ class PopupActivity(
             val allAnswered =
                 adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
 
-            if (allAnswered) {
+            if (allAnswered || editMode) {
                 notifyDismissListener(adapter.answerDetails)
                 dismiss()
                 updateCategoryCompletion()
@@ -109,6 +110,8 @@ class PopupActivity(
                 Toast.makeText(context, "Please answer all questions", Toast.LENGTH_SHORT).show()
             }
         }
+
+        if (viewMode) saveBtn.visibility = View.GONE else saveBtn.visibility = View.VISIBLE
 
         closeIcon.setOnClickListener {
             dismiss()
