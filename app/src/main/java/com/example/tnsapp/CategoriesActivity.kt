@@ -123,14 +123,13 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             onBackPressedDispatcher.onBackPressed()
         }
 
-//        if (viewMode) submitAll.visibility = View.GONE else submitAll.visibility = View.VISIBLE
+        if (viewMode) submitAll.visibility = View.GONE else submitAll.visibility = View.VISIBLE
 
         submitAll.isEnabled = false
         submitAll.backgroundTintList =
             ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
 
         db = AppDatabase.getDatabase(this)!!
-
 
         //handle submission on new answers and already existing answers in edit mode updating the existing answers in the db
 
@@ -141,6 +140,30 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 sharedPreferences.getString("answers", json),
                 Array<Answers>::class.java
             )
+
+            if (editMode) {
+//                loop through answers and check if id is null, add new item in existingAnswers, otherwise update existing item
+                answers.forEach {
+                    if (it.id == null) {
+                        existingAnswers = existingAnswers.plus(
+                            Answers(
+                                null,
+                                it.responderName,
+                                it.answer,
+                                it.qId,
+                                it.auditId,
+                                cwsName = existingAnswers.last().cwsName,
+                                groupedAnswersId = existingAnswers.last().groupedAnswersId,
+                            )
+                        )
+                    } else {
+                        val index = existingAnswers.indexOfFirst { answer -> answer.qId == it.qId }
+                        existingAnswers = existingAnswers.toMutableList().apply {
+                            this[index] = it
+                        }
+                    }
+                }
+            }
 
             // Update each answer with a unique id
             answers.forEach {
@@ -162,17 +185,25 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             } else {
                 // Update existing answers in the database
                 Thread {
-                    existingAnswers.forEach { existingAnswer ->
-                        val updatedAnswer = answers.find { it.qId == existingAnswer.qId }
-                        if (updatedAnswer != null) {
-                            existingAnswer.answer = updatedAnswer.answer
-                            existingAnswer.groupedAnswersId = updatedAnswer.groupedAnswersId
-                            db.answerDao().updateAnswer(existingAnswers.toTypedArray())
-                        }
+                    db.answerDao().updateAnswer(existingAnswers.toTypedArray())
+
+//                    filter answers with null id and insert them into the db
+                    val newAnswers = answers.filter { it.id == null }.map {
+                        Answers(
+                            null,
+                            it.responderName,
+                            it.answer,
+                            it.qId,
+                            it.auditId,
+                            cwsName = existingAnswers.last().cwsName,
+                            groupedAnswersId = existingAnswers.last().groupedAnswersId,
+                        )
                     }
-                }
+
+                    db.answerDao().insertAll(newAnswers.toTypedArray())
+                }.start()
             }
-            // Remove shared preferences after submitting answers
+//             Remove shared preferences after submitting answers
             editor.remove("answers")
             editor.apply()
 
@@ -193,7 +224,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun onClickListener(addStation: Button) {
         addStation.setOnClickListener {
-            val auditId = intent.getIntExtra("auditId", 0)
             openStationActivity(getSelectedLanguage())
         }
     }
@@ -235,6 +265,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             }
         }
     }
+
     private fun getCwsNames(cwsList: Array<Cws>): List<String> {
         val names = mutableListOf<String>()
         for (cws in cwsList) {
@@ -242,6 +273,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         return names
     }
+
     private fun disableRecyclerView(recyclerView: RecyclerView) {
         // Disable all child views of the RecyclerView
         for (i in 0 until recyclerView.childCount) {
@@ -252,6 +284,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         // Change background color of RecyclerView to grey
         recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.lightGrey))
     }
+
     private fun enableRecyclerView(recyclerView: RecyclerView) {
         // Enable all child views of the RecyclerView
         for (i in 0 until recyclerView.childCount) {
@@ -262,6 +295,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         // Change background color of RecyclerView to white
         recyclerView.setBackgroundColor(ContextCompat.getColor(this, R.color.LightPink1))
     }
+
     @SuppressLint("SetTextI18n")
     private fun setupUI(items: List<Categories>?) {
         respondentContainer = findViewById(R.id.textInputLayoutContainer)
@@ -270,16 +304,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
 //        if editMode is true, load answers
         if (editMode) {
-            enableRecyclerView(recyclerView)
 //            get today's answers corresponding with auditId
             existingAnswers = db.answerDao().getAll()
                 .filter { it.groupedAnswersId == selectedGroupedAnswerId }
 
-            existingAnswers.forEach {
-                println(it.toString())
-            }
-
-            respondent.text = existingAnswers.first().responderName
+            respondent.text = existingAnswers.last().responderName
             respondent.isEnabled = false
 
             val cwsList = db.cwsDao().getAll()
@@ -291,8 +320,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 getCwsNames(cwsList)
             )
 
-            cwsName.setSelection(adapter.getPosition(existingAnswers.first().cwsName))
+            cwsName.setSelection(adapter.getPosition(existingAnswers.last().cwsName))
             cwsName.isEnabled = false
+            cwsName.adapter = adapter
 
             addStation.visibility = View.GONE
 
@@ -309,7 +339,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             existingAnswers = db.answerDao().getAll()
                 .filter { it.groupedAnswersId == selectedGroupedAnswerId }
 
-            respondent.text = existingAnswers.first().responderName
+            respondent.text = existingAnswers.last().responderName
             respondent.isEnabled = false
 
             val cwsList = db.cwsDao().getAll()
@@ -321,8 +351,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 getCwsNames(cwsList)
             )
 
-            cwsName.setSelection(adapter.getPosition(existingAnswers.first().cwsName))
+            cwsName.setSelection(adapter.getPosition(existingAnswers.last().cwsName))
             cwsName.isEnabled = false
+            cwsName.adapter = adapter
 
             addStation.visibility = View.GONE
 
@@ -335,8 +366,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             // Update percentage text
             percentageText.text = "$score%"
-
-
         } else {
             progressBar.progress = 0
             percentageText.text = "0%"
@@ -436,6 +465,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 this,
                 applicationContext,
                 editMode,
+                viewMode,
                 existingAnswers,
                 allCatQuestions
             )
@@ -443,9 +473,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = adapter
     }
+
     override fun onItemClick(position: Int) {
         startActivityAfterClick(position)
     }
+
     private fun startActivityAfterClick(position: Int) {
         val auditId = intent.getIntExtra("auditId", 0)
 
@@ -465,6 +497,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dialog.setDismissListener(this)
         dialog.show()
     }
+
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?, categoryId: Int) {
         adapter.updateColor(categoryId)
@@ -492,7 +525,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
 
         progress = (answerDetails.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
-//        println(progress)
         val score = progress
         progressBar.progress = score
         // Update percentage text
@@ -503,8 +535,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         editor.putString("answers", json)
         editor.apply()
     }
+
     override fun onClick(v: View?) {
         TODO("Not yet implemented")
     }
-
 }

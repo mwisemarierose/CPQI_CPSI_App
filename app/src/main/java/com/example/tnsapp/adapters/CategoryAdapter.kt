@@ -19,6 +19,7 @@ class CategoryAdapter(
     private val listener: OnItemClickListener,
     val context: Context,
     private val editMode: Boolean,
+    private val viewMode: Boolean,
     private val existingAnswers: List<Answers>,
     private val allCatQuestions: List<Questions>
 ) :
@@ -57,26 +58,18 @@ class CategoryAdapter(
         val currentItem = items[position]
         holder.categoryNameView.text = currentItem.name
 
-        println(currentItem.toString())
-
-        if (editMode) {
+        if (editMode || viewMode) {
 //            get the questions for the category
             val questions =
                 allCatQuestions.filter { it.catId.toInt() == (currentItem.id.toInt() - 1) }
-            questions.forEach {
-                println(it.toString())
-            }
+
             val answeredQuestions =
-                existingAnswers.filter { it.qId.toInt() in questions.map { it -> it.id.toInt() } }
-            answeredQuestions.forEach {
-                println(it.toString())
-            }
+                existingAnswers.filter { it.qId.toInt() in questions.map { i -> i.id.toInt() } }
+
             if (answeredQuestions.isNotEmpty()) {
                 selectedCategoryIds.add(currentItem.id.toInt())
             }
         }
-
-        println(selectedCategoryIds.toString())
 
         if (selectedCategoryIds.contains(currentItem.id.toInt())) {
             holder.progressBar.setBackgroundColor(context.getColor(R.color.maroon))

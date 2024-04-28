@@ -19,7 +19,7 @@ interface AnswersDao {
     suspend fun getByQuestionId(questionId: Long): Array<Answers>
 
     @Query("SELECT * FROM answers WHERE audit_id = :auditId")
-     fun getAllByAuditId(auditId: Int): Array<Answers>
+    fun getAllByAuditId(auditId: Int): Array<Answers>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(answer: Answers)
@@ -30,12 +30,13 @@ interface AnswersDao {
     @Update
     fun updateAnswer(answers: Array<Answers>)
 
-
     @Delete
     suspend fun delete(answer: Answers)
+
     @Query("SELECT COUNT(*) > 0 FROM answers WHERE cws_name = :cwsName")
     fun hasCompletedAudit(cwsName: String): Boolean
 }
+
 @Dao
 interface CwsDao {
     @Query("SELECT * FROM cws WHERE cws_name = :name LIMIT 1")
@@ -49,11 +50,13 @@ interface CwsDao {
 
     @Query("SELECT * FROM cws")
     fun getAll(): Array<Cws>
+
     @Insert(onConflict = OnConflictStrategy.NONE)
     fun insertAll(cws: Array<Cws>)
 
     @Delete
     suspend fun delete(cws: Cws)
+
     @Query("SELECT * FROM cws WHERE audit_id = :auditId")
     fun getCwsByAuditId(auditId: Int): List<Cws>
 

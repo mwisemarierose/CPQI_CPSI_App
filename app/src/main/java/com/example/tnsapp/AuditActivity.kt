@@ -27,9 +27,7 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         setContentView(R.layout.activity_audit)
         val language = getSelectedLanguage()
         supportActionBar?.hide()
-
         intent.getStringExtra("language")?.let { setupUI(it) }
-
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
         setupLanguageSpinner(languageSpinner)
     }

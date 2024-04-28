@@ -29,8 +29,7 @@ class MainActivity : AppCompatActivity() {
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
         setupLanguageSpinner(languageSpinner)
         val language = getSelectedLanguage()
-        setupUI(language)
-        println(language)
+        intent.getStringExtra("language")?.let { setupUI(it) }
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language))
         onClickListener()
     }
@@ -78,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         // Save the selected language in SharedPreferences or any other way you prefer
         saveLanguagePreference(languageCode)
         setupUI(languageCode)
+        println(languageCode)
     }
     private fun saveLanguagePreference(language: String) {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -88,13 +88,13 @@ class MainActivity : AppCompatActivity() {
     }
     private fun setupUI(selectedLanguage: String) {
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
-
         // Use "en" as default language if language extra is missing
         val result = if (selectedLanguage == "English" || selectedLanguage == "en") {
             "data_en.json"
         } else {
             "data_rw.json"
         }
+        println(result)
 
         val selectedLang = if (selectedLanguage == "English" || selectedLanguage == "en") 0 else 1
         languageSpinner.setSelection(selectedLang)
@@ -110,8 +110,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun openAuditActivity(language: String) {
-        val intent = Intent(this, AuditActivity::class.java)
+        val intent = Intent(this, AddNewActivity::class.java)
         intent.putExtra("language", language)
+        intent.putExtra("auditId", 1)
+        intent.putExtra("audit", jsonData)
         startActivity(intent)
     }
 }

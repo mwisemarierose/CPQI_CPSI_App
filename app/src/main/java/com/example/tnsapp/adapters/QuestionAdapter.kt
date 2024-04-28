@@ -173,6 +173,16 @@ class QuestionAdapter(
                 noBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
                 noBtn.setBackgroundResource(R.drawable.border_maroon)
             }
+
+            if (viewMode) {
+                yesBtn.isEnabled = false
+                noBtn.isEnabled = false
+                skipBtn.isEnabled = false
+            } else {
+                yesBtn.isEnabled = true
+                noBtn.isEnabled = true
+                skipBtn.isEnabled = true
+            }
         }
 
         val questionNumberView: TextView = itemView.findViewById(R.id.popUpTextNumbering)
@@ -181,6 +191,7 @@ class QuestionAdapter(
         val noBtn: Button = itemView.findViewById(R.id.noButton)
         val skipBtn: Button = itemView.findViewById(R.id.skipButton)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.popup_item_list, parent, false)
@@ -213,8 +224,9 @@ class QuestionAdapter(
             Answers.SKIP -> {
                 holder.skipBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.grey))
             }
-            else-> {
-                if(editMode || viewMode ){
+
+            else -> {
+                if (editMode || viewMode) {
 
                     val existingAnswer = existingAnswers.find { it.qId == currentItem.id }
                     when (existingAnswer?.answer) {
@@ -229,9 +241,9 @@ class QuestionAdapter(
                         Answers.SKIP -> {
                             holder.skipBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.grey))
                         }
+                    }
                 }
             }
-        }
         }
 
         holder.bind(currentItem)
