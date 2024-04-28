@@ -123,7 +123,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             onBackPressedDispatcher.onBackPressed()
         }
 
-        if (viewMode) submitAll.visibility = View.GONE else submitAll.visibility = View.VISIBLE
+//        if (viewMode) submitAll.visibility = View.GONE else submitAll.visibility = View.VISIBLE
 
         submitAll.isEnabled = false
         submitAll.backgroundTintList =
@@ -270,6 +270,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
 //        if editMode is true, load answers
         if (editMode) {
+            enableRecyclerView(recyclerView)
 //            get today's answers corresponding with auditId
             existingAnswers = db.answerDao().getAll()
                 .filter { it.groupedAnswersId == selectedGroupedAnswerId }
@@ -334,8 +335,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             // Update percentage text
             percentageText.text = "$score%"
-
-            //handle submission of edited answers updated the existing answers in the db
 
 
         } else {
