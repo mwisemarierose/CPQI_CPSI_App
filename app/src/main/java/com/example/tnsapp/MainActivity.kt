@@ -11,7 +11,6 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tnsapp.adapters.AuditAdapter
 import com.example.tnsapp.data.AuditCategories
 import com.example.tnsapp.parsers.auditParser
@@ -20,24 +19,36 @@ import com.example.tnsapp.parsers.readJsonFromAssets
 class MainActivity : AppCompatActivity() {
 
     private lateinit var jsonData: String
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
+
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
         setupLanguageSpinner(languageSpinner)
-        val language = getSelectedLanguage()
-        intent.getStringExtra("language")?.let { setupUI(it) }
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language))
+
+        val initialLanguage = getInitialLanguage()
+        setupUI(initialLanguage)
+
         onClickListener()
     }
 
-    private fun getSelectedLanguage(): String {
+    private fun getInitialLanguage(): String {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString("language", "en") ?: "en"
+        val savedLanguage = sharedPref.getString("language", null)
+
+        return savedLanguage ?: getDefaultLanguage()
     }
+
+    private fun getDefaultLanguage(): String {
+        // Determine the default language based on your requirements
+        // For example, you can use the device's default language
+        return "en" // Change this to the desired default language
+    }
+
     private fun setupLanguageSpinner(languageSpinner: Spinner) {
         ArrayAdapter.createFromResource(
             this,
@@ -55,16 +66,12 @@ class MainActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                val selectedLanguage = parent?.getItemAtPosition(position).toString()
-                val intentLang = intent.getStringExtra("language")
-
-                if (intentLang != selectedLanguage && selectedLanguage == "English") {
-                    if (intentLang != null) {
-                        changeLanguage(selectedLanguage)
-                    }
-                } else {
-                    changeLanguage(if (selectedLanguage == "English" || selectedLanguage == "en") "en" else "rw")
+                val selectedLanguage = when (position) {
+                    0 -> "en"
+                    1 -> "rw"
+                    else -> getDefaultLanguage()
                 }
+                changeLanguage(selectedLanguage)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -72,13 +79,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun getDefaultJsonFileName(language: String): String {
+        return when (language) {
+            "en" -> "data_en.json"
+            "rw" -> "data_rw.json"
+            else -> "data_en.json" // Use English as the default
+        }
+    }
+
     private fun changeLanguage(languageCode: String) {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
-        // Save the selected language in SharedPreferences or any other way you prefer
         saveLanguagePreference(languageCode)
         setupUI(languageCode)
-        println(languageCode)
     }
+
     private fun saveLanguagePreference(language: String) {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
@@ -86,29 +101,27 @@ class MainActivity : AppCompatActivity() {
             apply()
         }
     }
+
     private fun setupUI(selectedLanguage: String) {
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
-        // Use "en" as default language if language extra is missing
-        val result = if (selectedLanguage == "English" || selectedLanguage == "en") {
-            "data_en.json"
-        } else {
-            "data_rw.json"
+        val selectedLang = when (selectedLanguage) {
+            "en" -> 0
+            "rw" -> 1
+            else -> 0 // Set English as the default
         }
-        println(result)
-
-        val selectedLang = if (selectedLanguage == "English" || selectedLanguage == "en") 0 else 1
         languageSpinner.setSelection(selectedLang)
 
-        jsonData = readJsonFromAssets(this, result)
-
+        jsonData = readJsonFromAssets(this, getDefaultJsonFileName(selectedLanguage))
     }
+
     private fun onClickListener() {
         val getStarted = findViewById<Button>(R.id.get_started)
         getStarted.setOnClickListener {
-            val language = getSelectedLanguage()
+            val language = getInitialLanguage()
             openAuditActivity(language)
         }
     }
+
     private fun openAuditActivity(language: String) {
         val intent = Intent(this, AddNewActivity::class.java)
         intent.putExtra("language", language)
