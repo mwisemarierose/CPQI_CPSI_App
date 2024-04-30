@@ -101,7 +101,7 @@ class PopupActivity(
             val allAnswered =
                 adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
 
-            if (allAnswered || editMode) {
+            if (allAnswered) {
                 notifyDismissListener(adapter.answerDetails)
                 dismiss()
                 updateCategoryCompletion()

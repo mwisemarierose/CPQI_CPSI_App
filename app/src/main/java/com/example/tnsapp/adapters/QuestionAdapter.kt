@@ -227,7 +227,6 @@ class QuestionAdapter(
 
             else -> {
                 if (editMode || viewMode) {
-
                     val existingAnswer = existingAnswers.find { it.qId == currentItem.id }
                     when (existingAnswer?.answer) {
                         Answers.YES -> {
