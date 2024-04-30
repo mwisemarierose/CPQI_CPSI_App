@@ -20,6 +20,7 @@ class CategoryAdapter(
     val context: Context,
     private val editMode: Boolean,
     private val viewMode: Boolean,
+    private val answerDetails: Array<Answers>,
     private val existingAnswers: List<Answers>,
     private val allCatQuestions: List<Questions>
 ) :
@@ -63,8 +64,16 @@ class CategoryAdapter(
             val questions =
                 allCatQuestions.filter { it.catId.toInt() == (currentItem.id.toInt() - 1) }
 
+            questions.forEach {
+                println(it.toString())
+            }
+
             val answeredQuestions =
-                existingAnswers.filter { it.qId.toInt() in questions.map { i -> i.id.toInt() } }
+                answerDetails.filter { it.qId.toInt() in questions.map { i -> i.id.toInt() } }
+
+            answeredQuestions.forEach {
+                println(it.toString())
+            }
 
             if (answeredQuestions.isNotEmpty()) {
                 selectedCategoryIds.add(currentItem.id.toInt())

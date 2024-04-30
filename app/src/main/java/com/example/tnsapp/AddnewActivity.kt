@@ -21,9 +21,11 @@ import com.example.tnsapp.adapters.AddNewListAdapter
 import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
+import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.data.RecordedAudit
 import com.example.tnsapp.parsers.allAuditQuestionsParser
+import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.isTodayDate
 import org.json.JSONObject
 import java.io.PrintWriter
@@ -39,6 +41,8 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var adapter: AddNewListAdapter
     private lateinit var db: AppDatabase
     private lateinit var items: List<Questions>
+    private lateinit var categories: List<Categories>
+    private lateinit var getAnswers: Array<Answers>
     private var auditId by Delegates.notNull<Int>()
     private lateinit var audit: String
     private lateinit var uniqueResult: Map<String, RecordedAudit>
@@ -53,6 +57,8 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
         items = allAuditQuestionsParser(audit, auditId)
+
+        categories = categoryParser(audit, auditId)
 
         val parsedAudit =
             JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString())
@@ -77,7 +83,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 //        access answers from room db
         db = AppDatabase.getDatabase(this)!!
 
-        val getAnswers = db.answerDao().getAllByAuditId(auditId)
+        getAnswers = db.answerDao().getAllByAuditId(auditId)
 
         addNewBtn.setOnClickListener {
             openCategoryActivity(auditId, audit)
@@ -86,33 +92,36 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         // Remove date filtering logic here
         val result = getAnswers.map {
             RecordedAudit(
-                null, it.auditId.toInt(), cwsName = it.cwsName,
+                null,
+                it.auditId.toInt(),
+                cwsName = it.cwsName,
+                respondent = it.responderName,
                 score = if (it.answer == Answers.YES) 1 else 0,
                 date = it.date,
                 groupedAnswersId = it.groupedAnswersId
             )
         }
 
-        uniqueResult = result
-            .groupBy { it.groupedAnswersId }
-            .mapValues { (_, audits) ->
-                audits.reduce { _, audit ->
-                    RecordedAudit(
-                        null,
-                        audit.auditId,
-                        audit.cwsName,
-                        audits.sumOf { it.score },
-                        audit.groupedAnswersId,
-                        audit.date
-                    )
-                }
+        uniqueResult = result.groupBy { it.groupedAnswersId }.mapValues { (_, audits) ->
+            audits.reduce { _, audit ->
+                RecordedAudit(
+                    null,
+                    audit.auditId,
+                    audit.cwsName,
+                    audit.respondent,
+                    audits.sumOf { it.score },
+                    audit.groupedAnswersId,
+                    audit.date
+                )
             }
+        }
 
         emptyView = findViewById(R.id.emptyTextView)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(uniqueResult, result.size, items.size, this)
+        adapter =
+            AddNewListAdapter(uniqueResult, result.size, items.size, getAnswers.toList(), this)
         recyclerView.adapter = adapter
 
         if (result.isEmpty() || result[0].auditId != auditId) {
@@ -169,10 +178,10 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             )
         }
 
-        activity.startActivityForResult(intent, REQUEST_CODE_CREATE_DOCUMENT)
+        activity.startActivityForResult(intent, requestCodeCreateDocument)
     }
 
-    private val REQUEST_CODE_CREATE_DOCUMENT = 1001
+    private val requestCodeCreateDocument = 1001
 
     // This function should be called from onActivityResult in the calling Activity or Fragment
     private fun handleActivityResult(
@@ -182,15 +191,61 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         uniqueResult: Map<String, RecordedAudit>,
         activity: Activity
     ) {
-        if (requestCode == REQUEST_CODE_CREATE_DOCUMENT && resultCode == Activity.RESULT_OK) {
+        if (requestCode == requestCodeCreateDocument && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
                 activity.contentResolver.openOutputStream(uri)?.use { outputStream ->
                     PrintWriter(outputStream.bufferedWriter()).use { writer ->
-                        writer.println("CWS Name, Score, Date")
-
+                        writer.println("Audit,CWS Name,Respondent,Total Answered,Score Percentage,Date,Category,Question,Answer,Grouped Answers Id")
                         for (p in uniqueResult) {
-                            val line = "${p.value.cwsName}, ${p.value.score}, ${p.value.date}"
-                            writer.println(line)
+                            var line: String
+                            for ((index, answer) in getAnswers.toList().filter {
+                                it.groupedAnswersId == p.value.groupedAnswersId
+                            }.withIndex()) {
+                                if (index == 0) {
+                                    line =
+                                        "${JSONObject(JSONObject(audit).getJSONArray("audits")[p.value.auditId - 1].toString())["name"]},${p.value.cwsName},${p.value.respondent},${
+                                            getAnswers.toList().filter {
+                                                it.groupedAnswersId == p.value.groupedAnswersId
+                                            }.size
+                                        } / ${items.size},${
+                                            p.value.score * 100 / items.size
+                                        }%,${p.value.date},${
+                                            categories.find {
+                                                it.id == (items.find { i -> i.id == answer.qId }?.catId?.plus(
+                                                    1
+                                                ))
+                                            }?.name
+                                        },\"${
+                                            items.find { it.id == answer.qId }?.qName
+                                        }\",${answer.answer},${answer.groupedAnswersId}"
+                                } else {
+                                    line =
+                                        if (items.find { i ->
+                                                i.id == getAnswers.filter {
+                                                    it.groupedAnswersId == p.value.groupedAnswersId
+                                                }.toList()[index - 1].qId
+                                            }?.catId != items.find { i ->
+                                                i.id == getAnswers.filter {
+                                                    it.groupedAnswersId == p.value.groupedAnswersId
+                                                }.toList()[index].qId
+                                            }?.catId) {
+                                            ",,,,,,${
+                                                categories.find {
+                                                    it.id == (items.find { i -> i.id == answer.qId }?.catId?.plus(
+                                                        1
+                                                    ))
+                                                }?.name
+                                            },\"${
+                                                items.find { it.id == answer.qId }?.qName
+                                            }\",${answer.answer},"
+                                        } else {
+                                            ",,,,,,,\"${
+                                                items.find { it.id == answer.qId }?.qName
+                                            }\",${answer.answer},"
+                                        }
+                                }
+                                writer.println(line)
+                            }
                         }
 
                         writer.flush()
@@ -204,11 +259,10 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_CODE_CREATE_DOCUMENT) {
+        if (requestCode == requestCodeCreateDocument) {
             handleActivityResult(requestCode, resultCode, data, uniqueResult, this)
         }
     }
-
 
     private fun openCategoryActivity(auditId: Int, audit: String?) {
         val intent = Intent(this, CategoriesActivity::class.java)
@@ -228,8 +282,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 uniqueResult.entries.elementAt(position).value.groupedAnswersId
             )
             intent.putExtra(
-                "editMode",
-                isTodayDate(
+                "editMode", isTodayDate(
                     uniqueResult.entries.elementAt(position).value.date
                 )
             )

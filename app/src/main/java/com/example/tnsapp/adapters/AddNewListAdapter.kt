@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.R
+import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.RecordedAudit
 
 
@@ -14,6 +15,7 @@ class AddNewListAdapter(
     val items: Map<String, RecordedAudit>,
     private val totalItems: Int,
     private val auditQSize: Int,
+    private val answers: List<Answers>,
     private val itemClickListener: OnItemClickListener,
 ) :
     RecyclerView.Adapter<AddNewListAdapter.ViewHolder>() {
@@ -60,7 +62,9 @@ class AddNewListAdapter(
         val currentItem = items.entries.elementAt(position).value
         holder.auditCwsNameView.text = currentItem.cwsName
         holder.auditDateView.text = currentItem.date
-        holder.totalAView.text = "${currentItem.score}/ $auditQSize"
+        holder.totalAView.text = "${
+            answers.filter { it.groupedAnswersId == currentItem.groupedAnswersId }.size
+        } / $auditQSize"
         holder.auditScoreView.text =
             ((currentItem.score * 100) / auditQSize).toString() + "%"
         holder.itemView.setOnClickListener {

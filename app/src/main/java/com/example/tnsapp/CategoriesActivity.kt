@@ -219,7 +219,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             intent.putExtra("audit", audit)
             startActivity(intent)
         }
-
     }
 
     private fun onClickListener(addStation: Button) {
@@ -308,6 +307,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             existingAnswers = db.answerDao().getAll()
                 .filter { it.groupedAnswersId == selectedGroupedAnswerId }
 
+            answerDetails = existingAnswers.toTypedArray()
+
             respondent.text = existingAnswers.last().responderName
             respondent.isEnabled = false
 
@@ -354,6 +355,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             cwsName.setSelection(adapter.getPosition(existingAnswers.last().cwsName))
             cwsName.isEnabled = false
             cwsName.adapter = adapter
+            println(cwsName.selectedItem.toString())
 
             addStation.visibility = View.GONE
 
@@ -466,6 +468,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 applicationContext,
                 editMode,
                 viewMode,
+                answerDetails,
                 existingAnswers,
                 allCatQuestions
             )
@@ -497,6 +500,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         dialog.setDismissListener(this)
         dialog.show()
     }
+
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?, categoryId: Int) {
         adapter.updateColor(categoryId)
