@@ -78,7 +78,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         db = AppDatabase.getDatabase(this)!!
 
         val getAnswers = db.answerDao().getAllByAuditId(auditId)
-
         addNewBtn.setOnClickListener {
             openCategoryActivity(auditId, audit)
         }
@@ -107,7 +106,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                     )
                 }
             }
-
         emptyView = findViewById(R.id.emptyTextView)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -156,7 +154,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
-
     // Assuming this function is called from an Activity or Fragment
     fun downloadCsv(activity: Activity) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {

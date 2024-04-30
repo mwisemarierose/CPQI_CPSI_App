@@ -199,7 +199,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                             groupedAnswersId = existingAnswers.last().groupedAnswersId,
                         )
                     }
-
                     db.answerDao().insertAll(newAnswers.toTypedArray())
                 }.start()
             }
@@ -310,7 +309,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             respondent.text = existingAnswers.last().responderName
             respondent.isEnabled = false
-
             val cwsList = db.cwsDao().getAll()
 
             // Create an ArrayAdapter with CWS names (or relevant data)
@@ -319,7 +317,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 android.R.layout.simple_spinner_dropdown_item,
                 getCwsNames(cwsList)
             )
-
             cwsName.setSelection(adapter.getPosition(existingAnswers.last().cwsName))
             cwsName.isEnabled = false
             cwsName.adapter = adapter

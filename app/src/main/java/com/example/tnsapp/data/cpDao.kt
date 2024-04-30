@@ -12,6 +12,11 @@ import androidx.room.Update
 interface AnswersDao {
 
 
+    //get cws name using grouped_answers_id
+    @Query("SELECT cws_name FROM answers WHERE grouped_answers_id = :groupedAnswersId")
+    fun getCwsName(groupedAnswersId: String): String
+
+
     @Query("SELECT * FROM answers")
     fun getAll(): Array<Answers>
 
