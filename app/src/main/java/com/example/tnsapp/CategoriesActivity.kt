@@ -140,7 +140,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 sharedPreferences.getString("answers", json),
                 Array<Answers>::class.java
             )
-
             if (editMode) {
 //                loop through answers and check if id is null, add new item in existingAnswers, otherwise update existing item
                 answers.forEach {
@@ -330,7 +329,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             val score = progress
 
             progressBar.progress = score
-
             percentageText.text = "$score%"
         } else if (viewMode) {
             // Get today's answers corresponding with auditId
@@ -400,7 +398,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 }
             }
         }
-
         cwsName.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,

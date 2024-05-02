@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -120,7 +122,8 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = AddNewListAdapter(uniqueResult, result.size, items.size, this)
+        adapter =
+            AddNewListAdapter(uniqueResult, result.size, items.size, getAnswers.toList(), this)
         recyclerView.adapter = adapter
 
         if (result.isEmpty() || result[0].auditId != auditId) {
@@ -181,7 +184,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     }
 
     private val requestCodeCreateDocument = 1001
-
     // This function should be called from onActivityResult in the calling Activity or Fragment
     private fun handleActivityResult(
         requestCode: Int,
@@ -194,68 +196,83 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             data?.data?.let { uri ->
                 activity.contentResolver.openOutputStream(uri)?.use { outputStream ->
                     PrintWriter(outputStream.bufferedWriter()).use { writer ->
-                        writer.println("Audit,CWS Name,Respondent,Total Score,Score Percentage,Date,Category,Question,Answer,Grouped Answers Id")
+                        writer.println("Date,Audit,Category,Question,Answer,CWS Name,Respondent,Total Answered,Score Percentage,Grouped Answers Id")
                         for (p in uniqueResult) {
                             var line: String
                             for ((index, answer) in getAnswers.toList().filter {
                                 it.groupedAnswersId == p.value.groupedAnswersId
                             }.withIndex()) {
-                                if (index == 0) {
-                                    line =
-                                        "${JSONObject(JSONObject(audit).getJSONArray("audits")[p.value.auditId - 1].toString())["name"]},${p.value.cwsName},${p.value.respondent},${p.value.score} / ${items.size},${
-                                            p.value.score * 100 / items.size
-                                        }%,${p.value.date},${
-                                            categories.find {
-                                                it.id == (items.find { i -> i.id == answer.qId }?.catId?.plus(
-                                                    1
-                                                ))
-                                            }?.name
-                                        },\"${
-                                            items.find { it.id == answer.qId }?.qName
-                                        }\",${answer.answer},${answer.groupedAnswersId}"
-                                } else {
-                                    line =
-                                        if (items.find { i ->
-                                                i.id == getAnswers.filter {
-                                                    it.groupedAnswersId == p.value.groupedAnswersId
-                                                }.toList()[index - 1].qId
-                                            }?.catId != items.find { i ->
-                                                i.id == getAnswers.filter {
-                                                    it.groupedAnswersId == p.value.groupedAnswersId
-                                                }.toList()[index].qId
-                                            }?.catId) {
-                                            ",,,,,,${
-                                                categories.find {
-                                                    it.id == (items.find { i -> i.id == answer.qId }?.catId?.plus(
-                                                        1
-                                                    ))
-                                                }?.name
-                                            },\"${
-                                                items.find { it.id == answer.qId }?.qName
-                                            }\",${answer.answer},"
-                                        } else {
-                                            ",,,,,,,\"${
-                                                items.find { it.id == answer.qId }?.qName
-                                            }\",${answer.answer},"
-                                        }
-                                }
+                                line =
+                                    "${p.value.date},${JSONObject(JSONObject(audit).getJSONArray("audits")[p.value.auditId - 1].toString())["name"]},${
+                                        categories.find {
+                                            it.id == (items.find { i -> i.id == answer.qId }?.catId?.plus(
+                                                1
+                                            ))
+                                        }?.name
+                                    },\"${
+                                        items.find { it.id == answer.qId }?.qName
+                                    }\",${answer.answer},${p.value.cwsName},${p.value.respondent},${
+                                        getAnswers.toList().filter {
+                                            it.groupedAnswersId == p.value.groupedAnswersId
+                                        }.size
+                                    } /  ${items.size},${
+                                        p.value.score * 100 / items.size
+                                    }%,${answer.groupedAnswersId}"
+
                                 writer.println(line)
                             }
                         }
-
                         writer.flush()
                     }
                 }
             }
         }
     }
+    //import functionality with the csv file with the same field of the exported file  when cws and audit is not in db create one
 
+    fun uploadCsv(activity: Activity) {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/csv"
+        }
+        activity.startActivityForResult(intent, requestCodeOpenDocument) // New request code
+    }
+
+    private val requestCodeOpenDocument = 1002
+
+    // This function should be called from onActivityResult in the calling Activity or Fragment
+    private fun handleImportResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+        db: AppDatabase,
+        activity: Activity
+    ) {
+        if (requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK){
+            data?.data?.let { uri ->
+                activity.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                        var line: String?
+                        // Skip the header
+                        reader.readLine()
+
+
+
+
+
+                    }}}
+
+        }
+    }
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == requestCodeCreateDocument) {
             handleActivityResult(requestCode, resultCode, data, uniqueResult, this)
+        }
+        else if (requestCode == requestCodeOpenDocument) {
+            handleImportResult(requestCode, resultCode, data, db, this)
         }
     }
 
