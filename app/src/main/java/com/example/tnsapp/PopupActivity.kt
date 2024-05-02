@@ -29,7 +29,6 @@ class PopupActivity(
     private val cwsName: String,
     private val editMode: Boolean,
     private val viewMode: Boolean,
-    private val existingAnswers: List<Answers>,
 ) : Dialog(context) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: QuestionAdapter
@@ -91,8 +90,7 @@ class PopupActivity(
             respondent,
             cwsName,
             editMode,
-            viewMode,
-            existingAnswers
+            viewMode
         )
 
         recyclerView.adapter = adapter

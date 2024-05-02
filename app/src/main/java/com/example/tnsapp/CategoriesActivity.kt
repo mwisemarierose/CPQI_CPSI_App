@@ -68,7 +68,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
     private var json: String = ""
-    private var existingAnswers: List<Answers> = emptyList()
 
     //    initialize room db
     private lateinit var db: AppDatabase
@@ -129,8 +128,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         submitAll.backgroundTintList =
             ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
 
-        db = AppDatabase.getDatabase(this)!!
-
         //handle submission on new answers and already existing answers in edit mode updating the existing answers in the db
 
         submitAll.setOnClickListener {
@@ -141,23 +138,23 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 Array<Answers>::class.java
             )
             if (editMode) {
-//                loop through answers and check if id is null, add new item in existingAnswers, otherwise update existing item
+//                loop through answers and check if id is null, add new item in answerDetails, otherwise update existing item
                 answers.forEach {
                     if (it.id == null) {
-                        existingAnswers = existingAnswers.plus(
+                        answerDetails = answerDetails.plus(
                             Answers(
                                 null,
                                 it.responderName,
                                 it.answer,
                                 it.qId,
                                 it.auditId,
-                                cwsName = existingAnswers.last().cwsName,
-                                groupedAnswersId = existingAnswers.last().groupedAnswersId,
+                                cwsName = answerDetails.last().cwsName,
+                                groupedAnswersId = it.groupedAnswersId,
                             )
                         )
                     } else {
-                        val index = existingAnswers.indexOfFirst { answer -> answer.qId == it.qId }
-                        existingAnswers = existingAnswers.toMutableList().apply {
+                        val index = answerDetails.indexOfFirst { answer -> answer.qId == it.qId }
+                        answerDetails = answerDetails.apply {
                             this[index] = it
                         }
                     }
@@ -165,8 +162,10 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             }
 
             // Update each answer with a unique id
-            answers.forEach {
-                it.groupedAnswersId = groupedAnswersId
+            if (!editMode) {
+                answers.forEach {
+                    it.groupedAnswersId = groupedAnswersId
+                }
             }
 
             // If respondent is not selected, show error message
@@ -182,22 +181,38 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                     db.answerDao().insertAll(answers)
                 }.start()
             } else {
-                // Update existing answers in the database
                 Thread {
-                    db.answerDao().updateAnswer(existingAnswers.toTypedArray())
+                    answerDetails = answerDetails.map {
+                        Answers(
+                            db.answerDao().getAll()
+                                .find { answer -> answer.qId == it.qId && answer.groupedAnswersId == it.groupedAnswersId }?.id,
+                            it.responderName,
+                            it.answer,
+                            it.qId,
+                            it.auditId,
+                            cwsName = it.cwsName,
+                            groupedAnswersId = it.groupedAnswersId,
+                        )
+                    }.toTypedArray()
 
-//                    filter answers with null id and insert them into the db
-                    val newAnswers = answers.filter { it.id == null }.map {
+                    db.answerDao().updateAnswer(answerDetails)
+
+                    val newAnswers = answers.filter {
+//                        check if qId exists under groupedAnswersId
+                        db.answerDao().getAll()
+                            .none { answer -> answer.qId == it.qId && answer.groupedAnswersId == it.groupedAnswersId }
+                    }.map {
                         Answers(
                             null,
                             it.responderName,
                             it.answer,
                             it.qId,
                             it.auditId,
-                            cwsName = existingAnswers.last().cwsName,
-                            groupedAnswersId = existingAnswers.last().groupedAnswersId,
+                            cwsName = answerDetails.last().cwsName,
+                            groupedAnswersId = answerDetails.last().groupedAnswersId,
                         )
                     }
+
                     db.answerDao().insertAll(newAnswers.toTypedArray())
                 }.start()
             }
@@ -302,12 +317,10 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 //        if editMode is true, load answers
         if (editMode) {
 //            get today's answers corresponding with auditId
-            existingAnswers = db.answerDao().getAll()
-                .filter { it.groupedAnswersId == selectedGroupedAnswerId }
+            answerDetails = db.answerDao().getAll()
+                .filter { it.groupedAnswersId == selectedGroupedAnswerId }.toTypedArray()
 
-            answerDetails = existingAnswers.toTypedArray()
-
-            respondent.text = existingAnswers.last().responderName
+            respondent.text = answerDetails.last().responderName
             respondent.isEnabled = false
             val cwsList = db.cwsDao().getAll()
 
@@ -317,7 +330,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 android.R.layout.simple_spinner_dropdown_item,
                 getCwsNames(cwsList)
             )
-            cwsName.setSelection(adapter.getPosition(existingAnswers.last().cwsName))
+            cwsName.setSelection(adapter.getPosition(answerDetails.last().cwsName))
             cwsName.isEnabled = false
             cwsName.adapter = adapter
 
@@ -325,17 +338,17 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
 //            update progress bar
             progress =
-                (existingAnswers.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
+                (answerDetails.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
             val score = progress
 
             progressBar.progress = score
             percentageText.text = "$score%"
         } else if (viewMode) {
             // Get today's answers corresponding with auditId
-            existingAnswers = db.answerDao().getAll()
-                .filter { it.groupedAnswersId == selectedGroupedAnswerId }
+            answerDetails = db.answerDao().getAll()
+                .filter { it.groupedAnswersId == selectedGroupedAnswerId }.toTypedArray()
 
-            respondent.text = existingAnswers.last().responderName
+            respondent.text = answerDetails.last().responderName
             respondent.isEnabled = false
 
             val cwsList = db.cwsDao().getAll()
@@ -347,16 +360,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 getCwsNames(cwsList)
             )
 
-            cwsName.setSelection(adapter.getPosition(existingAnswers.last().cwsName))
+            cwsName.setSelection(adapter.getPosition(answerDetails.last().cwsName))
             cwsName.isEnabled = false
             cwsName.adapter = adapter
-            println(cwsName.selectedItem.toString())
 
             addStation.visibility = View.GONE
 
             // Update progress bar
             progress =
-                (existingAnswers.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
+                (answerDetails.count { it.answer == Answers.YES } * 100) / allCatQuestions.size
             val score = progress
 
             progressBar.progress = score
@@ -407,10 +419,11 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             ) {
                 val selectedCwsName = cwsName.selectedItem.toString()
                 val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-                val existingAnswers = db.answerDao().getAll()
+                answerDetails = db.answerDao().getAll()
                     .filter { it.cwsName == selectedCwsName && formatDate(it.date) == today && it.auditId.toInt() == auditId }
+                    .toTypedArray()
 
-                if (existingAnswers.isNotEmpty()) {
+                if (answerDetails.isNotEmpty()) {
                     // Display error message immediately
                     if (!editMode) {
                         (parent?.getChildAt(0) as? TextView)?.error =
@@ -426,23 +439,17 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                     if (!editMode) disableRecyclerView(recyclerView)
                 } else {
                     // No existing answers found, proceed with adding/updating answerDetails
-                    if (answerDetails.isNotEmpty()) {
-                        answerDetails = answerDetails.map {
-                            it.copy(cwsName = selectedCwsName)
-                        }.toTypedArray()
-                    } else {
-                        answerDetails = arrayOf(
-                            Answers(
-                                null,
-                                respondent.text.toString(),
-                                "",
-                                items?.getOrNull(0)?.id ?: 0,
-                                auditId.toLong(),
-                                selectedCwsName,
-                                ""
-                            )
+                    answerDetails = arrayOf(
+                        Answers(
+                            null,
+                            respondent.text.toString(),
+                            "",
+                            items?.getOrNull(0)?.id ?: 0,
+                            auditId.toLong(),
+                            selectedCwsName,
+                            ""
                         )
-                    }
+                    ).toList().toTypedArray()
                     if (!editMode) enableRecyclerView(recyclerView)
                 }
             }
@@ -463,7 +470,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 editMode,
                 viewMode,
                 answerDetails,
-                existingAnswers,
                 allCatQuestions
             )
         }!!
@@ -488,8 +494,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             respondent.text.toString(),
             if (cwsName.selectedItem != null) cwsName.selectedItem.toString() else "",
             editMode,
-            viewMode,
-            existingAnswers
+            viewMode
         )
         dialog.setDismissListener(this)
         dialog.show()
@@ -499,6 +504,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     override fun onDialogDismissed(updatedAnswers: Array<Answers>?, categoryId: Int) {
         adapter.updateColor(categoryId)
         adapter.notifyDataSetChanged()
+
         updatedAnswers?.forEach { updatedAnswer ->
             val existingAnswer = answerDetails.find { it.qId == updatedAnswer.qId }
             if (existingAnswer != null) {

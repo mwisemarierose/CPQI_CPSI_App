@@ -11,9 +11,6 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.example.tnsapp.adapters.AuditAdapter
-import com.example.tnsapp.data.AuditCategories
-import com.example.tnsapp.parsers.auditParser
 import com.example.tnsapp.parsers.readJsonFromAssets
 
 class MainActivity : AppCompatActivity() {
