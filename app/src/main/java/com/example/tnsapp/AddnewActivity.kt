@@ -241,38 +241,12 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private val requestCodeOpenDocument = 1002
 
     // This function should be called from onActivityResult in the calling Activity or Fragment
-    private fun handleImportResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?,
-        db: AppDatabase,
-        activity: Activity
-    ) {
-        if (requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK){
-            data?.data?.let { uri ->
-                activity.contentResolver.openInputStream(uri)?.use { inputStream ->
-                    BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                        var line: String?
-                        // Skip the header
-                        reader.readLine()
-
-
-
-
-
-                    }}}
-
-        }
-    }
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == requestCodeCreateDocument) {
             handleActivityResult(requestCode, resultCode, data, uniqueResult, this)
-        }
-        else if (requestCode == requestCodeOpenDocument) {
-            handleImportResult(requestCode, resultCode, data, db, this)
         }
     }
 
