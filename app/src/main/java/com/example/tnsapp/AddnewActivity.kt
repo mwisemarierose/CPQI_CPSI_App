@@ -249,18 +249,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         activity: Activity
     ) {
         if (requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK){
-            data?.data?.let { uri ->
-                activity.contentResolver.openInputStream(uri)?.use { inputStream ->
-                    BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                        var line: String?
-                        // Skip the header
-                        reader.readLine()
-
-
-
-
-
-                    }}}
 
         }
     }
