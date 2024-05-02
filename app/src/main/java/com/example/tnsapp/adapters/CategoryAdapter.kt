@@ -21,7 +21,6 @@ class CategoryAdapter(
     private val editMode: Boolean,
     private val viewMode: Boolean,
     private val answerDetails: Array<Answers>,
-    private val existingAnswers: List<Answers>,
     private val allCatQuestions: List<Questions>
 ) :
     RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
@@ -38,6 +37,7 @@ class CategoryAdapter(
         }
 
         override fun onClick(v: View?) {
+            println("here")
             val position = items[adapterPosition].id.toInt()
             if (position != RecyclerView.NO_POSITION) {
                 listener.onItemClick(position)
@@ -64,16 +64,8 @@ class CategoryAdapter(
             val questions =
                 allCatQuestions.filter { it.catId.toInt() == (currentItem.id.toInt() - 1) }
 
-            questions.forEach {
-                println(it.toString())
-            }
-
             val answeredQuestions =
                 answerDetails.filter { it.qId.toInt() in questions.map { i -> i.id.toInt() } }
-
-            answeredQuestions.forEach {
-                println(it.toString())
-            }
 
             if (answeredQuestions.isNotEmpty()) {
                 selectedCategoryIds.add(currentItem.id.toInt())

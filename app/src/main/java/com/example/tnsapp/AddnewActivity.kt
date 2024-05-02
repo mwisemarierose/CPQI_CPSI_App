@@ -59,13 +59,9 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
         items = allAuditQuestionsParser(audit, auditId)
-        //  // Initialize Retrofit
-//          val retrofit = Retrofit.Builder()
-//              .baseUrl("https://jsonplaceholder.typicode.com/")
-//              .addConverterFactory(GsonConverterFactory.create())
-//              .build()
 
         categories = categoryParser(audit, auditId)
+
         val parsedAudit =
             JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString())
 
@@ -83,7 +79,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
     @SuppressLint("ResourceAsColor")
     private fun setupUI(audit: String, auditId: Int) {
-//        val auditId = intent.getIntExtra("auditId", 0)
         val addNewBtn = findViewById<Button>(R.id.addNewBtn)
 
 //        access answers from room db
@@ -130,14 +125,13 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             AddNewListAdapter(uniqueResult, result.size, items.size, getAnswers.toList(), this)
         recyclerView.adapter = adapter
 
-        if (result.isEmpty() || result[0].auditId != auditId) {
+        if (result.isEmpty() || result[result.size - 1].auditId != auditId) {
             emptyView.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
         } else {
             emptyView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         }
-        adapter.setupItemDecoration(recyclerView)
     }
 
     @SuppressLint("RestrictedApi")
@@ -189,6 +183,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     }
 
     private val requestCodeCreateDocument = 1001
+
     // This function should be called from onActivityResult in the calling Activity or Fragment
     private fun handleActivityResult(
         requestCode: Int,
@@ -204,9 +199,9 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                         writer.println("Date,Audit,Category,Question,Answer,CWS Name,Respondent,Total Answered,Score Percentage,Grouped Answers Id")
                         for (p in uniqueResult) {
                             var line: String
-                            for ((index, answer) in getAnswers.toList().filter {
+                            for (answer in getAnswers.toList().filter {
                                 it.groupedAnswersId == p.value.groupedAnswersId
-                            }.withIndex()) {
+                            }) {
                                 line =
                                     "${p.value.date},${JSONObject(JSONObject(audit).getJSONArray("audits")[p.value.auditId - 1].toString())["name"]},${
                                         categories.find {
@@ -235,14 +230,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     }
     //import functionality with the csv file with the same field of the exported file  when cws and audit is not in db create one
 
-    fun uploadCsv(activity: Activity) {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "text/csv"
-        }
-        activity.startActivityForResult(intent, requestCodeOpenDocument) // New request code
-    }
-
     private val requestCodeOpenDocument = 1002
 
     // This function should be called from onActivityResult in the calling Activity or Fragment
@@ -250,29 +237,29 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         requestCode: Int,
         resultCode: Int,
         data: Intent?,
-        db: AppDatabase,
         activity: Activity
     ) {
-        if (requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK){
+        if (requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
                 activity.contentResolver.openInputStream(uri)?.use { inputStream ->
                     BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                        var line: String?
                         // Skip the header
                         reader.readLine()
-                    }}}
+                    }
+                }
+            }
 
         }
     }
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == requestCodeCreateDocument) {
             handleActivityResult(requestCode, resultCode, data, uniqueResult, this)
-        }
-        else if (requestCode == requestCodeOpenDocument) {
-            handleImportResult(requestCode, resultCode, data, db, this)
+        } else if (requestCode == requestCodeOpenDocument) {
+            handleImportResult(requestCode, resultCode, data, this)
         }
     }
 

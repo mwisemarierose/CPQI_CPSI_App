@@ -18,25 +18,56 @@ class QuestionAdapter(
     private val respondent: String,
     private val cwsName: String,
     private val editMode: Boolean,
-    private val viewMode: Boolean,
-    private var existingAnswers: List<Answers>
+    private val viewMode: Boolean
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(currentItem: Questions) {
             yesBtn.setOnClickListener {
-                items.forEachIndexed { index, item ->
-                    if (item.id == currentItem.id) {
-                        if (answerDetails.isNotEmpty() && index < answerDetails.size) {
-                            if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
-                                answerDetails[index] = Answers(
+                if (editMode) {
+                    answerDetails.forEachIndexed { index, item ->
+                        if (item.qId == currentItem.id) {
+                            answerDetails[index].answer = Answers.YES
+                        } else {
+                            answerDetails = answerDetails.plus(
+                                Answers(
                                     null,
                                     respondent,
                                     Answers.YES,
                                     currentItem.id,
                                     auditId.toLong(),
                                     cwsName,
-                                    ""
+                                    item.groupedAnswersId
                                 )
+                            )
+                        }
+                    }
+                } else {
+                    items.forEachIndexed { index, item ->
+                        if (item.id == currentItem.id) {
+                            if (answerDetails.isNotEmpty() && index < answerDetails.size) {
+                                if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                                    answerDetails[index] = Answers(
+                                        null,
+                                        respondent,
+                                        Answers.YES,
+                                        currentItem.id,
+                                        auditId.toLong(),
+                                        cwsName,
+                                        ""
+                                    )
+                                } else {
+                                    answerDetails = answerDetails.plus(
+                                        Answers(
+                                            null,
+                                            respondent,
+                                            Answers.YES,
+                                            currentItem.id,
+                                            auditId.toLong(),
+                                            cwsName,
+                                            ""
+                                        )
+                                    )
+                                }
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
@@ -50,22 +81,9 @@ class QuestionAdapter(
                                     )
                                 )
                             }
-                        } else {
-                            answerDetails = answerDetails.plus(
-                                Answers(
-                                    null,
-                                    respondent,
-                                    Answers.YES,
-                                    currentItem.id,
-                                    auditId.toLong(),
-                                    cwsName,
-                                    ""
-                                )
-                            )
                         }
                     }
                 }
-
 
                 yesBtn.setBackgroundColor(itemView.resources.getColor(R.color.green))
                 noBtn.setBackgroundColor(itemView.resources.getColor(R.color.transparent))
@@ -75,19 +93,51 @@ class QuestionAdapter(
             }
 
             noBtn.setOnClickListener {
-                items.forEachIndexed { index, item ->
-                    if (item.id == currentItem.id) {
-                        if (answerDetails.isNotEmpty() && index < answerDetails.size) {
-                            if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
-                                answerDetails[index] = Answers(
+                if (editMode) {
+                    answerDetails.forEachIndexed { index, item ->
+                        if (item.qId == currentItem.id) {
+                            answerDetails[index].answer = Answers.NO
+                        } else {
+                            answerDetails = answerDetails.plus(
+                                Answers(
                                     null,
                                     respondent,
                                     Answers.NO,
                                     currentItem.id,
                                     auditId.toLong(),
                                     cwsName,
-                                    ""
+                                    answerDetails[index].groupedAnswersId
                                 )
+                            )
+                        }
+                    }
+                } else {
+                    items.forEachIndexed { index, item ->
+                        if (item.id == currentItem.id) {
+                            if (answerDetails.isNotEmpty() && index < answerDetails.size) {
+                                if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                                    answerDetails[index] = Answers(
+                                        null,
+                                        respondent,
+                                        Answers.NO,
+                                        currentItem.id,
+                                        auditId.toLong(),
+                                        cwsName,
+                                        ""
+                                    )
+                                } else {
+                                    answerDetails = answerDetails.plus(
+                                        Answers(
+                                            null,
+                                            respondent,
+                                            Answers.NO,
+                                            currentItem.id,
+                                            auditId.toLong(),
+                                            cwsName,
+                                            ""
+                                        )
+                                    )
+                                }
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
@@ -101,18 +151,6 @@ class QuestionAdapter(
                                     )
                                 )
                             }
-                        } else {
-                            answerDetails = answerDetails.plus(
-                                Answers(
-                                    null,
-                                    respondent,
-                                    Answers.NO,
-                                    currentItem.id,
-                                    auditId.toLong(),
-                                    cwsName,
-                                    ""
-                                )
-                            )
                         }
                     }
                 }
@@ -125,19 +163,51 @@ class QuestionAdapter(
             }
 
             skipBtn.setOnClickListener {
-                items.forEachIndexed { index, item ->
-                    if (item.id == currentItem.id) {
-                        if (answerDetails.isNotEmpty() && index < answerDetails.size) {
-                            if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
-                                answerDetails[index] = Answers(
+                if (editMode) {
+                    answerDetails.forEachIndexed { index, item ->
+                        if (item.qId == currentItem.id) {
+                            answerDetails[index].answer = Answers.SKIP
+                        } else {
+                            answerDetails = answerDetails.plus(
+                                Answers(
                                     null,
                                     respondent,
                                     Answers.SKIP,
                                     currentItem.id,
                                     auditId.toLong(),
                                     cwsName,
-                                    ""
+                                    answerDetails[index].groupedAnswersId
                                 )
+                            )
+                        }
+                    }
+                } else {
+                    items.forEachIndexed { index, item ->
+                        if (item.id == currentItem.id) {
+                            if (answerDetails.isNotEmpty() && index < answerDetails.size) {
+                                if (answerDetails[index].qId == currentItem.id || answerDetails.size == 1) {
+                                    answerDetails[index] = Answers(
+                                        null,
+                                        respondent,
+                                        Answers.SKIP,
+                                        currentItem.id,
+                                        auditId.toLong(),
+                                        cwsName,
+                                        ""
+                                    )
+                                } else {
+                                    answerDetails = answerDetails.plus(
+                                        Answers(
+                                            null,
+                                            respondent,
+                                            Answers.SKIP,
+                                            currentItem.id,
+                                            auditId.toLong(),
+                                            cwsName,
+                                            ""
+                                        )
+                                    )
+                                }
                             } else {
                                 answerDetails = answerDetails.plus(
                                     Answers(
@@ -151,18 +221,6 @@ class QuestionAdapter(
                                     )
                                 )
                             }
-                        } else {
-                            answerDetails = answerDetails.plus(
-                                Answers(
-                                    null,
-                                    respondent,
-                                    Answers.SKIP,
-                                    currentItem.id,
-                                    auditId.toLong(),
-                                    cwsName,
-                                    ""
-                                )
-                            )
                         }
                     }
                 }
@@ -227,7 +285,7 @@ class QuestionAdapter(
 
             else -> {
                 if (editMode || viewMode) {
-                    val existingAnswer = existingAnswers.find { it.qId == currentItem.id }
+                    val existingAnswer = answerDetails.find { it.qId == currentItem.id }
                     when (existingAnswer?.answer) {
                         Answers.YES -> {
                             holder.yesBtn.setBackgroundColor(holder.itemView.resources.getColor(R.color.green))
