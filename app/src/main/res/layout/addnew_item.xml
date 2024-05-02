@@ -11,13 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
+        android:background="@drawable/border"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingVertical="2dp"
+            android:paddingVertical="5dp"
            >
 
             <!-- Date Dummy Data -->
@@ -29,7 +30,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:text="2024-03-19"
+                android:text="@string/_2024_03_19"
                 android:textSize="18sp" />
 
             <!-- CWSName Dummy Data -->

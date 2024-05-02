@@ -11,6 +11,7 @@
         <!-- Custom spinner theme attributes for light mode -->
         <item name="android:textColor">#800000</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@color/grey</item>
+
     </style>
 </resources>

@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.R
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.RecordedAudit
+import androidx.recyclerview.widget.DividerItemDecoration
+
+
 
 
 class AddNewListAdapter(
@@ -26,6 +29,7 @@ class AddNewListAdapter(
         val auditDateView: TextView = itemView.findViewById(R.id.auditDate)
         val auditScoreView: TextView = itemView.findViewById(R.id.auditScore)
         override fun onClick(v: View?) {}
+
     }
 
     interface OnItemClickListener {
@@ -52,5 +56,14 @@ class AddNewListAdapter(
     }
     override fun getItemCount(): Int {
         return if (items.isEmpty()) 0 else items.size
+    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    fun setupItemDecoration(recyclerView: RecyclerView) {
+        recyclerView.apply {
+            setHasFixedSize(true)
+            val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+            itemDecoration.setDrawable(context.getDrawable(R.drawable.divider)!!)
+            addItemDecoration(itemDecoration)
+        }
     }
 }

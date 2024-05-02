@@ -51,8 +51,9 @@
     <string name="cws_error">CWS name cannot be empty</string>
     <string name="leader_error">CWS leader cannot be empty</string>
     <string name="address_error">CWS address cannot be empty</string>
-    <string-array name="languages" translatable="false">
-        <item>English</item>
+    <string name="_2024_03_19">2024-03-19</string>
+    <string-array name="languages" translatable="false" >
+        <item >English </item>
         <item>Kinyarwanda</item>
     </string-array>
 </resources>

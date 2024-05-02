@@ -8,8 +8,6 @@ import android.os.Bundle
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -30,6 +28,8 @@ import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.isTodayDate
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.io.PrintWriter
 import kotlin.properties.Delegates
 
@@ -59,9 +59,13 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
         items = allAuditQuestionsParser(audit, auditId)
+        //  // Initialize Retrofit
+//          val retrofit = Retrofit.Builder()
+//              .baseUrl("https://jsonplaceholder.typicode.com/")
+//              .addConverterFactory(GsonConverterFactory.create())
+//              .build()
 
         categories = categoryParser(audit, auditId)
-
         val parsedAudit =
             JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString())
 
@@ -133,6 +137,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             emptyView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         }
+        adapter.setupItemDecoration(recyclerView)
     }
 
     @SuppressLint("RestrictedApi")
@@ -255,11 +260,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                         var line: String?
                         // Skip the header
                         reader.readLine()
-
-
-
-
-
                     }}}
 
         }
