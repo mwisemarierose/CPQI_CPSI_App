@@ -61,6 +61,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var progressBar: ProgressBar
     private lateinit var percentageText: TextView
     private lateinit var addStation: Button
+    private lateinit var cwsEditText: TextView
+    private lateinit var cwsInputLayout: LinearLayout
     private var editMode = false
     private var viewMode = false
     private var selectedGroupedAnswerId = ""
@@ -86,6 +88,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         selectedGroupedAnswerId = intent.getStringExtra("selectedGroupedAnswerId").toString()
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         submitAll = findViewById(R.id.submitAllBtn)
+        cwsEditText = findViewById(R.id.cwsEditText)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         auditId = intent.getIntExtra("auditId", 0)
         audit = intent.getStringExtra("audit").toString()
@@ -94,6 +97,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         progressBar = findViewById(R.id.scoreProgressBar)
         percentageText = findViewById(R.id.percentageText)
         addStation = findViewById(R.id.addStation)
+        cwsInputLayout = findViewById(R.id.cwsInputLayout)
         onClickListener(addStation)
         val score = 0
 
@@ -122,7 +126,10 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             onBackPressedDispatcher.onBackPressed()
         }
 
+
         if (viewMode) submitAll.visibility = View.GONE else submitAll.visibility = View.VISIBLE
+//        if(editMode|| viewMode) cwsNameInput.visibility = View.VISIBLE else cwsNameInput.visibility = View.GONE
+
 
         submitAll.isEnabled = false
         submitAll.backgroundTintList =
@@ -330,11 +337,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 android.R.layout.simple_spinner_dropdown_item,
                 getCwsNames(cwsList)
             )
-            cwsName.setSelection(adapter.getPosition(answerDetails.last().cwsName))
-            cwsName.isEnabled = false
-            cwsName.adapter = adapter
+            val selectedCwsName = answerDetails.firstOrNull()?.cwsName ?: ""
+            cwsEditText.text = selectedCwsName
+            cwsEditText.isEnabled = false
+
 
             addStation.visibility = View.GONE
+            cwsName.visibility = View.GONE
+            cwsInputLayout.visibility = View.VISIBLE
+
 
 //            update progress bar
             progress =
@@ -360,11 +371,13 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 getCwsNames(cwsList)
             )
 
-            cwsName.setSelection(adapter.getPosition(answerDetails.last().cwsName))
-            cwsName.isEnabled = false
-            cwsName.adapter = adapter
+            val selectedCwsName = answerDetails.firstOrNull()?.cwsName ?: ""
+            cwsEditText.text = selectedCwsName
+            cwsEditText.isEnabled = false
 
             addStation.visibility = View.GONE
+            cwsName.visibility = View.GONE
+            cwsInputLayout.visibility = View.VISIBLE
 
             // Update progress bar
             progress =
@@ -492,7 +505,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             adapter.items[position - 1].name,
             answerDetails,
             respondent.text.toString(),
-            if (cwsName.selectedItem != null) cwsName.selectedItem.toString() else "",
+            if (cwsName.selectedItem != null) if (editMode) cwsEditText.text.toString() else cwsName.selectedItem.toString() else "",
             editMode,
             viewMode
         )

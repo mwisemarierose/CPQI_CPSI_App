@@ -71,6 +71,19 @@
                     android:layout_height="48dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/cwsInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:hint="@string/name_txt">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/cwsEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
             <!-- CWS Name Input -->
             <LinearLayout
                 android:layout_width="match_parent"

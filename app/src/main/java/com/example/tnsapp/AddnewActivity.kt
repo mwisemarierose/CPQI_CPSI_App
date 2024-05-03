@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +18,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tnsapp.adapters.AddNewListAdapter
@@ -29,8 +34,10 @@ import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.isTodayDate
 import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.PrintWriter
+import android.Manifest
 import kotlin.properties.Delegates
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
@@ -54,6 +61,19 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addnew)
         supportActionBar?.hide()
+      //check for permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
+        }
+        else {
+//            openDocumentPicker()
+        }
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
         auditId = intent.getIntExtra("auditId", 0)
@@ -76,6 +96,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             onBackPressedDispatcher.onBackPressed()
         }
     }
+
 
     @SuppressLint("ResourceAsColor")
     private fun setupUI(audit: String, auditId: Int) {
@@ -133,15 +154,11 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             recyclerView.visibility = View.VISIBLE
         }
     }
-
     @SuppressLint("RestrictedApi")
     fun showDropdownMenu(v: View?) {
         val menuBuilder = MenuBuilder(this)
         val inflater = MenuInflater(this)
         inflater.inflate(R.menu.dropdown_menu, menuBuilder)
-
-        // Add an export menu item
-
         val optionsMenu = v?.let { MenuPopupHelper(this, menuBuilder, it) }
         optionsMenu?.setForceShowIcon(true)
 
@@ -151,12 +168,17 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                     R.id.export_option -> {
                         // Export data to CSV
                         downloadCsv(this@AddNewActivity)
-
                         Toast.makeText(this@AddNewActivity, "Exporting data...", Toast.LENGTH_SHORT)
                             .show()
                         true
                     }
-
+                    R.id.import_option -> {
+                        // Import data from CSV
+                        openDocumentPicker()
+                        Toast.makeText(this@AddNewActivity, "Importing data...", Toast.LENGTH_SHORT)
+                            .show()
+                        true
+                    }
                     else -> false
                 }
             }
@@ -166,6 +188,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
+
 
     // Assuming this function is called from an Activity or Fragment
     fun downloadCsv(activity: Activity) {
@@ -228,28 +251,49 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             }
         }
     }
-    //import functionality with the csv file with the same field of the exported file  when cws and audit is not in db create one
 
-    private val requestCodeOpenDocument = 1002
-
-    // This function should be called from onActivityResult in the calling Activity or Fragment
-    private fun handleImportResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?,
-        activity: Activity
-    ) {
-        if (requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK) {
-            data?.data?.let { uri ->
-                activity.contentResolver.openInputStream(uri)?.use { inputStream ->
-                    BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                        // Skip the header
-                        reader.readLine()
-                    }
-                }
-            }
-
+    private fun openDocumentPicker() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
         }
+        startActivityForResult(intent, requestCodeOpenDocument)
+    }
+
+
+    private val requestCodeOpenDocument = 101
+
+    @SuppressLint("Range")
+    private fun getRealPathFromURI(uri: Uri): String? {
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        cursor?.let {
+            val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            cursor.moveToFirst()
+            val name = cursor.getString(index)
+            val path = cursor.getString(cursor.getColumnIndex(OpenableColumns.SIZE))
+            cursor.close()
+            return path
+        }
+        return null
+    }
+    //read a cvs file
+    private fun readCsvFile(uri: Uri): MutableList<List<String>> {
+        val reader = BufferedReader(contentResolver.openInputStream(uri)?.reader() ?: return mutableListOf())
+        val resultList = mutableListOf<List<String>>() // List to store parsed CSV data
+        // Skip the header row (assuming the first row contains column names)
+        reader.readLine()
+
+        var line: String?
+        while (reader.readLine().also { line = it } != null) {
+            // Split the line based on comma delimiter (",")
+            val rowData = line!!.split(",")
+
+            // Add the split row data to the result list
+            resultList.add(rowData)
+        }
+        reader.close()
+
+        return resultList
     }
 
     @Deprecated("Deprecated in Java")
@@ -258,8 +302,11 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         if (requestCode == requestCodeCreateDocument) {
             handleActivityResult(requestCode, resultCode, data, uniqueResult, this)
-        } else if (requestCode == requestCodeOpenDocument) {
-            handleImportResult(requestCode, resultCode, data, this)
+      }else if(requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+               val csvData = readCsvFile(uri)
+                println("dataaaa$csvData")
+            }
         }
     }
 
