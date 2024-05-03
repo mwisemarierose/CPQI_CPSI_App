@@ -282,20 +282,17 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val resultList = mutableListOf<List<String>>() // List to store parsed CSV data
         // Skip the header row (assuming the first row contains column names)
         reader.readLine()
-
         var line: String?
         while (reader.readLine().also { line = it } != null) {
             // Split the line based on comma delimiter (",")
             val rowData = line!!.split(",")
-
             // Add the split row data to the result list
             resultList.add(rowData)
         }
         reader.close()
-
         return resultList
-    }
 
+    }
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -322,6 +319,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val intent = Intent(this@AddNewActivity, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)
         intent.putExtra("audit", audit)
+        intent.putExtra("auditName", auditName)
         if (db.answerDao().getAllByAuditId(auditId).isNotEmpty()) {
             intent.putExtra(
                 "selectedGroupedAnswerId",

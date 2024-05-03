@@ -70,7 +70,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
     private var json: String = ""
-
     //    initialize room db
     private lateinit var db: AppDatabase
     private var items: List<Categories> = emptyList()
@@ -101,6 +100,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         onClickListener(addStation)
         val score = 0
 
+        println(score)
+
         progressBar.progress = score
 
         // Update percentage text
@@ -123,12 +124,12 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         toolBarTitle.text = intent.getStringExtra("auditName")
 
         backIconBtn.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+           // Go back to the previous activity
+            finish()
         }
 
 
         if (viewMode) submitAll.visibility = View.GONE else submitAll.visibility = View.VISIBLE
-//        if(editMode|| viewMode) cwsNameInput.visibility = View.VISIBLE else cwsNameInput.visibility = View.GONE
 
 
         submitAll.isEnabled = false
