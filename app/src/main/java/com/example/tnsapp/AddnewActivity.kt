@@ -61,7 +61,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addnew)
         supportActionBar?.hide()
-      //check for permissions
+        //check for permissions
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -145,6 +145,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         adapter =
             AddNewListAdapter(uniqueResult, result.size, items.size, getAnswers.toList(), this)
         recyclerView.adapter = adapter
+        adapter.setupItemDecoration(recyclerView)
 
         if (result.isEmpty() || result[result.size - 1].auditId != auditId) {
             emptyView.visibility = View.VISIBLE
@@ -299,9 +300,9 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         if (requestCode == requestCodeCreateDocument) {
             handleActivityResult(requestCode, resultCode, data, uniqueResult, this)
-      }else if(requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK) {
+        }else if(requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
-               val csvData = readCsvFile(uri)
+                val csvData = readCsvFile(uri)
                 println("dataaaa$csvData")
             }
         }
