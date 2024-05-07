@@ -283,20 +283,18 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val data = lines.subList(1, lines.size)
         val answers = mutableListOf<Answers>()
         for (line in data) {
-            val regex = Regex(",(?=(?:[^\"]\"[^\"]\")[^\"]\$)")
-//            println(line)
-            val values = line.split(regex)
+            val values = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)".toRegex())
             println(values)
-            val auditName = values[1]
-            val categoryName = values[2]
-            val questionName = values[3]
-            val answer = values[4]
-            val cwsName = values[5]
-            val respondent = values[6]
-            val groupedAnswersId = values[9]
+            val auditName = values[1].trim('"')
+            val categoryName = values[2].trim('"')
+            val questionName = values[3].trim('"')
+            val answer = values[4].trim('"')
+            val cwsName = values[5].trim('"')
+            val respondent = values[6].trim('"')
+            val groupedAnswersId = values[9].trim('"')
             val auditId = getAuditIdFromName(auditName)
             val questionId = getQuestionIdFromName(questionName, auditId)
-//            println(respondent)
+            println(respondent)
             val newanswer = Answers(
                 null,
                 respondent,
@@ -307,6 +305,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 groupedAnswersId
             )
             answers.add(newanswer)
+            println(newanswer)
         }
         db.answerDao().insertAll(answers.toTypedArray())
     }
