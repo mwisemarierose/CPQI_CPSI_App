@@ -17,12 +17,12 @@
             },
             {
               "id": 2,
-              "text": "Reba aho bapimira kawa. Mbere yo gupima, Umunzani \nuregeye muri zeru kandi izina(cyangwa Irangamuntu) \nry'umuhinzi, itariki, ingano(kg) n'igiciro byujujwe ku \ninyemezabuguzi?\n",
+              "text": "Reba aho bapimira kawa. Mbere yo gupima, Umunzani uregeye muri zeru kandi izina(cyangwa Irangamuntu) ry'umuhinzi, itariki, ingano(kg) n'igiciro byujujwe ku inyemezabuguzi?",
               "weight": 1
             },
             {
               "id": 3,
-              "text": "Reba kawa mbere y'uko zishyirwa mu mashini. \nZitandukanywa hakurikijwe ibara n'ireme bwite ryazo \nmbere yo kuzitonora?",
+              "text": "Reba kawa mbere y'uko zishyirwa mu mashini. Zitandukanywa hakurikijwe ibara n'ireme bwite ryazo mbere yo kuzitonora?",
               "weight": 1
             }
           ]
@@ -34,22 +34,22 @@
           "questions": [
             {
               "id": 4,
-              "text": "Kawa igomba gutonorwa itararenza amasaha 8 isaruwe. \nBaza bamwe mu bahinzi igihe basaruriye. Ese ntabwo \nkawa zirarenza amasaha 8?",
+              "text": "Kawa igomba gutonorwa itararenza amasaha 8 isaruwe.Baza bamwe mu bahinzi igihe basaruriye. Ese ntabwo kawa zirarenza amasaha 8?",
               "weight": 1
             },
             {
               "id": 5,
-              "text": "Reba isoko y'amazi. Ese amazi arimo gukoreshwa arasa \nneza; nta myanda irimo, ntabwo ava cyangwa ngo \nasandare hasi?",
+              "text": "Reba isoko y'amazi. Ese amazi arimo gukoreshwa arasa neza; nta myanda irimo, ntabwo ava cyangwa ngo asandare hasi?",
               "weight": 1
             },
             {
               "id": 6,
-              "text": "Reba imashini itonora. Irakora neza, iregeye neza kandi \nnta bisigazwa bya kawa yabanjemo bikirimo?",
+              "text": "Reba imashini itonora. Irakora neza, iregeye neza kandi nta bisigazwa bya kawa yabanjemo bikirimo?",
               "weight": 1
             },
             {
               "id": 7,
-              "text": "Reba mu bigega bihugutishirizwamo kawa maze uyore \nintete 50. Ese izamenetse cyangwa izidatonoye \nntizirenga 10?\n",
+              "text": "Reba mu bigega bihugutishirizwamo kawa maze uyore intete 50. Ese izamenetse cyangwa izidatonoye ntizirenga 10?",
               "weight": 1
             }
           ]
@@ -61,12 +61,12 @@
           "questions": [
             {
               "id": 8,
-              "text": "Reba niba nta bisigizwa bya loti ya kawa yabanje mu \nbigega byasigayemo. Ese ibigega bisukuwe neza mbere \nyo gushyiramo indi loti?",
+              "text": "Reba niba nta bisigizwa bya loti ya kawa yabanje mu bigega byasigayemo. Ese ibigega bisukuwe neza mbere yo gushyiramo indi loti?",
               "weight": 1
             },
             {
               "id": 9,
-              "text": "Reba ahahugutishirizwa. Buri saha, hari umuntu \nugenzura kawa yegereje guhuguta?\n",
+              "text": "Reba ahahugutishirizwa. Buri saha, hari umuntu ugenzura kawa yegereje guhuguta?",
               "weight": 1
             }
           ]
@@ -78,12 +78,12 @@
           "questions": [
             {
               "id": 10,
-              "text": "Reba niba nta bisigazwa bya kawa ya loti zabanje \nbirimo. Ahogerezwa kawa harasukurwa neza \nnyuma yo kuzikuramo?\n",
+              "text": "Reba niba nta bisigazwa bya kawa ya loti zabanje birimo. Ahogerezwa kawa harasukurwa neza nyuma yo kuzikuramo?",
               "weight": 1
             },
             {
               "id": 11,
-              "text": "Reba kawa imaze kozwa cyangwa yimurirwa ku \nbwumukirizo. Nta murenda wasigaye ku ntete?",
+              "text": "Reba kawa imaze kozwa cyangwa yimurirwa ku bwumukirizo. Nta murenda wasigaye ku ntete?",
                 "weight": 1
             }
           ]
@@ -95,7 +95,7 @@
           "questions": [
             {
               "id": 12,
-              "text": "Reba mu bwumukirizo no ku bwanikiro. Kawa \nijonjorwamo izangiritse? Irahindurwa (izari hasi zikaza \nhejuru)? Ibitanda byanditseho icyiciro cya kawa \nyanitseho.",
+              "text": "Reba mu bwumukirizo no ku bwanikiro. Kawa ijonjorwamo izangiritse? Irahindurwa (izari hasi zikaza hejuru)? Ibitanda byanditseho icyiciro cya kawa yanitseho.",
                 "weight": 1
             }
           ]
@@ -107,22 +107,22 @@
           "questions": [
             {
               "id": 13,
-              "text": "Reba kawa yanitse. Umubyimba wa kawa zigerekeranye \nuri munsi ya 5cm(hafi 1/2 cy'urutoki rwa \nmukubitarukoko)\n",
+              "text": "Reba kawa yanitse. Umubyimba wa kawa zigerekeranye uri munsi ya 5cm(hafi 1/2 cy'urutoki rwa mukubitarukoko)",
                 "weight": 1
             },
             {
               "id": 14,
-              "text": "Reba ibitanda byanikwaho. Ese ibitanda hafi ya byose \nbiraterereye, nta binogo birimo byakwirundamo kawa?",
+              "text": "Reba ibitanda byanikwaho. Ese ibitanda hafi ya byose biraterereye, nta binogo birimo byakwirundamo kawa?",
                 "weight": 1
             },
             {
               "id": 15,
-              "text": "Reba ko ibitanda byose bifite amashashi(nylex) \nn'udutimba (shade net). Ese kawa itwikirizwa udutimba \nmu gihe cy'ubushyuhe bukabije (11:00-14:00) kandi \nhakongerwaho ishashi(nylex) mu gihe cy'imvura na \nnijoro?",
+              "text": "Reba ko ibitanda byose bifite amashashi(nylex) n'udutimba (shade net). Ese kawa itwikirizwa udutimba mu gihe cy'ubushyuhe bukabije (11:00-14:00) kandi hakongerwaho ishashi(nylex) mu gihe cy'imvura na nijoro?",
                 "weight": 1
             },
             {
               "id": 16,
-              "text": "Fata impagararizi ya kawa mu bubiko upime ubuhehere \nbwayo. Ubuherere bwayo buri hagati ya 10-12%?",
+              "text": "Fata impagararizi ya kawa mu bubiko upime ubuhehere bwayo. Ubuherere bwayo buri hagati ya 10-12%?",
                 "weight": 1
             }
           ]
@@ -134,12 +134,12 @@
           "questions": [
             {
               "id": 17,
-              "text": "Reba aho kawa ibitse. Ese harumutse, hari isuku kandi \nnta byonnyi birimo? Kawa ntabwo iteretse hasi? \nUmwuka winjiramo neza?",
+              "text": "Reba aho kawa ibitse. Ese harumutse, hari isuku kandi nta byonnyi birimo? Kawa ntabwo iteretse hasi? \nUmwuka winjiramo neza?",
                 "weight": 1
             },
             {
               "id": 18,
-              "text": "Reba inyandiko y'ububiko n'ibiranga kawa. Ese kawa \nibitse hakurikijwe ibyiciro byayo kandi bigaragara ku \ncyo ibitsemo?",
+              "text": "Reba inyandiko y'ububiko n'ibiranga kawa. Ese kawa ibitse hakurikijwe ibyiciro byayo kandi bigaragara ku \ncyo ibitsemo?",
                 "weight": 1
             }
           ]

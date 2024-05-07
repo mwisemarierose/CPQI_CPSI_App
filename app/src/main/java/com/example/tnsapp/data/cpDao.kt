@@ -19,11 +19,15 @@ interface AnswersDao {
     @Query("SELECT * FROM answers")
     fun getAll(): Array<Answers>
 
-    @Query("SELECT * FROM answers WHERE q_id = :questionId")
-    suspend fun getByQuestionId(questionId: Long): Array<Answers>
+    @Query("SELECT * FROM answers WHERE grouped_answers_id = :groupedAnswersId")
+    fun getAllByGroupedAnswersId(groupedAnswersId: String): Array<Answers>
 
     @Query("SELECT * FROM answers WHERE audit_id = :auditId")
     fun getAllByAuditId(auditId: Int): Array<Answers>
+
+    @Query("SELECT * FROM answers WHERE q_id = :questionId AND grouped_answers_id = :groupedAnswersId")
+    fun getAnswerByQuestionId(questionId: Long, groupedAnswersId: String): Answers?
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(answer: Answers)

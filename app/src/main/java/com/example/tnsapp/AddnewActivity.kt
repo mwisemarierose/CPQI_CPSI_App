@@ -38,6 +38,7 @@ import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import android.Manifest
+import java.util.Date
 import kotlin.properties.Delegates
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
@@ -189,8 +190,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
-
-
     // Assuming this function is called from an Activity or Fragment
     fun downloadCsv(activity: Activity) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -202,10 +201,8 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 }.csv"
             )
         }
-
         activity.startActivityForResult(intent, requestCodeCreateDocument)
     }
-
     private val requestCodeCreateDocument = 1001
 
     // This function should be called from onActivityResult in the calling Activity or Fragment
@@ -278,21 +275,77 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         return null
     }
     //read a cvs file
-    private fun readCsvFile(uri: Uri): MutableList<List<String>> {
-        val reader = BufferedReader(contentResolver.openInputStream(uri)?.reader() ?: return mutableListOf())
-        val resultList = mutableListOf<List<String>>() // List to store parsed CSV data
-        // Skip the header row (assuming the first row contains column names)
-        reader.readLine()
-        var line: String?
-        while (reader.readLine().also { line = it } != null) {
-            // Split the line based on comma delimiter (",")
-            val rowData = line!!.split(",")
-            // Add the split row data to the result list
-            resultList.add(rowData)
+   private fun readCsvFile (uri: Uri) {
+        val inputStream = contentResolver.openInputStream(uri)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        val lines = reader.readLines()
+        val header = lines[0].split(",")
+        val data = lines.subList(1, lines.size)
+        val answers = mutableListOf<Answers>()
+        for (line in data) {
+            val regex = Regex(",(?=(?:[^\"]\"[^\"]\")[^\"]\$)")
+//            println(line)
+            val values = line.split(regex)
+            println(values)
+            val auditName = values[1]
+            val categoryName = values[2]
+            val questionName = values[3]
+            val answer = values[4]
+            val cwsName = values[5]
+            val respondent = values[6]
+            val groupedAnswersId = values[9]
+            val auditId = getAuditIdFromName(auditName)
+            val questionId = getQuestionIdFromName(questionName, auditId)
+//            println(respondent)
+            val newanswer = Answers(
+                null,
+                respondent,
+                answer,
+                questionId,
+                auditId,
+                cwsName,
+                groupedAnswersId
+            )
+            answers.add(newanswer)
         }
-        reader.close()
-        return resultList
+        db.answerDao().insertAll(answers.toTypedArray())
+    }
+    private fun getAuditIdFromName(auditName: String): Long {
+        val jsonObject = JSONObject(intent.getStringExtra("audit") ?: "{}")
+        val audits = jsonObject.getJSONArray("audits")
 
+        for (i in 0 until audits.length()) {
+            val audit = audits.getJSONObject(i)
+            if (audit.getString("name") == auditName) {
+                return audit.getLong("id")
+            }
+        }
+
+        return -1L
+    }
+
+    private fun getQuestionIdFromName(questionName: String, auditId: Long): Long {
+        val jsonObject = JSONObject(intent.getStringExtra("audit") ?: "{}")
+        val audits = jsonObject.getJSONArray("audits")
+
+        for (i in 0 until audits.length()) {
+            val audit = audits.getJSONObject(i)
+            if (audit.getLong("id") == auditId) {
+                val categories = audit.getJSONArray("categories")
+                for (j in 0 until categories.length()) {
+                    val category = categories.getJSONObject(j)
+                    val questions = category.getJSONArray("questions")
+                    for (k in 0 until questions.length()) {
+                        val question = questions.getJSONObject(k)
+                        if (question.getString("text") == questionName) {
+                            return question.getLong("id")
+                        }
+                    }
+                }
+            }
+        }
+
+        return -1L
     }
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
