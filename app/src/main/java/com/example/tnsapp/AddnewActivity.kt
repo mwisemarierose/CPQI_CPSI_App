@@ -1,5 +1,6 @@
 package com.example.tnsapp
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -34,11 +35,8 @@ import com.example.tnsapp.parsers.categoryParser
 import com.example.tnsapp.utils.isTodayDate
 import org.json.JSONObject
 import java.io.BufferedReader
-import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.PrintWriter
-import android.Manifest
-import java.util.Date
 import kotlin.properties.Delegates
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
@@ -284,7 +282,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val answers = mutableListOf<Answers>()
         for (line in data) {
             val values = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)".toRegex())
-            println(values)
+//            println(values)
             val auditName = values[1].trim('"')
             val categoryName = values[2].trim('"')
             val questionName = values[3].trim('"')
@@ -292,22 +290,33 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             val cwsName = values[5].trim('"')
             val respondent = values[6].trim('"')
             val groupedAnswersId = values[9].trim('"')
+
             val auditId = getAuditIdFromName(auditName)
             val questionId = getQuestionIdFromName(questionName, auditId)
-            println(respondent)
-            val newanswer = Answers(
-                null,
-                respondent,
-                answer,
-                questionId,
-                auditId,
-                cwsName,
-                groupedAnswersId
-            )
-            answers.add(newanswer)
-            println(newanswer)
+
+//            val existingAnswer = db.answerDao().getByGroupedAnswersId(groupedAnswersId)
+//            if (existingAnswer != null) {
+//                // Update the existing answer
+//                existingAnswer.answer = answer
+//                existingAnswer.responderName
+//                // Update any other fields as needed
+//                db.answerDao().updateAnswer(existingAnswer)
+//            } else {
+//                // Insert a new answer
+//                val newAnswer = Answers(
+//                    null,
+//                    respondent,
+//                    answer,
+//                    questionId,
+//                    auditId,
+//                    cwsName,
+//                    groupedAnswersId
+//                )
+//                answers.add(newAnswer)
+//            }
+
+//            db.answerDao().insertAll(answers.toTypedArray())
         }
-        db.answerDao().insertAll(answers.toTypedArray())
     }
     private fun getAuditIdFromName(auditName: String): Long {
         val jsonObject = JSONObject(intent.getStringExtra("audit") ?: "{}")

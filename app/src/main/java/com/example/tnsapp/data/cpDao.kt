@@ -18,7 +18,8 @@ interface AnswersDao {
 
     @Query("SELECT * FROM answers")
     fun getAll(): Array<Answers>
-
+    @Query("SELECT * FROM answers WHERE grouped_answers_id = :groupedAnswersId")
+    fun getByGroupedAnswersId(groupedAnswersId: String): Answers?
     @Query("SELECT * FROM answers WHERE grouped_answers_id = :groupedAnswersId")
     fun getAllByGroupedAnswersId(groupedAnswersId: String): Array<Answers>
 

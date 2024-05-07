@@ -134,12 +134,12 @@
           "questions": [
             {
               "id": 17,
-              "text": "Reba aho kawa ibitse. Ese harumutse, hari isuku kandi nta byonnyi birimo? Kawa ntabwo iteretse hasi? \nUmwuka winjiramo neza?",
+              "text": "Reba aho kawa ibitse. Ese harumutse, hari isuku kandi nta byonnyi birimo? Kawa ntabwo iteretse hasi? Umwuka winjiramo neza?",
                 "weight": 1
             },
             {
               "id": 18,
-              "text": "Reba inyandiko y'ububiko n'ibiranga kawa. Ese kawa ibitse hakurikijwe ibyiciro byayo kandi bigaragara ku \ncyo ibitsemo?",
+              "text": "Reba inyandiko y'ububiko n'ibiranga kawa. Ese kawa ibitse hakurikijwe ibyiciro byayo kandi bigaragara ku cyo ibitsemo?",
                 "weight": 1
             }
           ]
@@ -159,12 +159,12 @@
           "questions": [
             {
               "id": 19,
-              "text": " Amafaranga yose yinjizwa n'ayasohorwa n'uruganda yandikwa mu \nibitabo byabugenewe (impapuro cg ikoranabuhanga) `ndetse \ninyemezabwishyu zitangwa ku byaguzwe byose (bibaye byiza \nuruganda rusigarana kopi yo kubika).\nGenzura niba hari uburyo bw'ibaruramari busobanutse \nuruganda rufite kandi burakoreshwa",
+              "text": " Amafaranga yose yinjizwa n'ayasohorwa n'uruganda yandikwa mu ibitabo byabugenewe (impapuro cg ikoranabuhanga) `ndetse inyemezabwishyu zitangwa ku byaguzwe byose (bibaye byiza uruganda rusigarana kopi yo kubika).Genzura niba hari uburyo bw'ibaruramari busobanutse uruganda rufite kandi burakoreshwa",
                 "weight": 1
             },
             {
               "id": 20,
-              "text": "Iyinjira n'isohoka ry'amafaranga ricungwa neza bituma uruganda\nrudahagarika kugura kawa ndetse abahinzi bazanye kawa ntibahite \nbishyurwa bahabwa amafaranga yabo mu igihe bemeranijwe \nn'uruganda. Kimwe n'abakozi b'uruganda nabo bahemberwa ku \nigihe.Genzura niba nta kusanyirizo ryahagaritse kwakira kawa \nkubera kubura amafaranga yo kwishyura ndetse niba imyenda \ny'abahinzi bazanye kawa n'imishahara y'abakozi yishyurwa ku igihe",
+              "text": "Iyinjira n'isohoka ry'amafaranga ricungwa neza bituma uruganda rudahagarika kugura kawa ndetse abahinzi bazanye kawa ntibahite bishyurwa bahabwa amafaranga yabo mu igihe bemeranijwe n'uruganda. Kimwe n'abakozi b'uruganda nabo bahemberwa ku igihe.Genzura niba nta kusanyirizo ryahagaritse kwakira kawa kubera kubura amafaranga yo kwishyura ndetse niba imyenda y'abahinzi bazanye kawa n'imishahara y'abakozi yishyurwa ku igihe",
                 "weight": 1
             }
           ]
@@ -176,27 +176,27 @@
           "questions": [
             {
               "id": 21,
-              "text": "Amazi yanduye ava mu uruganda ntabwo ajya mu imigezi cyangwa \nngo asandare ku mbuga. Imigende itwara amazi cyangwa \nibyobo/ahantu bihurizwamo amazi yakoreshejwe ntabwo byuzura \nngo amazi arenguke hanze. \nGenzura niba hari ibigaragaza ko amazi aheruka kurenguka hafi \ny'imiyoboro ishyira kawa mu ibyiciro n' ibyobo by'amazi.ngo amazi \narenguke hanze",
+              "text": "Amazi yanduye ava mu uruganda ntabwo ajya mu imigezi cyangwa ngo asandare ku mbuga. Imigende itwara amazi cyangwa ibyobo/ahantu bihurizwamo amazi yakoreshejwe ntabwo byuzura ngo amazi arenguke hanze. Genzura niba hari ibigaragaza ko amazi aheruka kurenguka hafi y'imiyoboro ishyira kawa mu ibyiciro n' ibyobo by'amazi.ngo amazi arenguke hanze",
                 "weight": 1
             },
             {
               "id": 22,
-              "text": "ta bimenyetso byo kwangiza amazi bigaragara ku ruganda.\nGenzura ko nta mazi yangirika(robinet ziva/ibitembo byamenetse); \nby'umwihariko genzura ahari ikigega cy'amazi, aho batonorera, \nihugutishamurenda n'ahari imiyoboro ishyira kawa mu ibyiciro",
+              "text": "ta bimenyetso byo kwangiza amazi bigaragara ku ruganda.\nGenzura ko nta mazi yangirika(robinet ziva/ibitembo byamenetse); by'umwihariko genzura ahari ikigega cy'amazi, aho batonorera, ihugutishamurenda n'ahari imiyoboro ishyira kawa mu ibyiciro",
                 "weight": 1
             },
             {
               "id": 23,
-              "text": "Ibishishwa bya kawa bitandukanywa n'amazi yanduye ndetse \nbikarundwa ahantu cg mu ibyobo bitandukanye.\nGenzura niba hari uburyo uuruganda rufite bwo gutandukanya \nibishishwa n'amazi yanduye(urugero: niba hari ikigega \ngitandukanirizwamo ibishishwa n'amazi cg Imiyoboro ifite uburyo \nbuyungurura amazi)",
+              "text": "Ibishishwa bya kawa bitandukanywa n'amazi yanduye ndetse \nbikarundwa ahantu cg mu ibyobo bitandukanye.Genzura niba hari uburyo uuruganda rufite bwo gutandukanya ibishishwa n'amazi yanduye(urugero: niba hari ikigega gitandukanirizwamo ibishishwa n'amazi cg Imiyoboro ifite uburyo buyungurura amazi)",
                 "weight": 1
             },
             {
               "id": 24,
-              "text": "Ibice byikaraga by'imashini bitwikirijwe ibirinda ko byateza \nimpanuka igihe bihubutsemo; ibyobo by'amazi birazitiye, nta \nbikoresho bikomeretsa byandagaye, abakozi barindwa ibyabangiriza \nubuzima aho bakorera.\nGenzura aho imashini iri.\n",
+              "text": "Ibice byikaraga by'imashini bitwikirijwe ibirinda ko byateza \nimpanuka igihe bihubutsemo; ibyobo by'amazi birazitiye, nta bikoresho bikomeretsa byandagaye, abakozi barindwa ibyabangiriza ubuzima aho bakorera.Genzura aho imashini iri.",
                 "weight": 1
             },
             {
               "id": 25,
-              "text": " Abakozi bakorera ahantu hameze neza hatuma akazi gakorwa neza; \nbabona amazi meza yo kunywa, hari isuku n'uburyo bwo gukaraba \nintoki. \nBaza abakozi ku imiterere y'aho bakorera n'uburyo babona \nibibafasha gukora akazi,unagenzure niba bafite ubwiherero n'amazi \nyo gukaraba intoki no kunywa",
+              "text": " Abakozi bakorera ahantu hameze neza hatuma akazi gakorwa neza; \nbabona amazi meza yo kunywa, hari isuku n'uburyo bwo gukaraba intoki. Baza abakozi ku imiterere y'aho bakorera n'uburyo babona ibibafasha gukora akazi,unagenzure niba bafite ubwiherero n'amazi yo gukaraba intoki no kunywa",
                 "weight": 1
             },
             {

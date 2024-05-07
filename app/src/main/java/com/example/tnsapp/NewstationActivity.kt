@@ -69,16 +69,16 @@ class  NewstationActivity : AppCompatActivity() {
                     findViewById<EditText>(R.id.cwsName).requestFocus()
                     return@launch
                 }
-                if (cwsLeader.isEmpty()) {
-                    findViewById<EditText>(R.id.cwsLeader).error = getString(R.string.leader_error)
-                    findViewById<EditText>(R.id.cwsLeader).requestFocus()
-                    return@launch
-                }
-                if (location.isEmpty()) {
-                    findViewById<EditText>(R.id.location).error = getString(R.string.address_error)
-                    findViewById<EditText>(R.id.location).requestFocus()
-                    return@launch
-                }
+//                if (cwsLeader.isEmpty()) {
+//                    findViewById<EditText>(R.id.cwsLeader).error = getString(R.string.leader_error)
+//                    findViewById<EditText>(R.id.cwsLeader).requestFocus()
+//                    return@launch
+//                }
+//                if (location.isEmpty()) {
+//                    findViewById<EditText>(R.id.location).error = getString(R.string.address_error)
+//                    findViewById<EditText>(R.id.location).requestFocus()
+//                    return@launch
+//                }
 
                 if (existingCws == null) {
                     val auditId = intent.getIntExtra("audit_id", 0)
