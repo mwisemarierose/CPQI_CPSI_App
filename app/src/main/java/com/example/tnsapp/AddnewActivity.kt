@@ -28,6 +28,7 @@ import com.example.tnsapp.adapters.CategoryAdapter
 import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
 import com.example.tnsapp.data.Categories
+import com.example.tnsapp.data.Cws
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.data.RecordedAudit
 import com.example.tnsapp.parsers.allAuditQuestionsParser
@@ -69,8 +70,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 1
             )
-        }
-        else {
+        } else {
 //            openDocumentPicker()
         }
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
@@ -154,6 +154,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             recyclerView.visibility = View.VISIBLE
         }
     }
+
     @SuppressLint("RestrictedApi")
     fun showDropdownMenu(v: View?) {
         val menuBuilder = MenuBuilder(this)
@@ -172,6 +173,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                             .show()
                         true
                     }
+
                     R.id.import_option -> {
                         // Import data from CSV
                         openDocumentPicker()
@@ -179,6 +181,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                             .show()
                         true
                     }
+
                     else -> false
                 }
             }
@@ -188,6 +191,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
+
     // Assuming this function is called from an Activity or Fragment
     fun downloadCsv(activity: Activity) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -201,6 +205,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         }
         activity.startActivityForResult(intent, requestCodeCreateDocument)
     }
+
     private val requestCodeCreateDocument = 1001
 
     // This function should be called from onActivityResult in the calling Activity or Fragment
@@ -272,52 +277,69 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         }
         return null
     }
+
     //read a cvs file
-   private fun readCsvFile (uri: Uri) {
+    private fun readCsvFile(uri: Uri) {
         val inputStream = contentResolver.openInputStream(uri)
         val reader = BufferedReader(InputStreamReader(inputStream))
         val lines = reader.readLines()
-        val header = lines[0].split(",")
         val data = lines.subList(1, lines.size)
         val answers = mutableListOf<Answers>()
         for (line in data) {
             val values = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)".toRegex())
-//            println(values)
             val auditName = values[1].trim('"')
-            val categoryName = values[2].trim('"')
             val questionName = values[3].trim('"')
             val answer = values[4].trim('"')
             val cwsName = values[5].trim('"')
             val respondent = values[6].trim('"')
             val groupedAnswersId = values[9].trim('"')
-
             val auditId = getAuditIdFromName(auditName)
             val questionId = getQuestionIdFromName(questionName, auditId)
+            val newCws = Cws(
+                null,
+                cwsName,
+                "",
+                "",
+                1
+            )
 
-//            val existingAnswer = db.answerDao().getByGroupedAnswersId(groupedAnswersId)
-//            if (existingAnswer != null) {
-//                // Update the existing answer
-//                existingAnswer.answer = answer
-//                existingAnswer.responderName
-//                // Update any other fields as needed
-//                db.answerDao().updateAnswer(existingAnswer)
-//            } else {
-//                // Insert a new answer
-//                val newAnswer = Answers(
-//                    null,
-//                    respondent,
-//                    answer,
-//                    questionId,
-//                    auditId,
-//                    cwsName,
-//                    groupedAnswersId
-//                )
-//                answers.add(newAnswer)
-//            }
+            if (db.cwsDao().getCwsByName(cwsName) == null) db.cwsDao().insert(newCws)
 
-//            db.answerDao().insertAll(answers.toTypedArray())
+//            format result to Answers object
+            val answerObj = Answers(
+                if (db.answerDao()
+                        .getAnswerByQuestionId(questionId, groupedAnswersId) == null
+                ) null else db.answerDao().getAnswerByQuestionId(
+                    questionId,
+                    groupedAnswersId
+                )?.id,
+                respondent,
+                answer,
+                questionId,
+                auditId,
+                cwsName,
+                groupedAnswersId
+            )
+            answers.add(answerObj)
+        }
+
+        try {
+            answers.forEach {
+                if (db.answerDao().getAnswerByQuestionId(it.qId, it.groupedAnswersId) == null) {
+                    db.answerDao().insert(it)
+                } else {
+                    db.answerDao().updateAnswer(arrayOf(it))
+                }
+            }
+            Toast.makeText(this, "Data imported successfully", Toast.LENGTH_SHORT).show()
+            //refresh activity
+            finish()
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error importing data", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun getAuditIdFromName(auditName: String): Long {
         val jsonObject = JSONObject(intent.getStringExtra("audit") ?: "{}")
         val audits = jsonObject.getJSONArray("audits")
@@ -355,13 +377,14 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         return -1L
     }
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == requestCodeCreateDocument) {
             handleActivityResult(requestCode, resultCode, data, uniqueResult, this)
-        }else if(requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == requestCodeOpenDocument && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
                 val csvData = readCsvFile(uri)
                 println("dataaaa$csvData")

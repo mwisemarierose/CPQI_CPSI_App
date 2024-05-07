@@ -9,12 +9,9 @@ import androidx.room.Update
 
 @Dao
 interface AnswersDao {
-
-
     //get cws name using grouped_answers_id
     @Query("SELECT cws_name FROM answers WHERE grouped_answers_id = :groupedAnswersId")
     fun getCwsName(groupedAnswersId: String): String
-
 
     @Query("SELECT * FROM answers")
     fun getAll(): Array<Answers>
@@ -28,7 +25,6 @@ interface AnswersDao {
 
     @Query("SELECT * FROM answers WHERE q_id = :questionId AND grouped_answers_id = :groupedAnswersId")
     fun getAnswerByQuestionId(questionId: Long, groupedAnswersId: String): Answers?
-
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(answer: Answers)
@@ -49,7 +45,7 @@ interface AnswersDao {
 @Dao
 interface CwsDao {
     @Query("SELECT * FROM cws WHERE cws_name = :name LIMIT 1")
-    suspend fun getCwsByName(name: String): Cws?
+    fun getCwsByName(name: String): Cws?
 
     @Query("SELECT * FROM cws WHERE cws_name = :name")
     suspend fun getAllCwsByName(name: String): Cws?
