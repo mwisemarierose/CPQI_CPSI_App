@@ -108,16 +108,17 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         }
 
 //        get answers by unique date from datetime
-        val uniqueDates = getAnswers
-            .map { it.date.substring(0, 10) }
-            .distinct()
+//        val uniqueDates = getAnswers
+//            .map { it.date.substring(0, 10) }
+//            .distinct()
+        val getAnswer = db.answerDao().getAll()
 
-        val result = uniqueDates.map { date ->
-            val answer = getAnswers.find { it.date.substring(0, 10) == date }
+        val result = getAnswer.map {
+//            val answer = getAnswers.find { it.date.substring(0, 10) == date }
             RecordedAudit(
-                cwsName = answer?.cwsName ?: "",
+                cwsName = it.cwsName ?: "",
                 score = 0,
-                date = date
+                date = it.date
             )
         }
 
@@ -146,8 +147,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         optionsMenu?.show()
     }
-
-
     private fun openCategoryActivity(auditId: Int, audit: String?) {
         val intent = Intent(this, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)
