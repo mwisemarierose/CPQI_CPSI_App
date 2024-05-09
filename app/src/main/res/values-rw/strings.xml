@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TNSapp</string>
+    <string name="app_name">CPQI App</string>
     <string name="get_started">TANGIRA</string>
     <string name="coffee_image">coffee_image</string>
     <string name="which_audit_are_you_inclined_to_undertake">Nirihe genzura ushaka gukora?</string>
@@ -10,7 +10,10 @@
     <string name="add_new">Kora irindi</string>
     <string name="date">Itariki</string>
     <string name="cws_name">Izina rya station</string>
-    <string name="score">Amanota:</string>
+    <string name="cws">Station</string>
+    <string name="total_answered">Hasubijwe</string>
+    <string name="score">Amanota</string>
+    <string name="answered_score">Amanota y\' Ibyasubijwe</string>
     <string name="no_records">no records</string>
     <string name="name_txt">Amazina</string>
     <string name="date_lbl">Itariki:</string>
@@ -23,8 +26,32 @@
     <string name="category_icon">category icon</string>
     <string name="import_csv">Import CSV</string>
     <string name="export_csv">Export CSV</string>
-    <string name="submitAll_txt" >Submit All</string>
+    <string name="submitAll_txt">Submit All</string>
     <string name="skip">Taruka</string>
     <string name="submit">Emeza</string>
-
+    <string name="success_alert_msg">Igikorwa cyagenze neza!!!</string>
+    <string name="register_your_station">Ongeramo station </string>
+    <string name="address">Aderesi</string>
+    <string name="cws_leader">Nyiri station</string>
+    <string name="cws_Name">Izina rya station</string>
+    <string name="new_station">Sitasiyo Nshya</string>
+    <string name="Add_station">Shyiramo Sitasiyo</string>
+    <string name="add">Add</string>
+    <string name="no_items_to_display">Nta kintu kirimo</string>
+    <string name="missing_field_error_alert_msg">Uzuza ibikenewe byose</string>
+    <string name="select_cws_name">Hitamo Izina rya CWS</string>
+    <string name="toast_message">Gushyiramo Sitasiyo byagenze neza </string>
+    <string name="toast_message1">Sitasiyo isanzwe irimo!</string>
+    <string name="already_recorded_error_alert_msg">Iyi station yamaze gukorerwa.</string>
+    <string name="missing_respondent_error">Please enter a respondent.</string>
+    <string name="Score" />
+    <string name="scores">Scores</string>
+    <string name="edit_audit">Edit Audit</string>
+    <string name="cws_error">Andika izina rya station</string>
+    <string name="leader_error">Andika izina rya nyiri sitasiyo</string>
+    <string name="address_error">Andika izina rya Aderesi</string>
+    <string name="_2024_03_19">2024-03-19</string>
+    <string name="uploaded_file">uploaded file</string>
+    <string name="missing_cws_error">Please select a CWS</string>
+    <string name="cws_owner" />
 </resources>

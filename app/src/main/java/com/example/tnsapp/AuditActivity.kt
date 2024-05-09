@@ -25,12 +25,15 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audit)
+        val language = getSelectedLanguage()
         supportActionBar?.hide()
-
         intent.getStringExtra("language")?.let { setupUI(it) }
-
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
         setupLanguageSpinner(languageSpinner)
+    }
+    private fun getSelectedLanguage(): String {
+        val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString("language", "en") ?: "en"
     }
 
     private fun setupLanguageSpinner(languageSpinner: Spinner) {
@@ -67,7 +70,6 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
             }
         }
     }
-
     private fun changeLanguage(languageCode: String) {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
         // Save the selected language in SharedPreferences or any other way you prefer
@@ -102,7 +104,6 @@ class AuditActivity : AppCompatActivity(), AuditAdapter.OnItemClickListener {
         jsonData = readJsonFromAssets(this, result)
 
         val items: List<AuditCategories> = auditParser(jsonData)
-
         // Handle case where JSON parsing fails or data is empty
         adapter = AuditAdapter(items, this)
         recyclerView.adapter = adapter
