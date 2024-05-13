@@ -3,10 +3,10 @@ package com.example.tnsapp.parsers
 import com.example.tnsapp.data.Questions
 import org.json.JSONObject
 
-fun questionParser(jsonString: String, parentId: Int, catId: Int): List<Questions> {
+fun questionParser(jsonString: JSONObject, parentId: Int, catId: Int): List<Questions> {
     val items = mutableListOf<Questions>()
     val catJsonArray =
-        JSONObject(JSONObject(jsonString).getJSONArray("audits")[parentId - 1].toString())
+        JSONObject((jsonString).getJSONArray("audits")[parentId - 1].toString())
             .getJSONArray("categories")
     val qJsonArray = JSONObject(catJsonArray[catId - 1].toString()).getJSONArray("questions")
     for (i in 0 until qJsonArray.length()) {

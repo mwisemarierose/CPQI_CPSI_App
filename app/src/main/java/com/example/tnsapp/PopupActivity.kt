@@ -18,6 +18,8 @@ import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.Questions
 import com.example.tnsapp.parsers.questionParser
+import org.json.JSONObject
+
 class PopupActivity(
     context: Context,
     private val auditId: Int,
@@ -80,7 +82,7 @@ class PopupActivity(
 
 //        get answers from shared preferences
         json = sharedPreferences.getString("answers", null).toString()
-        val items: List<Questions> = questionParser(audit, auditId, catId)
+        val items: List<Questions> = questionParser(JSONObject(audit),auditId,catId)
 
         popupTitle.text = catName
         adapter = QuestionAdapter(
@@ -95,18 +97,45 @@ class PopupActivity(
 
         recyclerView.adapter = adapter
 
-        saveBtn.setOnClickListener {
-            val allAnswered =
-                adapter.answerDetails.size >= items.size && adapter.answerDetails.all { it.qId != 0L }
+        if (editMode) {
+            saveBtn.setOnClickListener {
+                val answeredQuestionsInCurrentCategory = adapter.answerDetails.any { it.qId != 0L }
 
-            if (allAnswered) {
-                notifyDismissListener(adapter.answerDetails)
-                dismiss()
-                updateCategoryCompletion()
-            } else {
-                Toast.makeText(context, "Please answer all questions", Toast.LENGTH_SHORT).show()
+                if (answeredQuestionsInCurrentCategory) {
+                    notifyDismissListener(adapter.answerDetails)
+                    dismiss()
+                    updateCategoryCompletion()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Please edit at least one answer in this category",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            saveBtn.setOnClickListener {
+                val currentCategoryQuestions = items.map { it.id }
+                val answeredQuestionsInCurrentCategory =
+                    adapter.answerDetails.filter { it.qId in currentCategoryQuestions }
+
+                val allAnsweredInCurrentCategory =
+                    answeredQuestionsInCurrentCategory.size == items.size
+
+                if (allAnsweredInCurrentCategory) {
+                    notifyDismissListener(adapter.answerDetails)
+                    dismiss()
+                    updateCategoryCompletion()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Please answer all questions in this category",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
+
         if (viewMode) saveBtn.visibility = View.GONE else saveBtn.visibility = View.VISIBLE
 
         closeIcon.setOnClickListener {

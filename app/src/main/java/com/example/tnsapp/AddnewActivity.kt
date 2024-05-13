@@ -38,6 +38,7 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
+import java.util.UUID
 import kotlin.properties.Delegates
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
@@ -284,6 +285,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val answers = mutableListOf<Answers>()
         for (line in data) {
             val values = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)".toRegex())
+            val date = values[0].trim('"')
             val auditName = values[1].trim('"')
             val questionName = values[3].trim('"')
             val answer = values[4].trim('"')
@@ -293,11 +295,10 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             val auditId = getAuditIdFromName(auditName)
             val questionId = getQuestionIdFromName(questionName, auditId)
             val newCws = Cws(
-                null,
+                id = UUID.randomUUID(),
                 cwsName,
                 "",
                 "",
-                1
             )
 
             if (db.cwsDao().getCwsByName(cwsName) == null) db.cwsDao().insert(newCws)
@@ -315,7 +316,8 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 questionId,
                 auditId,
                 cwsName,
-                groupedAnswersId
+                groupedAnswersId,
+                date
             )
             answers.add(answerObj)
         }

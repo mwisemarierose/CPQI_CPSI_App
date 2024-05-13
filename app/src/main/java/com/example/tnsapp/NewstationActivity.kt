@@ -63,27 +63,16 @@ class  NewstationActivity : AppCompatActivity() {
                 val successMessage = getString(R.string.toast_message)
                 val duplicateMessage = getString(R.string.toast_message)
 
-              //set error on empty fields if any
+                //set error on empty fields if any
                 if (cwsName.isEmpty()) {
                     findViewById<EditText>(R.id.cwsName).error = getString(R.string.cws_error)
                     findViewById<EditText>(R.id.cwsName).requestFocus()
                     return@launch
                 }
-//                if (cwsLeader.isEmpty()) {
-//                    findViewById<EditText>(R.id.cwsLeader).error = getString(R.string.leader_error)
-//                    findViewById<EditText>(R.id.cwsLeader).requestFocus()
-//                    return@launch
-//                }
-//                if (location.isEmpty()) {
-//                    findViewById<EditText>(R.id.location).error = getString(R.string.address_error)
-//                    findViewById<EditText>(R.id.location).requestFocus()
-//                    return@launch
-//                }
-
                 if (existingCws == null) {
-                    val auditId = intent.getIntExtra("audit_id", 0)
-                    val cws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location, auditId = auditId)
-                    db.cwsDao().insert(cws)
+                    val newCws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location)
+                    db.cwsDao().insert(newCws)
+
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@NewstationActivity, successMessage, Toast.LENGTH_SHORT).show()
                     }

@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:paddingHorizontal="10dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
@@ -153,6 +153,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/scores"
+                        android:textSize="18sp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         app:layout_constraintBottom_toTopOf="@+id/scoreProgressBar"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -162,8 +163,8 @@
 
                     <ProgressBar
                         android:id="@+id/scoreProgressBar"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:indeterminateOnly="false"
                         android:progressDrawable="@drawable/progress_circle"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -174,7 +175,7 @@
 
                     <TextView
                         android:id="@+id/percentageText"
-                        android:layout_width="45dp"
+                        android:layout_width="35dp"
                         android:layout_height="30dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         app:layout_constraintBottom_toBottomOf="@+id/scoreProgressBar"
@@ -182,6 +183,7 @@
                         app:layout_constraintStart_toStartOf="@+id/scoreProgressBar"
                         app:layout_constraintTop_toTopOf="@+id/scoreProgressBar"
                         tools:text="60%"
+                        android:textSize="18sp"
                         android:textStyle="bold"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
@@ -191,10 +193,9 @@
                 android:id="@+id/submitAllBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
+                android:layout_gravity="bottom"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/maroon"
                 android:padding="15dp"

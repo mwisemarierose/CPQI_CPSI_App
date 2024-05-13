@@ -3,6 +3,8 @@ package com.example.tnsapp
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import com.example.tnsapp.data.Questions
+import org.json.JSONObject
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
@@ -27,9 +29,9 @@ import com.example.tnsapp.data.Answers
 import com.example.tnsapp.data.AppDatabase
 import com.example.tnsapp.data.Categories
 import com.example.tnsapp.data.Cws
-import com.example.tnsapp.data.Questions
 import com.example.tnsapp.parsers.allAuditQuestionsParser
 import com.example.tnsapp.parsers.categoryParser
+import com.example.tnsapp.parsers.questionParser
 import com.example.tnsapp.utils.formatDate
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -89,7 +91,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         submitAll = findViewById(R.id.submitAllBtn)
         cwsEditText = findViewById(R.id.cwsEditText)
         val toolBarTitle: TextView = findViewById(R.id.toolbarTitle)
-        auditId = intent.getIntExtra("auditId", 0)
+        auditId = intent.getIntExtra("auditId", 1)
         audit = intent.getStringExtra("audit").toString()
         items = categoryParser(audit, auditId)
         allCatQuestions = allAuditQuestionsParser(audit, auditId)
@@ -260,7 +262,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
     private fun openStationActivity(language: String) {
         val intent = Intent(this, NewstationActivity::class.java)
-        intent.putExtra("auditId", auditId)
+//        intent.putExtra("auditId", auditId)
         intent.putExtra("language", language)
         startActivityForResult(intent, REQUEST_CODE_ADD_CWS)
     }
@@ -340,14 +342,14 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             respondent.text = answerDetails.last().responderName
             respondent.isEnabled = false
-            val cwsList = db.cwsDao().getAll()
-
-            // Create an ArrayAdapter with CWS names (or relevant data)
-            val adapter = ArrayAdapter(
-                this@CategoriesActivity,
-                android.R.layout.simple_spinner_dropdown_item,
-                getCwsNames(cwsList)
-            )
+//            val cwsList = db.cwsDao().getAll()
+//
+//            // Create an ArrayAdapter with CWS names (or relevant data)
+//            val adapter = ArrayAdapter(
+//                this@CategoriesActivity,
+//                android.R.layout.simple_spinner_dropdown_item,
+//                getCwsNames(cwsList)
+//            )
             val selectedCwsName = answerDetails.firstOrNull()?.cwsName ?: ""
             cwsEditText.text = selectedCwsName
             cwsEditText.isEnabled = false
@@ -444,7 +446,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 val selectedCwsName = cwsName.selectedItem.toString()
                 val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                 answerDetails = db.answerDao().getAll()
-                    .filter { it.cwsName == selectedCwsName && formatDate(it.date) == today && it.auditId.toInt() == auditId }
+                    .filter { it.cwsName == selectedCwsName && formatDate(it.date) == today }
                     .toTypedArray()
 
                 if (answerDetails.isNotEmpty()) {
@@ -518,7 +520,8 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             respondent.text.toString(),
             if (cwsName.selectedItem != null) if (editMode) cwsEditText.text.toString() else cwsName.selectedItem.toString() else "",
             editMode,
-            viewMode
+            viewMode,
+
         )
         dialog.setDismissListener(this)
         dialog.show()

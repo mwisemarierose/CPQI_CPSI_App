@@ -46,20 +46,18 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:background="@drawable/border_green"
             android:text="@string/yes_txt"
             android:textColor="@android:color/black"
             android:textSize="15sp" />
 
-
         <Button
             android:id="@+id/noButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@drawable/border_maroon"
             android:text="@string/no_txt"
@@ -71,7 +69,7 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:background="@drawable/border_grey"
             android:text="@string/skip"

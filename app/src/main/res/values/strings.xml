@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CPQI App</string>
+    <string name="app_name">CPQI</string>
     <string name="get_started">Get Started</string>
     <string name="coffee_image">coffee_image</string>
     <string name="which_audit_are_you_inclined_to_undertake">Which audit are you inclined to undertake?</string>
@@ -54,7 +54,7 @@
     <string name="_2024_03_19">2024-03-19</string>
     <string name="uploaded_file">uploaded file</string>
     <string name="missing_cws_error">Please select a CWS</string>
-    <string name="cws_owner" />
+    <string name="CWS_Owner" > cws_owner </string>
     <string-array name="languages" translatable="false">
         <item>English </item>
         <item>Kinyarwanda</item>

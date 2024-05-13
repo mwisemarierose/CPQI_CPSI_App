@@ -62,8 +62,6 @@ interface CwsDao {
     @Delete
     suspend fun delete(cws: Cws)
 
-    @Query("SELECT * FROM cws WHERE audit_id = :auditId")
-    fun getCwsByAuditId(auditId: Int): List<Cws>
 
 //    @Transaction
 //    @Query("SELECT * FROM cws")
