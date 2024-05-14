@@ -54,4 +54,5 @@
     <string name="uploaded_file">uploaded file</string>
     <string name="missing_cws_error">Please select a CWS</string>
     <string name="CWS_Owner" > Nyiri sitasiyo </string>
+    <string name="cws_owner">CWS Owner</string>
 </resources>

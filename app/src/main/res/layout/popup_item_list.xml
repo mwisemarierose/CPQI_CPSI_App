@@ -13,7 +13,7 @@
             android:id="@+id/popUpTextNumbering"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/border_radius"
             android:padding="15dp"
             android:text="1"
@@ -25,6 +25,7 @@
             android:id="@+id/popUpText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:layout_centerInParent="true"
             android:layout_toEndOf="@id/popUpTextNumbering"
             android:text="@string/answer_txt"
@@ -34,7 +35,7 @@
 
     <!-- Button group for Question 1 -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_marginHorizontal="5dp"
@@ -47,6 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:background="@drawable/border_green"
             android:text="@string/yes_txt"
@@ -70,6 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:background="@drawable/border_grey"
             android:text="@string/skip"
