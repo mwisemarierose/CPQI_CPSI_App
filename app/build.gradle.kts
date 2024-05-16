@@ -7,14 +7,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tnsapp"
+    namespace = "com.technoserve.cpqi"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.tnsapp"
+        applicationId = "com.technoserve.cpqi"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -33,6 +33,7 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"
+
             )
         }
     }
