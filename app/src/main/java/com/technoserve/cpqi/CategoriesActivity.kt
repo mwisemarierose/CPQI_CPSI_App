@@ -139,6 +139,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         //handle submission on new answers and already existing answers in edit mode updating the existing answers in the db
 
         submitAll.setOnClickListener {
+
             val groupedAnswersId = UUID.randomUUID().toString()
 
             val answers = gson.fromJson(
@@ -249,6 +250,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             intent.putExtra("auditId", auditId)
             intent.putExtra("audit", audit)
             startActivity(intent)
+        }
+
+    }
+    private fun updateRespondentNameInAnswers() {
+        val respondentName = respondent.text.toString()
+        if (respondentName.isNotEmpty()) {
+            answerDetails = answerDetails.map {
+                it.copy(responderName = respondentName)
+            }.toTypedArray()
         }
     }
 

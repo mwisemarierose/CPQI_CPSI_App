@@ -99,16 +99,21 @@ class PopupActivity(
 
         if (editMode) {
             saveBtn.setOnClickListener {
-                val answeredQuestionsInCurrentCategory = adapter.answerDetails.any { it.qId != 0L }
+                val allAnsweredInCurrentCategory =
+                    items.all { question ->
+                        adapter.answerDetails.any { answer ->
+                            answer.qId == question.id && answer.answer.isNotEmpty()
+                        }
+                    }
 
-                if (answeredQuestionsInCurrentCategory) {
+                if (allAnsweredInCurrentCategory) {
                     notifyDismissListener(adapter.answerDetails)
                     dismiss()
                     updateCategoryCompletion()
                 } else {
                     Toast.makeText(
                         context,
-                        "Please edit at least one answer in this category",
+                        "Please answer all questions in this category",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
