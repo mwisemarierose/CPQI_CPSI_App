@@ -14,7 +14,7 @@ android {
         applicationId = "com.technoserve.cpqi"
         minSdk = 24
         targetSdk = 34
-        versionCode = 3
+        versionCode = 5
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -69,6 +69,8 @@ dependencies {
     implementation ("androidx.viewpager2:viewpager2:1.1.0-beta02")
     implementation ("com.github.smarteist:autoimageslider:1.3.9")
     implementation ("com.opencsv:opencsv:5.5.1")
+    implementation ("com.androidplot:androidplot-core:1.5.10")
+
 
 
     val roomVersion = "2.6.1"

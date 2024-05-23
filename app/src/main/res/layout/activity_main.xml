@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:ignore="MissingClass">
 
     <RelativeLayout
         android:layout_width="150dp"
@@ -38,6 +40,17 @@
             android:entries="@array/languages"/>
 
     </RelativeLayout>
+
+    <com.androidplot.xy.XYPlot
+        style="@style/APDefacto.Dark"
+        android:id="@+id/plot"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        app:title="A Simple XY Plot"
+        app:rangeTitle="range"
+        app:domainTitle="domain"
+        app:lineLabels="left|bottom"
+        app:lineLabelRotationBottom="-45"/>
 
     <Button
         android:id="@+id/get_started"
