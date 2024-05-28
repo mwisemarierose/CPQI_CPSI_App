@@ -4,16 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background"
     tools:context=".MainActivity"
     tools:ignore="MissingClass">
+
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background" />
 
     <RelativeLayout
         android:layout_width="150dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="3dp"
-        android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="3dp"
         android:background="@drawable/rounded_bg"
         android:orientation="horizontal">
 
@@ -45,10 +51,11 @@
         style="@style/APDefacto.Dark"
         android:id="@+id/plot"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        app:title="A Simple XY Plot"
-        app:rangeTitle="range"
-        app:domainTitle="domain"
+        android:layout_below="@id/backgroundImage"
+        android:layout_height="300dp"
+        app:title="Data Plot"
+        app:rangeTitle="Date"
+        app:domainTitle="Score"
         app:lineLabels="left|bottom"
         app:lineLabelRotationBottom="-45"/>
 
@@ -58,7 +65,7 @@
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="50dp"
         android:backgroundTint="@color/maroon"
         android:text="@string/get_started"
         android:textColor="@color/white" />

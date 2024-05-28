@@ -4,23 +4,22 @@ package com.technoserve.cpqi
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import com.androidplot.xy.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import com.androidplot.util.PixelUtils
+import com.androidplot.xy.*
 import com.technoserve.cpqi.parsers.readJsonFromAssets
 import java.text.FieldPosition
 import java.text.Format
 import java.text.ParsePosition
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,77 +36,47 @@ class MainActivity : AppCompatActivity() {
         val initialLanguage = getInitialLanguage()
         setupUI(initialLanguage)
         onClickListener()
-        plot = findViewById(R.id.plot)
-        plot = findViewById(R.id.plot)
+        val plot = findViewById<XYPlot>(R.id.plot)
 
-        // Adjust plot margins and padding
-        plot.setPlotMargins(0F, 0F, 0F, 0F)
-        plot.setPlotPadding(0F, 0F, 0F, 0F)
-        plot.graph.setMargins(50F, 50F, 50F, 50F)
-        plot.graph.setPadding(10F, 10F, 10F, 10F)
+        // create a couple arrays of y-values to plot:
+        val domainLabels = arrayOf(1, 2, 3, 6, 7, 8, 9, 10, 13, 14)
+        val series1Numbers = arrayOf(1, 4, 2, 8, 4, 16, 8, 32, 16, 64)
+        val series2Numbers = arrayOf(5, 2, 10, 5, 20, 10, 40, 20, 80, 40)
 
-        // Sample data with dates and scores
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        val dates = listOf(
-            dateFormat.parse("2024-05-01"),
-            dateFormat.parse("2024-05-02"),
-            dateFormat.parse("2024-05-03"),
-            dateFormat.parse("2024-05-04"),
-            dateFormat.parse("2024-05-05")
+        val series1 = SimpleXYSeries(
+            series1Numbers.toList(), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Date"
         )
-        val scores = listOf(10, 20, 15, 30, 25)
-
-        // Convert dates to timestamps (or any numerical representation)
-        val timestamps = dates.map { it.time.toDouble() }
-
-        val series1: XYSeries = SimpleXYSeries(
-            timestamps,
-            scores,
-            "Score vs Date"
+        val series2 = SimpleXYSeries(
+            series2Numbers.toList(), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Scores"
         )
 
-        val series1Format = LineAndPointFormatter(Color.BLUE, Color.BLACK, null, null)
+        val series1Format = LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels)
+        val series2Format = LineAndPointFormatter(this, R.xml.line_point_formatter_with_labels_2)
+
+        series2Format.linePaint.pathEffect = DashPathEffect(floatArrayOf(
+            PixelUtils.dpToPix(20f),
+            PixelUtils.dpToPix(15f)
+        ), 0f)
+
+
         series1Format.interpolationParams = CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal)
+        series2Format.interpolationParams = CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal)
+
 
         plot.addSeries(series1, series1Format)
+        plot.addSeries(series2, series2Format)
 
         plot.graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).format = object : Format() {
             override fun format(obj: Any?, toAppendTo: StringBuffer, pos: FieldPosition): StringBuffer {
-                val date = Date((obj as Number).toLong())
-                return toAppendTo.append(dateFormat.format(date))
+                val i = Math.round((obj as Number).toFloat())
+                return toAppendTo.append(domainLabels[i])
             }
 
-            override fun parseObject(source: String?, pos: ParsePosition): Any? {
+            override fun parseObject(source: String, pos: ParsePosition): Any? {
                 return null
             }
         }
-        plot.graph.getLineLabelStyle(XYGraphWidget.Edge.LEFT).format = object : Format() {
-            override fun format(obj: Any?, toAppendTo: StringBuffer, pos: FieldPosition): StringBuffer {
-                val score = (obj as Number).toInt()
-                return toAppendTo.append(score.toString())
-            }
-
-            override fun parseObject(source: String?, pos: ParsePosition): Any? {
-                return null
-            }
-        }
-        val maxDate = timestamps.maxOrNull() ?: 0.0
-        val minDate = timestamps.minOrNull() ?: 0.0
-        val maxScore = scores.maxOrNull() ?: 0
-        val minScore = scores.minOrNull() ?: 0
-
-// Add some padding to the boundaries for better visibility
-        val dateRange = maxDate - minDate
-        val scorePadding = 0.1 * (maxScore - minScore)
-
-        plot.setDomainBoundaries(minDate - 0.1 * dateRange, maxDate + 0.1 * dateRange, BoundaryMode.AUTO)
-        plot.setRangeBoundaries(minScore - scorePadding, maxScore + scorePadding, BoundaryMode.AUTO)
-        plot.redraw()
-        PanZoom.attach(plot)
-
     }
-
-
     private fun getInitialLanguage(): String {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedLanguage = sharedPref.getString("language", null)

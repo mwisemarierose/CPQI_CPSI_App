@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
+import gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -299,6 +300,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 android.R.layout.simple_spinner_dropdown_item,
                 getCwsNames(cwsList)
             )
+
             // Update UI on the main thread
             runOnUiThread {
                 cwsName.adapter = adapter

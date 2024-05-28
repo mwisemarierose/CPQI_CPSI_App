@@ -70,6 +70,9 @@ dependencies {
     implementation ("com.github.smarteist:autoimageslider:1.3.9")
     implementation ("com.opencsv:opencsv:5.5.1")
     implementation ("com.androidplot:androidplot-core:1.5.10")
+    implementation ("gr.escsoft.michaelprimez.searchablespinner:SearchableSpinner:1.0.9")
+    implementation ("com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1")
+
 
 
 
