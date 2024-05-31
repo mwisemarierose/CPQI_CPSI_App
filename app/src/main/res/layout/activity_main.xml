@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/backgroundImage"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/background" />
 
@@ -46,18 +46,6 @@
             android:entries="@array/languages"/>
 
     </RelativeLayout>
-
-    <com.androidplot.xy.XYPlot
-        style="@style/APDefacto.Dark"
-        android:id="@+id/plot"
-        android:layout_width="fill_parent"
-        android:layout_below="@id/backgroundImage"
-        android:layout_height="300dp"
-        app:title="Data Plot"
-        app:rangeTitle="Date"
-        app:domainTitle="Score"
-        app:lineLabels="left|bottom"
-        app:lineLabelRotationBottom="-45"/>
 
     <Button
         android:id="@+id/get_started"

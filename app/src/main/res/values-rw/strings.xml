@@ -55,4 +55,5 @@
     <string name="missing_cws_error">Please select a CWS</string>
     <string name="CWS_Owner" > Nyiri sitasiyo </string>
     <string name="cws_owner">CWS Owner</string>
+    <string name="name_of_respondent">izina ryuwuzuza</string>
 </resources>

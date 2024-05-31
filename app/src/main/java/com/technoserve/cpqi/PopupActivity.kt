@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.technoserve.cpqi.adapters.QuestionAdapter
@@ -20,7 +21,7 @@ import com.technoserve.cpqi.data.Questions
 import com.technoserve.cpqi.parsers.questionParser
 import org.json.JSONObject
 
-class PopupActivity(
+class PopupActivity (
     context: Context,
     private val auditId: Int,
     private val audit: String,

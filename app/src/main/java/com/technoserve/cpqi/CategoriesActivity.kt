@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
-import gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -47,7 +46,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     companion object {
         private const val REQUEST_CODE_ADD_CWS = 100
     }
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
@@ -117,7 +115,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
         val currentDate = Date()
 
-        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("EEE MMM dd ,yyyy", Locale.ENGLISH)
         val formattedDate = dateFormat.format(currentDate)
 
         dateTextView.text = "${applicationContext.getString(R.string.date_lbl)} $formattedDate"

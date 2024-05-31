@@ -10,11 +10,12 @@ android {
     namespace = "com.technoserve.cpqi"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.technoserve.cpqi"
         minSdk = 24
         targetSdk = 34
-        versionCode = 5
+        versionCode = 8
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -35,6 +36,7 @@ android {
                 "proguard-rules.pro"
 
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
@@ -44,6 +46,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 }
 
@@ -69,8 +74,6 @@ dependencies {
     implementation ("androidx.viewpager2:viewpager2:1.1.0-beta02")
     implementation ("com.github.smarteist:autoimageslider:1.3.9")
     implementation ("com.opencsv:opencsv:5.5.1")
-    implementation ("com.androidplot:androidplot-core:1.5.10")
-    implementation ("gr.escsoft.michaelprimez.searchablespinner:SearchableSpinner:1.0.9")
     implementation ("com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1")
 
 
