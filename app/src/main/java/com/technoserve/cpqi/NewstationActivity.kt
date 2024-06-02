@@ -3,23 +3,28 @@ package com.technoserve.cpqi
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.smarteist.autoimageslider.SliderView
 import com.technoserve.cpqi.adapters.ImageSliderAdapter
 import com.technoserve.cpqi.data.AppDatabase
 import com.technoserve.cpqi.data.Cws
-import com.smarteist.autoimageslider.SliderView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class  NewstationActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
@@ -47,7 +52,9 @@ class  NewstationActivity : AppCompatActivity() {
         }
 
         db = AppDatabase.getDatabase(this)!!
-
+        insertInitialStationsFromJson()
+        val districtSpinner: Spinner = findViewById(R.id.districtSpinner)
+        setupDistrictSpinner(districtSpinner)
         val addBtn = findViewById<Button>(R.id.Add)
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         backIconBtn.setOnClickListener {
@@ -57,6 +64,7 @@ class  NewstationActivity : AppCompatActivity() {
             val cwsName = findViewById<EditText>(R.id.cwsName).text.toString()
             val cwsLeader = findViewById<EditText>(R.id.cwsLeader).text.toString()
             val location = findViewById<EditText>(R.id.location).text.toString()
+            val district = districtSpinner.selectedItem.toString()
 
             lifecycleScope.launch {
                 val existingCws = db.cwsDao().getCwsByName(cwsName)
@@ -70,7 +78,7 @@ class  NewstationActivity : AppCompatActivity() {
                     return@launch
                 }
                 if (existingCws == null) {
-                    val newCws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location)
+                    val newCws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location, district = district)
                     db.cwsDao().insert(newCws)
 
                     withContext(Dispatchers.Main) {
@@ -86,5 +94,31 @@ class  NewstationActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    private fun insertInitialStationsFromJson() {
+        lifecycleScope.launch {
+            val jsonString = assets.open("stations.json").bufferedReader().use { it.readText() }
+            val gson = Gson()
+            val stationsType = object : TypeToken<List<Cws>>() {}.type
+            val stations: List<Cws> = gson.fromJson(jsonString, stationsType)
+
+            val newStations = mutableListOf<Cws>()
+            for (station in stations) {
+                val existingCws = db.cwsDao().getAllCwsByName(station.cwsName)
+                if (existingCws == null) {
+                    newStations.add(station.copy(id = UUID.randomUUID()))
+                }
+            }
+
+            if (newStations.isNotEmpty()) {
+                db.cwsDao().insertAll(newStations)
+            }
+        }
+    }
+    private fun setupDistrictSpinner(spinner: Spinner) {
+        val districts = resources.getStringArray(R.array.select_district)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, districts)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
     }
 }

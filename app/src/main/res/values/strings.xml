@@ -57,6 +57,20 @@
     <string name="CWS_Owner" > cws_owner </string>
     <string name="cws_owner">CWS Owner</string>
     <string name="name_of_respondent">name of respondent</string>
+    <string-array name="select_district"  translatable="false">
+    <item>Muhanga </item>
+    <item>Ruhango</item>
+        <item>Nyamagabe </item>
+        <item>Rusizi</item>
+        <item>Nyarugenge </item>
+        <item>Gasabo</item>
+        <item>Kicukiro </item>
+        <item>Bugesera</item>
+        <item>Karongi </item>
+        <item>Nyamasheke</item>
+        <item> Nyanza</item>
+        <item> Huye</item>
+    </string-array>
     <string-array name="languages" translatable="false">
         <item>English </item>
         <item>Kinyarwanda</item>

@@ -1,0 +1,14 @@
+[
+  {
+    "cwsName": "Station 1",
+    "cwsLeader": "Leader 1",
+    "location": "Location 1",
+    "district": "Muhanga"
+  },
+  {
+    "cwsName": "Station 2",
+    "cwsLeader": "Leader 2",
+    "location": "Location 2",
+    "district": "Ruhango"
+  }
+]

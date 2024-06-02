@@ -4,7 +4,6 @@ package com.technoserve.cpqi
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.DashPathEffect
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -13,10 +12,12 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
+import com.technoserve.cpqi.data.AppDatabase
+import com.technoserve.cpqi.data.Cws
 import com.technoserve.cpqi.parsers.readJsonFromAssets
-import java.text.FieldPosition
-import java.text.Format
-import java.text.ParsePosition
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
+        val db = AppDatabase.getDatabase(this)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
         val languageSpinner: Spinner = findViewById(R.id.languageSpinner)
@@ -33,8 +35,8 @@ class MainActivity : AppCompatActivity() {
         val initialLanguage = getInitialLanguage()
         setupUI(initialLanguage)
         onClickListener()
-
     }
+
     private fun getInitialLanguage(): String {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedLanguage = sharedPref.getString("language", null)

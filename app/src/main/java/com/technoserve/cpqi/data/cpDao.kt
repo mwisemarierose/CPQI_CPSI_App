@@ -57,7 +57,7 @@ interface CwsDao {
     fun getAll(): Array<Cws>
 
     @Insert(onConflict = OnConflictStrategy.NONE)
-    fun insertAll(cws: Array<Cws>)
+    fun insertAll(cws: List<Cws>)
 
     @Delete
     suspend fun delete(cws: Cws)

@@ -306,6 +306,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 cwsName,
                 "",
                 "",
+                ""
             )
 
             if (db.cwsDao().getCwsByName(cwsName) == null) db.cwsDao().insert(newCws)
