@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         setupUI(initialLanguage)
         onClickListener()
     }
-
     private fun getInitialLanguage(): String {
         val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val savedLanguage = sharedPref.getString("language", null)

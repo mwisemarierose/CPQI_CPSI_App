@@ -46,7 +46,6 @@
             android:entries="@array/languages"/>
 
     </RelativeLayout>
-
     <Button
         android:id="@+id/get_started"
         android:layout_width="180dp"

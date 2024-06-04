@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
+import java.util.Locale
 
 
 @Entity(tableName = "recordedAudit")
@@ -14,5 +15,5 @@ data class RecordedAudit(
     @ColumnInfo(name = "respondent") val respondent: String,
     @ColumnInfo(name = "score") val score: Int,
     @ColumnInfo(name = "groupedAnswersId") val groupedAnswersId: String,
-    @ColumnInfo(name = "date") val date: String = Date().toString()
+    @ColumnInfo(name = "date") val date: String = Date().toString(),
 )

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.MenuInflater
@@ -16,6 +17,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
@@ -38,9 +40,12 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 import kotlin.properties.Delegates
-
 
 
 class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListener,
@@ -308,7 +313,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 "",
                 ""
             )
-
             if (db.cwsDao().getCwsByName(cwsName) == null) db.cwsDao().insert(newCws)
 
 //            format result to Answers object
@@ -360,7 +364,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         return -1L
     }
-
     private fun getQuestionIdFromName(questionName: String, auditId: Long): Long {
         val jsonObject = JSONObject(intent.getStringExtra("audit") ?: "{}")
         val audits = jsonObject.getJSONArray("audits")

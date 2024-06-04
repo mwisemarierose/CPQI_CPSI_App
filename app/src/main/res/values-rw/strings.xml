@@ -45,7 +45,7 @@
     <string name="already_recorded_error_alert_msg">Iyi station yamaze gukorerwa.</string>
     <string name="missing_respondent_error">Please enter a respondent.</string>
     <string name="Score" />
-    <string name="scores">Scores</string>
+    <string name="scores">Amanota</string>
     <string name="edit_audit">Edit Audit</string>
     <string name="cws_error">Andika izina rya station</string>
     <string name="leader_error">Andika izina rya nyiri sitasiyo</string>
@@ -54,6 +54,6 @@
     <string name="uploaded_file">uploaded file</string>
     <string name="missing_cws_error">Please select a CWS</string>
     <string name="CWS_Owner" > Nyiri sitasiyo </string>
-    <string name="cws_owner">CWS Owner</string>
+    <string name="cws_owner">Nyiri sitasiyo</string>
     <string name="name_of_respondent">izina ryuwuzuza</string>
 </resources>
