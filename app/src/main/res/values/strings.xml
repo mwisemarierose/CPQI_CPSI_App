@@ -60,16 +60,36 @@
     <string-array name="select_district"  translatable="false">
     <item>Muhanga </item>
     <item>Ruhango</item>
+        <item> Gisagara</item>
+        <item>Nyaruguru</item>
         <item>Nyamagabe </item>
-        <item>Rusizi</item>
+        <item> Nyanza</item>
+        <item> Huye</item>
+        <item> Kamonyi</item>
         <item>Nyarugenge </item>
         <item>Gasabo</item>
         <item>Kicukiro </item>
-        <item>Bugesera</item>
+        <item>Rusizi</item>
+        <item>Ngororero</item>
+        <item> Nyabihu</item>
         <item>Karongi </item>
         <item>Nyamasheke</item>
-        <item> Nyanza</item>
-        <item> Huye</item>
+        <item> Rubavu</item>
+        <item>Rutsiro </item>
+        <item>Bugesera</item>
+        <item>Gatsibo </item>
+        <item>Nyagatare </item>
+        <item>Kayonza</item>
+        <item>Ngoma </item>
+        <item>Kirehe</item>
+        <item>Rwamagana</item>
+        <item>Nyamasheke</item>
+        <item>Gakenke</item>
+        <item> Burera</item>
+        <item> Rulindo</item>
+        <item>Musanze </item>
+        <item>Gicumbi</item>
+
     </string-array>
     <string-array name="languages" translatable="false">
         <item>English </item>

@@ -12,12 +12,8 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
 import com.technoserve.cpqi.data.AppDatabase
-import com.technoserve.cpqi.data.Cws
 import com.technoserve.cpqi.parsers.readJsonFromAssets
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 

@@ -5,9 +5,13 @@ import android.app.Activity
 import android.content.Context
 import com.technoserve.cpqi.data.Questions
 import android.content.Intent
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -20,6 +24,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,10 +36,10 @@ import com.technoserve.cpqi.data.Cws
 import com.technoserve.cpqi.parsers.allAuditQuestionsParser
 import com.technoserve.cpqi.parsers.categoryParser
 import com.technoserve.cpqi.utils.formatDate
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -72,6 +77,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     //    initialize room db
     private lateinit var db: AppDatabase
     private var items: List<Categories> = emptyList()
+    private lateinit var respondentName: String
     private var allCatQuestions: List<Questions> = emptyList()
 
     @SuppressLint("SetTextI18n", "MissingInflatedId")
@@ -97,6 +103,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         addStation = findViewById(R.id.addStation)
         cwsInputLayout = findViewById(R.id.cwsInputLayout)
         onClickListener(addStation)
+        lifecycleScope.launch(Dispatchers.IO) {
+            insertInitialStationsFromJson()
+        }
         val score = 0
 
         println(score)
@@ -127,7 +136,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             finish()
         }
 
-
         if (viewMode) submitAll.visibility = View.GONE else submitAll.visibility = View.VISIBLE
 
 
@@ -136,6 +144,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             ColorStateList.valueOf(resources.getColor(if (submitAll.isEnabled) R.color.maroon else R.color.maroonDisabled))
 
         //handle submission on new answers and already existing answers in edit mode updating the existing answers in the db
+
 
         submitAll.setOnClickListener {
 
@@ -176,12 +185,15 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                 }
             }
 
-            // If respondent is not selected, show error message
+//             If respondent is not selected, show error message
             if (respondent.text.isEmpty()) {
                 respondent.error = getString(R.string.missing_respondent_error)
                 respondent.requestFocus()
                 return@setOnClickListener
             }
+
+            //if the respondent is empty raise an error and after entering name update the answerDetails
+
             //if cws name is not selected, show a toast and request focus in the spinner to select cws name
             if (cwsName.selectedItem == null) {
                 Toast.makeText(
@@ -252,14 +264,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
 
     }
-    private fun updateRespondentNameInAnswers() {
-        val respondentName = respondent.text.toString()
-        if (respondentName.isNotEmpty()) {
-            answerDetails = answerDetails.map {
-                it.copy(responderName = respondentName)
-            }.toTypedArray()
-        }
-    }
 
     private fun onClickListener(addStation: Button) {
         addStation.setOnClickListener {
@@ -289,7 +293,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     }
 
     private fun fetchCwsData() {
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val cwsList = db.cwsDao().getAll()
 
             // Create an ArrayAdapter with CWS names (or relevant data)
@@ -300,8 +304,9 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             )
 
             // Update UI on the main thread
-            runOnUiThread {
+            withContext(Dispatchers.Main) {
                 cwsName.adapter = adapter
+                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -312,6 +317,31 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             names.add(cws.cwsName)
         }
         return names
+    }
+    private fun insertInitialStationsFromJson() {
+        lifecycleScope.launch {
+            val jsonString = assets.open("stations.json").bufferedReader().use { it.readText() }
+            val gson = Gson()
+            val stationsType = object : TypeToken<List<Cws>>() {}.type
+            val stations: List<Cws> = gson.fromJson(jsonString, stationsType)
+
+            val newStations = mutableListOf<Cws>()
+            for (station in stations) {
+                val existingCws = db.cwsDao().getAllCwsByName(station.cwsName)
+                if (existingCws == null) {
+                    station.cwsLeader = ""
+                    station.location = ""
+                    newStations.add(station.copy(id = UUID.randomUUID()))
+                }
+            }
+
+            if (newStations.isNotEmpty()) {
+                db.cwsDao().insertAll(newStations)
+            }
+            withContext(Dispatchers.Main) {
+                fetchCwsData()
+            }
+        }
     }
 
     private fun disableRecyclerView(recyclerView: RecyclerView) {
@@ -341,6 +371,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         respondentContainer = findViewById(R.id.textInputLayoutContainer)
         respondent = findViewById(R.id.nameEditText)
         cwsName = findViewById(R.id.cwsNameSpinner)
+
 
 //        if editMode is true, load answers
         if (editMode) {
