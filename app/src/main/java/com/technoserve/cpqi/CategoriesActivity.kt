@@ -3,10 +3,7 @@ package com.technoserve.cpqi
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import com.technoserve.cpqi.data.Questions
 import android.content.Intent
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -28,15 +25,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.technoserve.cpqi.adapters.CategoryAdapter
 import com.technoserve.cpqi.data.Answers
 import com.technoserve.cpqi.data.AppDatabase
 import com.technoserve.cpqi.data.Categories
 import com.technoserve.cpqi.data.Cws
+import com.technoserve.cpqi.data.Questions
 import com.technoserve.cpqi.parsers.allAuditQuestionsParser
 import com.technoserve.cpqi.parsers.categoryParser
 import com.technoserve.cpqi.utils.formatDate
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,6 +50,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     companion object {
         private const val REQUEST_CODE_ADD_CWS = 100
     }
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CategoryAdapter
     private lateinit var audit: String
@@ -74,6 +74,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
     private lateinit var editor: SharedPreferences.Editor
     private val gson = Gson()
     private var json: String = ""
+
     //    initialize room db
     private lateinit var db: AppDatabase
     private var items: List<Categories> = emptyList()
@@ -108,8 +109,6 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         val score = 0
 
-        println(score)
-
         progressBar.progress = score
 
         // Update percentage text
@@ -132,7 +131,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         toolBarTitle.text = intent.getStringExtra("auditName")
 
         backIconBtn.setOnClickListener {
-           // Go back to the previous activity
+            // Go back to the previous activity
             finish()
         }
 
@@ -234,7 +233,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                     }.map {
                         Answers(
                             null,
-                            it.responderName,
+                            responderName = answerDetails.last().responderName,
                             it.answer,
                             it.qId,
                             it.auditId,
@@ -318,6 +317,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
         }
         return names
     }
+
     private fun insertInitialStationsFromJson() {
         lifecycleScope.launch {
             val jsonString = assets.open("stations.json").bufferedReader().use { it.readText() }
@@ -381,18 +381,10 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
 
             respondent.text = answerDetails.last().responderName
             respondent.isEnabled = false
-//            val cwsList = db.cwsDao().getAll()
-//
-//            // Create an ArrayAdapter with CWS names (or relevant data)
-//            val adapter = ArrayAdapter(
-//                this@CategoriesActivity,
-//                android.R.layout.simple_spinner_dropdown_item,
-//                getCwsNames(cwsList)
-//            )
+
             val selectedCwsName = answerDetails.firstOrNull()?.cwsName ?: ""
             cwsEditText.text = selectedCwsName
             cwsEditText.isEnabled = false
-
 
             addStation.visibility = View.GONE
             cwsName.visibility = View.GONE
@@ -445,13 +437,13 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             percentageText.text = "0%"
         }
 //        add respondent name and cws name to answerDetails when the user enters them
-        respondent.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
+        respondent.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
                 if (answerDetails.isNotEmpty()) {
                     answerDetails = answerDetails.map {
                         Answers(
                             null,
-                            respondent.text.toString(),
+                            s.toString(),
                             it.answer,
                             it.qId,
                             auditId.toLong(),
@@ -463,7 +455,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                     answerDetails = answerDetails.plus(
                         Answers(
                             null,
-                            respondent.text.toString(),
+                            s.toString(),
                             "",
                             items!![0].id,
                             auditId.toLong(),
@@ -472,8 +464,27 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
                         )
                     )
                 }
+
+//        add shared preferences to save answers
+                json = gson.toJson(answerDetails)
+                editor.putString("answers", json)
+                editor.apply()
             }
-        }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                // Do nothing before text is changed
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Do nothing when text is changed
+            }
+        })
+
         cwsName.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -560,7 +571,7 @@ class CategoriesActivity : AppCompatActivity(), CategoryAdapter.OnItemClickListe
             editMode,
             viewMode,
 
-        )
+            )
         dialog.setDismissListener(this)
         dialog.show()
     }
