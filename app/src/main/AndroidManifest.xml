@@ -24,7 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.TNSapp"
         tools:targetApi="tiramisu">
-
+        <activity
+            android:name=".Statistics"
+            android:exported="false" />
         <activity
             android:name=".NewstationActivity"
             android:exported="false" />

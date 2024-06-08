@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">CPQI</string>
     <string name="get_started">Get Started</string>
     <string name="coffee_image">coffee_image</string>
@@ -54,12 +54,17 @@
     <string name="_2024_03_19">2024-03-19</string>
     <string name="uploaded_file">uploaded file</string>
     <string name="missing_cws_error">Please select a CWS</string>
-    <string name="CWS_Owner" > cws_owner </string>
+    <string name="CWS_Owner"> cws_owner </string>
     <string name="cws_owner">CWS Owner</string>
     <string name="name_of_respondent">name of respondent</string>
-    <string-array name="select_district"  translatable="false">
-    <item>Muhanga </item>
-    <item>Ruhango</item>
+    <string name="view_statistics">View Statistics</string>
+    <string name="statistics">statistics</string>
+    <string name="respondent_name">Respondent Name</string>
+    <string name="welcome_message">WELCOME TO COFFEE PROCESSING QUALITY ASSESSMENT TOOL</string>
+
+    <string-array name="select_district" translatable="false">
+        <item>Muhanga </item>
+        <item>Ruhango</item>
         <item> Gisagara</item>
         <item>Nyaruguru</item>
         <item>Nyamagabe </item>
@@ -89,10 +94,30 @@
         <item> Rulindo</item>
         <item>Musanze </item>
         <item>Gicumbi</item>
-
     </string-array>
     <string-array name="languages" translatable="false">
         <item>English </item>
         <item>Kinyarwanda</item>
+    </string-array>
+    <string-array name="months" tools:ignore="InconsistentArrays">
+        <item>select month</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string-array name="years">
+        <item>select year</item>
+        <item>2024</item>
+        <item>2025</item>
+        <item>2026</item>
     </string-array>
 </resources>

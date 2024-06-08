@@ -9,6 +9,9 @@ import androidx.room.Update
 
 @Dao
 interface AnswersDao {
+
+    @Query("SELECT * FROM answers WHERE cws_name = :cwsName AND strftime('%m', date) = :month AND strftime('%Y', date) = :year")
+    fun getAllByCwsAndDate(cwsName: String, month: String, year: String): List<Answers>
     //get cws name using grouped_answers_id
     @Query("SELECT cws_name FROM answers WHERE grouped_answers_id = :groupedAnswersId")
     fun getCwsName(groupedAnswersId: String): String

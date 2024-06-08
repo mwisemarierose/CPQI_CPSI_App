@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.MenuInflater
@@ -17,7 +16,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
@@ -33,6 +31,7 @@ import com.technoserve.cpqi.data.Categories
 import com.technoserve.cpqi.data.Cws
 import com.technoserve.cpqi.data.Questions
 import com.technoserve.cpqi.data.RecordedAudit
+import com.technoserve.cpqi.data.StatisticsData
 import com.technoserve.cpqi.parsers.allAuditQuestionsParser
 import com.technoserve.cpqi.parsers.categoryParser
 import com.technoserve.cpqi.utils.isTodayDate
@@ -40,8 +39,6 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -106,6 +103,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     @SuppressLint("ResourceAsColor")
     private fun setupUI(audit: String, auditId: Int) {
         val addNewBtn = findViewById<Button>(R.id.addNewBtn)
+        val viewstatistics = findViewById<Button>(R.id.viewStatisticsBtn)
 
 //        access answers from room db
         db = AppDatabase.getDatabase(this)!!
@@ -114,6 +112,9 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
 
         addNewBtn.setOnClickListener {
             openCategoryActivity(auditId, audit)
+        }
+        viewstatistics.setOnClickListener {
+            openStatisticsActivity(viewstatistics)
         }
 
         // Remove date filtering logic here
@@ -404,11 +405,35 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
             }
         }
     }
+    private fun getDataForStatistics(): List<StatisticsData> {
+        val statisticsData = mutableListOf<StatisticsData>()
+
+        for (entry in uniqueResult.entries) {
+            val recordedAudit = entry.value
+            statisticsData.add(
+                StatisticsData(
+                    date = recordedAudit.date,
+                    cwsName = recordedAudit.cwsName,
+                    score = recordedAudit.score
+                )
+            )
+        }
+
+        return statisticsData
+    }
     private fun openCategoryActivity(auditId: Int, audit: String?) {
         val intent = Intent(this, CategoriesActivity::class.java)
         intent.putExtra("auditId", auditId)
         intent.putExtra("audit", audit)
         intent.putExtra("auditName", auditName)
+        startActivity(intent)
+    }
+    //open statistics activity
+    private fun openStatisticsActivity(view: View) {
+        val intent = Intent(this, Statistics::class.java)
+        startActivity(intent)
+        val statisticsData = getDataForStatistics()
+        intent.putParcelableArrayListExtra("statisticsData", ArrayList(statisticsData))
         startActivity(intent)
     }
 

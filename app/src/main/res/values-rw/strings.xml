@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">CPQI</string>
     <string name="get_started">TANGIRA</string>
     <string name="coffee_image">coffee_image</string>
@@ -56,4 +56,22 @@
     <string name="CWS_Owner" > Nyiri sitasiyo </string>
     <string name="cws_owner">Nyiri sitasiyo</string>
     <string name="name_of_respondent">izina ryuwuzuza</string>
+    <string name="view_statistics">View Statistics</string>
+    <string name="statistics">statistics</string>
+    <string name="respondent_name">Respondent Name</string>
+    <string name="welcome_message">Welcome to Coffee processing quality assessment tool</string>
+    <string-array name="months" tools:ignore="InconsistentArrays">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
 </resources>

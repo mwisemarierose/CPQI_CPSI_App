@@ -63,7 +63,7 @@
                 android:id="@+id/nameInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/name_of_respondent">
+                android:hint="@string/respondent_name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nameEditText"
