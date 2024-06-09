@@ -51,7 +51,7 @@
     <string name="cws_error">CWS name cannot be empty</string>
     <string name="leader_error">CWS leader cannot be empty</string>
     <string name="address_error">CWS address cannot be empty</string>
-    <string name="_2024_03_19">2024-03-19</string>
+    <string name="_2024_03_19">2024–03–19</string>
     <string name="uploaded_file">uploaded file</string>
     <string name="missing_cws_error">Please select a CWS</string>
     <string name="CWS_Owner"> cws_owner </string>
@@ -61,6 +61,8 @@
     <string name="statistics">statistics</string>
     <string name="respondent_name">Respondent Name</string>
     <string name="welcome_message">WELCOME TO COFFEE PROCESSING QUALITY ASSESSMENT TOOL</string>
+    <string name="select_year">Select Year</string>
+    <string name="select_month">Select Month</string>
 
     <string-array name="select_district" translatable="false">
         <item>Muhanga </item>

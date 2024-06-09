@@ -10,16 +10,35 @@ import androidx.room.Update
 @Dao
 interface AnswersDao {
 
-    @Query("SELECT * FROM answers WHERE cws_name = :cwsName AND strftime('%m', date) = :month AND strftime('%Y', date) = :year")
+    @Query(
+        "SELECT * FROM answers WHERE cws_name = :cwsName AND (" + "SELECT CASE \n" +
+                "        WHEN substr(date, 5, 3) = 'Jan' THEN '01'\n" +
+                "        WHEN substr(date, 5, 3) = 'Feb' THEN '02'\n" +
+                "        WHEN substr(date, 5, 3) = 'Mar' THEN '03'\n" +
+                "        WHEN substr(date, 5, 3) = 'Apr' THEN '04'\n" +
+                "        WHEN substr(date, 5, 3) = 'May' THEN '05'\n" +
+                "        WHEN substr(date, 5, 3) = 'Jun' THEN '06'\n" +
+                "        WHEN substr(date, 5, 3) = 'Jul' THEN '07'\n" +
+                "        WHEN substr(date, 5, 3) = 'Aug' THEN '08'\n" +
+                "        WHEN substr(date, 5, 3) = 'Sep' THEN '09'\n" +
+                "        WHEN substr(date, 5, 3) = 'Oct' THEN '10'\n" +
+                "        WHEN substr(date, 5, 3) = 'Nov' THEN '11'\n" +
+                "        WHEN substr(date, 5, 3) = 'Dec' THEN '12'\n" +
+                "    END) = :month AND " +
+                "substr(date, -4) = :year"
+    )
     fun getAllByCwsAndDate(cwsName: String, month: String, year: String): List<Answers>
+
     //get cws name using grouped_answers_id
     @Query("SELECT cws_name FROM answers WHERE grouped_answers_id = :groupedAnswersId")
     fun getCwsName(groupedAnswersId: String): String
 
     @Query("SELECT * FROM answers")
     fun getAll(): Array<Answers>
+
     @Query("SELECT * FROM answers WHERE grouped_answers_id = :groupedAnswersId")
     fun getByGroupedAnswersId(groupedAnswersId: String): Answers?
+
     @Query("SELECT * FROM answers WHERE grouped_answers_id = :groupedAnswersId")
     fun getAllByGroupedAnswersId(groupedAnswersId: String): Array<Answers>
 

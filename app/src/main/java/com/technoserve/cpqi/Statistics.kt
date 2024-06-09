@@ -21,6 +21,8 @@ import kotlinx.coroutines.withContext
 import java.text.FieldPosition
 import java.text.Format
 import java.text.ParsePosition
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class Statistics : AppCompatActivity() {
     private lateinit var cwsName: Spinner
@@ -35,6 +37,10 @@ class Statistics : AppCompatActivity() {
         setContentView(R.layout.activity_statistics)
         supportActionBar?.hide()
         db = AppDatabase.getDatabase(this)!!
+        cwsName = findViewById(R.id.cwsNameSpinner)
+        yearSpinner = findViewById(R.id.yearSpinner)
+        monthSpinner = findViewById(R.id.monthSpinner)
+
         fetchCwsData()
         setupMonthSpinner()
         setupYearSpinner()
@@ -49,7 +55,10 @@ class Statistics : AppCompatActivity() {
     }
 
     private fun setupMonthSpinner() {
-        monthSpinner = findViewById(R.id.monthSpinner)
+        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+        val monthArray = resources.getStringArray(R.array.months)
+        val defaultMonth = monthArray.getOrNull(currentMonth) ?: ""
+
         ArrayAdapter.createFromResource(
             this,
             R.array.months,
@@ -57,10 +66,16 @@ class Statistics : AppCompatActivity() {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             monthSpinner.adapter = adapter
+            monthSpinner.setSelection(adapter.getPosition(defaultMonth) + 1)
         }
 
         monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 updateGraph()
             }
 
@@ -71,7 +86,10 @@ class Statistics : AppCompatActivity() {
     }
 
     private fun setupYearSpinner() {
-        yearSpinner = findViewById(R.id.yearSpinner)
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val yearArray = resources.getStringArray(R.array.years)
+        val defaultYear = yearArray.getOrNull(yearArray.indexOf(currentYear.toString())) ?: ""
+
         ArrayAdapter.createFromResource(
             this,
             R.array.years,
@@ -79,10 +97,16 @@ class Statistics : AppCompatActivity() {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             yearSpinner.adapter = adapter
+            yearSpinner.setSelection(adapter.getPosition(defaultYear))
         }
 
         yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 updateGraph()
             }
 
@@ -93,9 +117,14 @@ class Statistics : AppCompatActivity() {
     }
 
     private fun fetchCwsData() {
-        cwsName = findViewById(R.id.cwsNameSpinner)
         lifecycleScope.launch(Dispatchers.IO) {
             val cwsList = db.cwsDao().getAll()
+
+            val answers = db.answerDao().getAllByCwsAndDate("RWACOF Karenge", "06", "2024")
+            println(answers.size)
+            answers.forEach {
+                println(it.toString())
+            }
 
             val adapter = ArrayAdapter(
                 this@Statistics,
@@ -111,7 +140,12 @@ class Statistics : AppCompatActivity() {
         }
 
         cwsName.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 updateGraph()
             }
 
@@ -128,6 +162,7 @@ class Statistics : AppCompatActivity() {
         }
         return names
     }
+
     private fun getMonthNumber(monthName: String): Int {
         return when (monthName) {
             "January" -> 1
@@ -180,7 +215,7 @@ class Statistics : AppCompatActivity() {
                         pos: FieldPosition
                     ): StringBuffer {
                         val i = Math.round((obj as Number).toFloat())
-                        return toAppendTo.append(data[i.toInt()].date)
+                        return toAppendTo.append(if (data.isNotEmpty()) data[i].date else "")
                     }
 
                     override fun parseObject(source: String?, pos: ParsePosition): Any? {
@@ -194,7 +229,7 @@ class Statistics : AppCompatActivity() {
     }
 
 
-    private suspend fun getDataForGraph(cwsName: String, month: Int, year: String): List<RecordedAudit> {
+    private fun getDataForGraph(cwsName: String, month: Int, year: String): List<RecordedAudit> {
         val monthString = if (month < 10) "0$month" else month.toString()
         val answers = db.answerDao().getAllByCwsAndDate(cwsName, monthString, year)
         val result = answers.map {

@@ -50,7 +50,7 @@
     <string name="cws_error">Andika izina rya station</string>
     <string name="leader_error">Andika izina rya nyiri sitasiyo</string>
     <string name="address_error">Andika izina rya Aderesi</string>
-    <string name="_2024_03_19">2024-03-19</string>
+    <string name="_2024_03_19">2024–03–19</string>
     <string name="uploaded_file">uploaded file</string>
     <string name="missing_cws_error">Please select a CWS</string>
     <string name="CWS_Owner" > Nyiri sitasiyo </string>
@@ -60,6 +60,8 @@
     <string name="statistics">statistics</string>
     <string name="respondent_name">Respondent Name</string>
     <string name="welcome_message">Welcome to Coffee processing quality assessment tool</string>
+    <string name="select_year">Select Year</string>
+    <string name="select_month">Select Month</string>
     <string-array name="months" tools:ignore="InconsistentArrays">
         <item>January</item>
         <item>February</item>
