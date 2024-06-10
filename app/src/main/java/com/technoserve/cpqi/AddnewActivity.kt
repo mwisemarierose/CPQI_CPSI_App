@@ -103,7 +103,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     @SuppressLint("ResourceAsColor")
     private fun setupUI(audit: String, auditId: Int) {
         val addNewBtn = findViewById<Button>(R.id.addNewBtn)
-        val viewstatistics = findViewById<Button>(R.id.viewStatisticsBtn)
+        val viewStatistics = findViewById<Button>(R.id.viewStatisticsBtn)
 
 //        access answers from room db
         db = AppDatabase.getDatabase(this)!!
@@ -113,8 +113,8 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         addNewBtn.setOnClickListener {
             openCategoryActivity(auditId, audit)
         }
-        viewstatistics.setOnClickListener {
-            openStatisticsActivity(viewstatistics)
+        viewStatistics.setOnClickListener {
+            openStatisticsActivity(viewStatistics)
         }
 
         // Remove date filtering logic here
@@ -431,10 +431,11 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     //open statistics activity
     private fun openStatisticsActivity(view: View) {
         val intent = Intent(this, Statistics::class.java)
+        intent.putExtra("auditId", auditId)
+        intent.putExtra("audit", audit)
         startActivity(intent)
         val statisticsData = getDataForStatistics()
         intent.putParcelableArrayListExtra("statisticsData", ArrayList(statisticsData))
-        startActivity(intent)
     }
 
     override fun onItemClick(position: Int) {

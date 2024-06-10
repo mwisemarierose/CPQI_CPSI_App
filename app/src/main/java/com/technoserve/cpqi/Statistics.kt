@@ -14,7 +14,9 @@ import com.androidplot.xy.*
 import com.technoserve.cpqi.data.Answers
 import com.technoserve.cpqi.data.AppDatabase
 import com.technoserve.cpqi.data.Cws
+import com.technoserve.cpqi.data.Questions
 import com.technoserve.cpqi.data.RecordedAudit
+import com.technoserve.cpqi.parsers.allAuditQuestionsParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,6 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.properties.Delegates
 
 class Statistics : AppCompatActivity() {
     private lateinit var cwsName: Spinner
@@ -32,6 +35,9 @@ class Statistics : AppCompatActivity() {
     private lateinit var monthSpinner: Spinner
     private lateinit var yearSpinner: Spinner
     private lateinit var db: AppDatabase
+    private var auditId by Delegates.notNull<Int>()
+    private lateinit var audit: String
+    private lateinit var items: List<Questions>
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +48,9 @@ class Statistics : AppCompatActivity() {
         cwsName = findViewById(R.id.cwsNameSpinner)
         yearSpinner = findViewById(R.id.yearSpinner)
         monthSpinner = findViewById(R.id.monthSpinner)
+        auditId = intent.getIntExtra("auditId", 0)
+        audit = intent.getStringExtra("audit").toString()
+        items = allAuditQuestionsParser(audit, auditId)
 
         fetchCwsData()
         setupMonthSpinner()
@@ -190,22 +199,13 @@ class Statistics : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 plot.clear()
                 val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US)
-                val xVals = data.map { dateFormat.parse(it.date)?.time?.toDouble() ?: 0.0 }
-                val yVals = data.map { it.score.toDouble() }
+                val xValues = data.map { dateFormat.parse(it.date)?.time?.toDouble() ?: 0.0 }
+                val yValues = data.map { it.score.toDouble() }
                 val series: XYSeries = SimpleXYSeries(
-                    xVals, yVals, "Score"
+                    xValues, yValues, "Score"
                 )
 
                 val format = LineAndPointFormatter(Color.GREEN, Color.BLACK, null, null)
-                if (data.size >= 3) {
-                    format.interpolationParams = CatmullRomInterpolator.Params(
-                        10,
-                        CatmullRomInterpolator.Type.Centripetal
-                    )
-                } else {
-                    // For fewer points, use no interpolation (straight lines)
-                    format.interpolationParams = null
-                }
                 plot.addSeries(series, format)
 
                 plot.graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).format = object : Format() {
@@ -240,6 +240,9 @@ class Statistics : AppCompatActivity() {
                     }
                 }
 
+                plot.linesPerRangeLabel = 3
+                plot.linesPerDomainLabel = 2
+
                 plot.redraw()
             }
         }
@@ -263,14 +266,25 @@ class Statistics : AppCompatActivity() {
             )
         }
 
-        return result.groupBy { it.groupedAnswersId }.mapValues { (_, audits) ->
+        return result.groupBy {
+//            group by date in the format "yyyy-MM-dd" from the date in the format "EEE MMM dd HH:mm:ss z yyyy"
+            val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US)
+            val date = dateFormat.parse(it.date)
+            val calendar = Calendar.getInstance()
+            if (date != null) {
+                calendar.time = date
+            }
+            "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH)}-${calendar.get(Calendar.DAY_OF_MONTH)}"
+        }.mapValues { (_, audits) ->
             audits.reduce { _, audit ->
                 RecordedAudit(
                     null,
                     audit.auditId,
                     audit.cwsName,
                     audit.respondent,
-                    (audits.sumOf { it.score }.toDouble() / audits.size * 100).toInt(),
+                    ((audits.filter {
+                        it.score == 1
+                    }.size.toDouble() / items.size) * 100).toInt(),
                     audit.groupedAnswersId,
                     audit.date
                 )
