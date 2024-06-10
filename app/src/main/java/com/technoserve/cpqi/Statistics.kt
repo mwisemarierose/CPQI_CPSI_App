@@ -23,6 +23,8 @@ import java.text.Format
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class Statistics : AppCompatActivity() {
     private lateinit var cwsName: Spinner
@@ -193,19 +195,23 @@ class Statistics : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 plot.clear()
-
+                val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US)
+                val xVals = data.map { dateFormat.parse(it.date)?.time?.toDouble() ?: 0.0 }
+                val yVals = data.map { it.score.toDouble() }
                 val series: XYSeries = SimpleXYSeries(
-                    data.map { it.score.toDouble() },
-                    SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                    "Score"
+                    xVals, yVals, "Score"
                 )
 
                 val format = LineAndPointFormatter(Color.GREEN, Color.BLACK, null, null)
-                format.interpolationParams = CatmullRomInterpolator.Params(
-                    10,
-                    CatmullRomInterpolator.Type.Centripetal
-                )
-
+                if (data.size >= 3) {
+                    format.interpolationParams = CatmullRomInterpolator.Params(
+                        10,
+                        CatmullRomInterpolator.Type.Centripetal
+                    )
+                } else {
+                    // For fewer points, use no interpolation (straight lines)
+                    format.interpolationParams = null
+                }
                 plot.addSeries(series, format)
 
                 plot.graph.getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).format = object : Format() {
@@ -214,8 +220,25 @@ class Statistics : AppCompatActivity() {
                         toAppendTo: StringBuffer,
                         pos: FieldPosition
                     ): StringBuffer {
-                        val i = Math.round((obj as Number).toFloat())
-                        return toAppendTo.append(if (data.isNotEmpty()) data[i].date else "")
+                        val date = Date((obj as Number).toLong())
+                        // Format the date for display (you can adjust this format as needed)
+                        val displayFormat = SimpleDateFormat("MMM dd", Locale.US)
+                        return toAppendTo.append(displayFormat.format(date))
+                    }
+
+                    override fun parseObject(source: String?, pos: ParsePosition): Any? {
+                        return null
+                    }
+                }
+                plot.setRangeBoundaries(0, 100, BoundaryMode.FIXED)
+                plot.graph.getLineLabelStyle(XYGraphWidget.Edge.LEFT).format = object : Format() {
+                    override fun format(
+                        obj: Any?,
+                        toAppendTo: StringBuffer,
+                        pos: FieldPosition
+                    ): StringBuffer {
+                        val percentage = (obj as Number).toInt()
+                        return toAppendTo.append("$percentage%")
                     }
 
                     override fun parseObject(source: String?, pos: ParsePosition): Any? {
@@ -239,8 +262,8 @@ class Statistics : AppCompatActivity() {
                 it.cwsName,
                 it.responderName,
                 if (it.answer == Answers.YES) 1 else 0,
-                it.date,
-                it.groupedAnswersId
+                it.groupedAnswersId,
+                it.date
             )
         }
 
@@ -251,11 +274,11 @@ class Statistics : AppCompatActivity() {
                     audit.auditId,
                     audit.cwsName,
                     audit.respondent,
-                    audits.sumOf { it.score },
+                    (audits.sumOf { it.score }.toDouble() / audits.size * 100).toInt(),
                     audit.groupedAnswersId,
                     audit.date
                 )
             }
-        }.values.toList()
+        }.values.toList().sortedBy { it.date }
     }
 }
