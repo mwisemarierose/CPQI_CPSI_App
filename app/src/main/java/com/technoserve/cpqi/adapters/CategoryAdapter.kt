@@ -37,7 +37,6 @@ class CategoryAdapter(
         }
 
         override fun onClick(v: View?) {
-            println("here")
             val position = items[adapterPosition].id.toInt()
             if (position != RecyclerView.NO_POSITION) {
                 listener.onItemClick(position)

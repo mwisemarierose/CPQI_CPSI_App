@@ -122,12 +122,6 @@ class Statistics : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val cwsList = db.cwsDao().getAll()
 
-            val answers = db.answerDao().getAllByCwsAndDate("RWACOF Karenge", "06", "2024")
-            println(answers.size)
-            answers.forEach {
-                println(it.toString())
-            }
-
             val adapter = ArrayAdapter(
                 this@Statistics,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -254,7 +248,9 @@ class Statistics : AppCompatActivity() {
 
     private fun getDataForGraph(cwsName: String, month: Int, year: String): List<RecordedAudit> {
         val monthString = if (month < 10) "0$month" else month.toString()
+
         val answers = db.answerDao().getAllByCwsAndDate(cwsName, monthString, year)
+
         val result = answers.map {
             RecordedAudit(
                 null,

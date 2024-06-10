@@ -11,9 +11,6 @@ import com.technoserve.cpqi.data.Answers
 import com.technoserve.cpqi.data.RecordedAudit
 import androidx.recyclerview.widget.DividerItemDecoration
 
-
-
-
 class AddNewListAdapter(
     val items: Map<String, RecordedAudit>,
     private val totalItems: Int,
@@ -35,11 +32,13 @@ class AddNewListAdapter(
     interface OnItemClickListener {
         fun onItemClick(position: Int)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.addnew_item, parent, false)
         return ViewHolder(view)
     }
+
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = items.entries.elementAt(position).value
@@ -54,9 +53,11 @@ class AddNewListAdapter(
             itemClickListener.onItemClick(position)
         }
     }
+
     override fun getItemCount(): Int {
         return if (items.isEmpty()) 0 else items.size
     }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     fun setupItemDecoration(recyclerView: RecyclerView) {
         recyclerView.apply {

@@ -21,7 +21,7 @@ import com.technoserve.cpqi.data.Questions
 import com.technoserve.cpqi.parsers.questionParser
 import org.json.JSONObject
 
-class PopupActivity (
+class PopupActivity(
     context: Context,
     private val auditId: Int,
     private val audit: String,
@@ -83,7 +83,7 @@ class PopupActivity (
 
 //        get answers from shared preferences
         json = sharedPreferences.getString("answers", null).toString()
-        val items: List<Questions> = questionParser(JSONObject(audit),auditId,catId)
+        val items: List<Questions> = questionParser(JSONObject(audit), auditId, catId)
 
         popupTitle.text = catName
         adapter = QuestionAdapter(
@@ -126,7 +126,7 @@ class PopupActivity (
                     adapter.answerDetails.filter { it.qId in currentCategoryQuestions }
 
                 val allAnsweredInCurrentCategory =
-                    answeredQuestionsInCurrentCategory.size == items.size
+                    answeredQuestionsInCurrentCategory.size >= items.size
 
                 if (allAnsweredInCurrentCategory) {
                     notifyDismissListener(adapter.answerDetails)
