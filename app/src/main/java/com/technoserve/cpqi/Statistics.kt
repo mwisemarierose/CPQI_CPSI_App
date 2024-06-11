@@ -241,7 +241,7 @@ class Statistics : AppCompatActivity() {
                 }
 
                 plot.linesPerRangeLabel = 3
-                plot.linesPerDomainLabel = 2
+                plot.linesPerDomainLabel = 1
 
                 plot.redraw()
             }
