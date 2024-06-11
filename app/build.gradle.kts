@@ -74,6 +74,7 @@ dependencies {
     implementation ("com.opencsv:opencsv:5.5.1")
     implementation ("com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1")
     implementation ("com.androidplot:androidplot-core:1.5.10")
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
     val roomVersion = "2.6.1"
 

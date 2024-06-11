@@ -77,14 +77,20 @@
             android:textColor="@color/white" />
 
     </RelativeLayout>
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:layout_gravity="bottom|center_horizontal"
+    android:gravity="center">
     <ImageView
         android:id="@+id/logoWatermark"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_gravity="bottom|center_horizontal"
+        android:foregroundGravity="center"
         android:alpha="0.9"
         android:contentDescription="App Logo Watermark"
         android:src="@drawable/tns1" />
+    </RelativeLayout>
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 pluginManagement {
     repositories {
         google()
+        jcenter()
         mavenCentral()
         gradlePluginPortal()
         maven { url = uri("https://www.jitpack.io" ) }
@@ -15,6 +16,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://www.jitpack.io" ) }
     }
 }
+
 
 rootProject.name = "TNSapp"
 include(":app")

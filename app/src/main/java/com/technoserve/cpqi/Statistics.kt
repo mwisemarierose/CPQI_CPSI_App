@@ -28,12 +28,20 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.properties.Delegates
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 class Statistics : AppCompatActivity() {
     private lateinit var cwsName: Spinner
     private lateinit var plot: XYPlot
     private lateinit var monthSpinner: Spinner
     private lateinit var yearSpinner: Spinner
+    private lateinit var lineChart: LineChart
     private lateinit var db: AppDatabase
     private var auditId by Delegates.notNull<Int>()
     private lateinit var audit: String
@@ -60,9 +68,7 @@ class Statistics : AppCompatActivity() {
         backIconBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-
         plot = findViewById(R.id.plot)
-        PanZoom.attach(plot)
     }
 
     private fun setupMonthSpinner() {
@@ -186,7 +192,6 @@ class Statistics : AppCompatActivity() {
         }
     }
 
-
     private fun updateGraph() {
         val selectedCws = cwsName.selectedItem.toString()
         val selectedMonthName = monthSpinner.selectedItem.toString()
@@ -240,12 +245,22 @@ class Statistics : AppCompatActivity() {
                     }
                 }
 
-                plot.linesPerRangeLabel = 3
-                plot.linesPerDomainLabel = 1
+                plot.linesPerRangeLabel = 2
+                plot.linesPerDomainLabel = if (data.size >= 3) 4 else 3
 
                 plot.redraw()
             }
         }
+    }
+    private fun formatDateForDisplay(dateString: String): String {
+        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US)
+        val date = dateFormat.parse(dateString)
+        val calendar = Calendar.getInstance()
+        if (date != null) {
+            calendar.time = date
+        }
+        val displayFormat = SimpleDateFormat("MMM dd", Locale.US)
+        return displayFormat.format(calendar.time)
     }
 
 
@@ -265,30 +280,34 @@ class Statistics : AppCompatActivity() {
                 it.date
             )
         }
+        val groupedAudits = LinkedHashMap<String, MutableList<RecordedAudit>>()
 
-        return result.groupBy {
-//            group by date in the format "yyyy-MM-dd" from the date in the format "EEE MMM dd HH:mm:ss z yyyy"
-            val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US)
-            val date = dateFormat.parse(it.date)
-            val calendar = Calendar.getInstance()
-            if (date != null) {
-                calendar.time = date
-            }
-            "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH)}-${calendar.get(Calendar.DAY_OF_MONTH)}"
-        }.mapValues { (_, audits) ->
+        result.forEach { audit ->
+            val dateKey = formatDateKey(audit.date)
+            groupedAudits.getOrPut(dateKey) { mutableListOf() }.add(audit)
+        }
+
+        return groupedAudits.map { (_, audits) ->
             audits.reduce { _, audit ->
                 RecordedAudit(
                     null,
                     audit.auditId,
                     audit.cwsName,
                     audit.respondent,
-                    ((audits.filter {
-                        it.score == 1
-                    }.size.toDouble() / items.size) * 100).toInt(),
+                    ((audits.filter { it.score == 1 }.size.toDouble() / items.size) * 100).toInt(),
                     audit.groupedAnswersId,
                     audit.date
                 )
             }
-        }.values.toList().sortedBy { it.date }
+        }.sortedBy { it.date }
+    }
+    private fun formatDateKey(dateString: String): String {
+        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US)
+        val date = dateFormat.parse(dateString)
+        val calendar = Calendar.getInstance()
+        if (date != null) {
+            calendar.time = date
+        }
+        return "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH)}-${calendar.get(Calendar.DAY_OF_MONTH)}"
     }
 }
