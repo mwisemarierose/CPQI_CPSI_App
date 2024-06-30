@@ -52,8 +52,6 @@ class  NewstationActivity : AppCompatActivity() {
 
         db = AppDatabase.getDatabase(this)!!
 
-        val districtSpinner: Spinner = findViewById(R.id.districtSpinner)
-        setupDistrictSpinner(districtSpinner)
         val addBtn = findViewById<Button>(R.id.Add)
         val backIconBtn: ImageView = findViewById(R.id.backIcon)
         backIconBtn.setOnClickListener {
@@ -63,7 +61,6 @@ class  NewstationActivity : AppCompatActivity() {
             val cwsName = findViewById<EditText>(R.id.cwsName).text.toString()
             val cwsLeader = findViewById<EditText>(R.id.cwsLeader).text.toString()
             val location = findViewById<EditText>(R.id.location).text.toString()
-            val district = districtSpinner.selectedItem.toString()
 
             lifecycleScope.launch {
                 val existingCws = db.cwsDao().getCwsByName(cwsName)
@@ -77,7 +74,7 @@ class  NewstationActivity : AppCompatActivity() {
                     return@launch
                 }
                 if (existingCws == null) {
-                    val newCws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location, district = district)
+                    val newCws = Cws(cwsName = cwsName, cwsLeader = cwsLeader, location = location)
                     db.cwsDao().insert(newCws)
 
                     withContext(Dispatchers.Main) {
@@ -93,11 +90,5 @@ class  NewstationActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-    private fun setupDistrictSpinner(spinner: Spinner) {
-        val districts = resources.getStringArray(R.array.select_district)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, districts)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
     }
 }

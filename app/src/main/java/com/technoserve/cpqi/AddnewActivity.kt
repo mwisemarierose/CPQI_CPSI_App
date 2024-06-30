@@ -61,7 +61,7 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
     private lateinit var audit: String
     private lateinit var uniqueResult: Map<String, RecordedAudit>
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addnew)
@@ -89,7 +89,9 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
         val parsedAudit =
             JSONObject(JSONObject(audit).getJSONArray("audits")[auditId - 1].toString())
 
-        toolBarTitle.text = if (parsedAudit.has("name")) parsedAudit["name"].toString() else "Audit"
+//        toolBarTitle.text = if (parsedAudit.has("name")) parsedAudit["name"].toString() else "Audit"
+        //set toolbar title text CPQI Checklists when in en language else use lisite yigenzura
+        toolBarTitle.text = if (Locale.getDefault().language == "en") "CPQI Checklists" else "Lisite yigenzura rya CPQI"
         auditName = if (parsedAudit.has("name")) parsedAudit["name"].toString() else "Audit"
         sharedPreferences = getSharedPreferences("AnswersPref", MODE_PRIVATE)
         editor = sharedPreferences.edit()
@@ -312,7 +314,6 @@ class AddNewActivity : AppCompatActivity(), AddNewListAdapter.OnItemClickListene
                 cwsName,
                 "",
                 "",
-                ""
             )
             if (db.cwsDao().getCwsByName(cwsName) == null) db.cwsDao().insert(newCws)
 

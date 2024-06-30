@@ -11,6 +11,5 @@ data class Cws(
     val id: UUID = UUID.randomUUID(),
     @ColumnInfo(name = "cws_name") val cwsName: String,
     @ColumnInfo(name = "cws_leader") var cwsLeader: String,
-    @ColumnInfo(name = "district") val district: String,
     @ColumnInfo(name = "location") var location: String,
 )

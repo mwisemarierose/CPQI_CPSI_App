@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:text="@string/audit_text"
             android:textColor="@android:color/white"
-            android:textSize="27sp" />
+            android:textSize="25sp" />
 
         <!-- Three Dots Icon -->
         <ImageView
@@ -50,10 +50,11 @@
         android:layout_below="@id/toolbar"
         android:layout_marginTop="16dp"
         android:drawableStart="@drawable/baseline_query_stats_24"
-        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
         android:backgroundTint="@color/maroon"
         android:text="@string/view_statistics"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        />
     <!-- Button in Body -->
     <Button
         android:id="@+id/addNewBtn"

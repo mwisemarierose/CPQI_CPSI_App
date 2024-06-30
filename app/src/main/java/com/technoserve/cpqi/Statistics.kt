@@ -224,7 +224,6 @@ class Statistics : AppCompatActivity() {
                         val displayFormat = SimpleDateFormat("MMM dd", Locale.US)
                         return toAppendTo.append(displayFormat.format(date))
                     }
-
                     override fun parseObject(source: String?, pos: ParsePosition): Any? {
                         return null
                     }
@@ -239,12 +238,10 @@ class Statistics : AppCompatActivity() {
                         val percentage = (obj as Number).toInt()
                         return toAppendTo.append("$percentage%")
                     }
-
                     override fun parseObject(source: String?, pos: ParsePosition): Any? {
                         return null
                     }
                 }
-
                 plot.linesPerRangeLabel = 2
                 plot.linesPerDomainLabel = if (data.size >= 3) 4 else 3
 
@@ -263,10 +260,8 @@ class Statistics : AppCompatActivity() {
         return displayFormat.format(calendar.time)
     }
 
-
     private fun getDataForGraph(cwsName: String, month: Int, year: String): List<RecordedAudit> {
         val monthString = if (month < 10) "0$month" else month.toString()
-
         val answers = db.answerDao().getAllByCwsAndDate(cwsName, monthString, year)
 
         val result = answers.map {
